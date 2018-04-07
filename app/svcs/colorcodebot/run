@@ -1,0 +1,2 @@
+#!/bin/execlineb -P
+foreground { redirfd -w 1 run.md5 md5sum run } fdmove -c 2 1 s6-setuidgid colorcodebot /usr/bin/env python3 /home/colorcodebot/colorcodebot.py
