@@ -11,7 +11,8 @@ from vault import TG_API_KEY
 
 LANG = {
     'welcome': "Hello! Send me a snippet of code as your message text, and I'll send you a colorized HTML file.",
-    'query ext': "Fantastic! What type of code is this?\n\nTo add more types, message @andykluger."
+    'query ext': "Fantastic! What type of code is this?\n\nTo add more types, message @andykluger.",
+    'switch to direct': "Direct Chat"
 }
 BOT = TeleBot(TG_API_KEY)
 
@@ -30,6 +31,12 @@ def mk_html(code: str, ext: str):
         '--style', 'solarized-dark',
         '--syntax', ext
     ] << code)()
+
+
+@BOT.inline_handler(lambda q: True)
+def switch_from_inline(inline_query):
+    BOT.answer_inline_query(inline_query.id, [], switch_pm_text=LANG['switch to direct'], switch_pm_parameter='sw-pm-param')
+
 
 
 @BOT.message_handler(commands=['start', 'help'])
