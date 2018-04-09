@@ -13,4 +13,4 @@ buildah run $container -- pip3 install -U -r /home/$appname/requirements.txt
 
 buildah config $container --cmd "s6-svscan /home/$appname/svcs"
 
-buildah commit --rm $container $appname-image-$version
+buildah commit --rm $container $appname:$version
