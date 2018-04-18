@@ -1,9 +1,12 @@
-certifi==2018.1.18        # via requests
+certifi==2018.4.16        # via requests
 chardet==3.0.4            # via requests
 idna==2.6                 # via requests
 plumbum==1.6.6
 pytelegrambotapi==3.6.2
-pyyaml==3.12
+python-dateutil==2.7.2    # via strictyaml
 requests==2.18.4          # via pytelegrambotapi
-six==1.11.0               # via pytelegrambotapi
+ruamel.yaml==0.15.37      # via strictyaml
+six==1.11.0               # via pytelegrambotapi, python-dateutil, structlog
+strictyaml==0.11.8
+structlog==18.1.0
 urllib3==1.22             # via requests
