@@ -8,10 +8,13 @@ buildah add --chown $appname:$appname $ccb app "/home/$appname/"
 
 buildah run $ccb -- apk update
 buildah run $ccb -- apk upgrade
-buildah run $ccb -- apk add python3-dev gcc musl-dev highlight s6
+buildah run $ccb -- apk add python3 python3-dev gcc musl-dev highlight s6
 buildah run $ccb -- pip3 install -U -r /home/$appname/requirements.txt
 
 buildah config --cmd "s6-svscan /home/$appname/svcs" $ccb
+
+buildah run $ccb -- apk del python3-dev gcc musl-dev
+buildah run $ccb -- rm -r /var/cache
 
 buildah commit --rm $ccb $appname:$version
 
