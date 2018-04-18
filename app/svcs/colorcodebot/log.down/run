@@ -1,0 +1,2 @@
+#!/bin/execlineb -P
+foreground { redirfd -w 1 run.md5 md5sum run } s6-log T s4194304 S41943040 /home/colorcodebot/logs
