@@ -10,12 +10,18 @@ from vault import TG_API_KEY
 
 
 LANG = {
-    'welcome': ("Hello! Send me a snippet of code as your message text, "
-                "and I'll send you a colorized HTML file."),
-    'query ext': ("Fantastic! What type of code is this?\n\n"
-                  "To add more types, message @andykluger."),
+    'welcome': (
+        "Hello! Send me a snippet of code as your message text, "
+        "and I'll send you a colorized HTML file."
+    ),
+    'query ext': (
+        "Fantastic! What type of code is this?\n\n"
+        "To add more types, message @andykluger."
+    ),
     'switch to direct': "Let's color some code!"
 }
+
+
 BOT = TeleBot(TG_API_KEY)
 
 
