@@ -1,16 +1,19 @@
 #!/bin/sh -e
 appname="colorcodebot"
 version=0.1
-container=`buildah from alpine`
 
-buildah run $container -- adduser -D $appname
-buildah add --chown $appname:$appname $container app "/home/$appname/"
+ccb=`buildah from alpine`
+buildah run $ccb -- adduser -D $appname
+buildah add --chown $appname:$appname $ccb app "/home/$appname/"
 
-buildah run $container -- apk update
-buildah run $container -- apk upgrade
-buildah run $container -- apk add python3-dev highlight s6
-buildah run $container -- pip3 install -U -r /home/$appname/requirements.txt
+buildah run $ccb -- apk update
+buildah run $ccb -- apk upgrade
+buildah run $ccb -- apk add python3-dev gcc musl-dev highlight s6
+buildah run $ccb -- pip3 install -U -r /home/$appname/requirements.txt
 
-buildah config $container --cmd "s6-svscan /home/$appname/svcs"
+buildah config --cmd "s6-svscan /home/$appname/svcs" $ccb
 
-buildah commit --rm $container $appname:$version
+buildah commit --rm $ccb $appname:$version
+
+# buildah push $appname-$version oci-archive:$appname-$version.oci.tar:$appname:$version
+# buildah push $appname-$version docker-archive:$appname-$version.docker.tar:$appname:$version
