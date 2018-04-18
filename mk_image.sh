@@ -2,6 +2,9 @@
 appname="colorcodebot"
 version=0.1
 
+rm -rf app/__pycache__
+rm -rf app/venv
+
 ccb=`buildah from alpine`
 buildah run $ccb -- adduser -D $appname
 buildah add --chown $appname:$appname $ccb app "/home/$appname/"
