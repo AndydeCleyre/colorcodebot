@@ -94,6 +94,7 @@ def intake_snippet(message):
             ('Kotlin', 'kt'),
             ('NGINX', 'nginx'),
             ('Objective C', 'objc'),
+            ('PHP', 'php'),
             ('Python', 'py'),
             ('Ruby', 'rb'),
             ('Rust', 'rs'),
