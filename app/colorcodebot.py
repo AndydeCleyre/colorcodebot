@@ -5,7 +5,7 @@ from plumbum.cmd import highlight
 from pygments import lexers, formatters
 from telebot import TeleBot
 from telebot.apihelper import ApiException
-from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup
+from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 import pygments
 import strictyaml
 import structlog
@@ -114,9 +114,28 @@ def intake_snippet(message):
     BOT.reply_to(message, LANG['query ext'], reply_markup=kb)
 
 
+def send_html(snippet: Message, ext: str):
+    BOT.send_chat_action(snippet.chat.id, 'upload_document')
+    html = mk_html(snippet.text, ext)
+    with io.StringIO(html) as doc:
+        doc.name = 'code.html'
+        BOT.send_document(snippet.chat.id, doc, reply_to_message_id=snippet.message_id)
+
+
+def send_image(snippet: Message, ext: str):
+    BOT.send_chat_action(snippet.chat.id, 'upload_photo')
+    png = mk_png(snippet.text, ext)
+    with io.BytesIO(png) as doc:
+        doc.name = 'code.png'
+        try:
+            BOT.send_photo(snippet.chat.id, doc, reply_to_message_id=snippet.message_id)
+        except ApiException as e:
+            LOG.error("failed to send compressed image", exc_info=e)
+            BOT.send_document(snippet.chat.id, doc, reply_to_message_id=snippet.message_id)
+
+
 @BOT.callback_query_handler(lambda q: yload(q.data)['action'] == 'set ext')
 def set_snippet_filetype(cb_query):
-    snippet = cb_query.message.reply_to_message
     data = yload(cb_query.data)
     LOG.msg(
         "colorizing code",
@@ -124,20 +143,9 @@ def set_snippet_filetype(cb_query):
         user_first_name=cb_query.message.reply_to_message.from_user.first_name,
         syntax=data['ext']
     )
-    BOT.send_chat_action(cb_query.message.chat.id, 'upload_document')
-    html = mk_html(snippet.text, data['ext'])
-    with io.StringIO(html) as doc:
-        doc.name = 'code.html'
-        BOT.send_document(cb_query.message.chat.id, doc, snippet.message_id)
-    BOT.send_chat_action(cb_query.message.chat.id, 'upload_photo')
-    png = mk_png(snippet.text, data['ext'])
-    with io.BytesIO(png) as doc:
-        doc.name = 'code.png'
-        try:
-            BOT.send_photo(cb_query.message.chat.id, doc, snippet.message_id)
-        except ApiException as e:
-            LOG.error("failed to send compressed image", exc_info=e)
-            BOT.send_document(cb_query.message.chat.id, doc, snippet.message_id)
+    snippet = cb_query.message.reply_to_message
+    send_html(snippet, data['ext'])
+    send_image(snippet, data['ext'])
 
 
 if __name__ == '__main__':
