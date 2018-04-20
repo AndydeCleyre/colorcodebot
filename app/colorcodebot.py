@@ -38,7 +38,7 @@ def ydump(data: dict) -> str:
     return strictyaml.as_document(data).as_yaml()
 
 
-def mk_html(code: str, ext: str) -> str:
+def mk_html(code: str, ext: str, theme: str='native') -> str:
     """Return HTML content"""
     return pygments.highlight(
         code,
@@ -46,12 +46,12 @@ def mk_html(code: str, ext: str) -> str:
         formatters.HtmlFormatter(
             linenos='table',
             full=True,
-            style='monokai'
+            style=theme
         )
     )
 
 
-def mk_png(code: str, ext: str) -> str:
+def mk_png(code: str, ext: str, theme: str='native') -> str:
     """Return path of generated png"""
     return pygments.highlight(
         code,
@@ -60,7 +60,7 @@ def mk_png(code: str, ext: str) -> str:
             font_name='Iosevka Custom',
             font_size=35,
             line_number_chars=3,
-            style='monokai'
+            style=theme
         )
     )
 
@@ -123,17 +123,17 @@ def intake_snippet(message):
     BOT.reply_to(message, LANG['query ext'], reply_markup=kb)
 
 
-def send_html(snippet: Message, ext: str):
+def send_html(snippet: Message, ext: str, theme: str='native'):
     BOT.send_chat_action(snippet.chat.id, 'upload_document')
-    html = mk_html(snippet.text, ext)
+    html = mk_html(snippet.text, ext, theme)
     with io.StringIO(html) as doc:
         doc.name = 'code.html'
         BOT.send_document(snippet.chat.id, doc, reply_to_message_id=snippet.message_id)
 
 
-def send_image(snippet: Message, ext: str, max_lines_for_compressed=80):
+def send_image(snippet: Message, ext: str, theme: str='native', max_lines_for_compressed: int=80):
     BOT.send_chat_action(snippet.chat.id, 'upload_photo')
-    png = mk_png(snippet.text, ext)
+    png = mk_png(snippet.text, ext, theme)
     with io.BytesIO(png) as doc:
         doc.name = 'code.png'
         if snippet.text.count('\n') <= max_lines_for_compressed:
