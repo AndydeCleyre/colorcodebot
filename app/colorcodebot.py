@@ -41,7 +41,6 @@ def ydump(data: dict) -> str:
 def mk_html(code: str, ext: str) -> str:
     """Return HTML content"""
     return (highlight[
-        '--line-numbers',
         '--inline-css',
         '--style', 'molokai',
         '--syntax', ext
