@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 import io
 
+from plumbum.cmd import highlight
+from pygments import lexers, formatters
+from telebot import TeleBot
+from telebot.apihelper import ApiException
+from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup
+import pygments
 import strictyaml
 import structlog
-from plumbum.cmd import highlight
-from telebot import TeleBot
-from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 from vault import TG_API_KEY
-
-
-LOG = structlog.get_logger()
 
 
 LANG = {
@@ -26,24 +26,35 @@ LANG = {
 }
 
 
+LOG = structlog.get_logger()
 BOT = TeleBot(TG_API_KEY)
 
 
-def yload(yamlstr):
-    return strictyaml.load(yamlstr).data
+def yload(yamltxt: str) -> dict:
+    return strictyaml.load(yamltxt).data
 
 
-def ydump(data):
+def ydump(data: dict) -> str:
     return strictyaml.as_document(data).as_yaml()
 
 
-def mk_html(code: str, ext: str):
+def mk_html(code: str, ext: str) -> str:
+    """Return HTML content"""
     return (highlight[
         '--line-numbers',
         '--inline-css',
-        '--style', 'solarized-dark',
+        '--style', 'molokai',
         '--syntax', ext
     ] << code)()
+
+
+def mk_png(code: str, ext: str) -> str:
+    """Return path of generated png"""
+    return pygments.highlight(
+        code,
+        lexers.get_lexer_by_name({'rs': 'rust', 'py': 'py3'}.get(ext, ext)),
+        formatters.ImageFormatter(font_name='Iosevka Custom', font_size=35, style='monokai')
+    )
 
 
 @BOT.inline_handler(lambda q: True)
@@ -83,7 +94,7 @@ def intake_snippet(message):
             name, callback_data=ydump({'action': 'set ext', 'ext': ext})
         ) for name, ext in (
             ('Bash', 'sh'),
-            ('C#', 'cs'),
+            ('C#', 'csharp'),
             ('C', 'c'),
             ('CSS', 'css'),
             ('Go', 'go'),
@@ -91,7 +102,7 @@ def intake_snippet(message):
             ('Java', 'java'),
             ('JavaScript', 'js'),
             ('JSON', 'json'),
-            ('Kotlin', 'kt'),
+            ('Kotlin', 'kotlin'),
             ('NGINX', 'nginx'),
             ('Objective C', 'objc'),
             ('PHP', 'php'),
@@ -114,10 +125,20 @@ def set_snippet_filetype(cb_query):
         user_first_name=cb_query.message.reply_to_message.from_user.first_name,
         syntax=data['ext']
     )
+    BOT.send_chat_action(cb_query.message.chat.id, 'upload_document')
     html = mk_html(snippet.text, data['ext'])
     with io.StringIO(html) as doc:
         doc.name = 'code.html'
         BOT.send_document(cb_query.message.chat.id, doc, snippet.message_id)
+    BOT.send_chat_action(cb_query.message.chat.id, 'upload_photo')
+    png = mk_png(snippet.text, data['ext'])
+    with io.BytesIO(png) as doc:
+        doc.name = 'code.png'
+        try:
+            BOT.send_photo(cb_query.message.chat.id, doc, snippet.message_id)
+        except ApiException as e:
+            LOG.error("failed to send compressed image", exc_info=e)
+            BOT.send_document(cb_query.message.chat.id, doc, snippet.message_id)
 
 
 if __name__ == '__main__':
