@@ -1,11 +1,12 @@
 #!/bin/sh -e
 appname="colorcodebot"
-version=0.1
+version="0.1"
+pyver="3.6"
+ccb=`buildah from alpine:3.7`
 
 rm -rf app/__pycache__
 rm -rf app/venv
 
-ccb=`buildah from alpine`
 buildah run $ccb -- adduser -D $appname
 buildah add --chown $appname:$appname $ccb app "/home/$appname/"
 
@@ -16,7 +17,6 @@ buildah run $ccb -- apk add \
   freetype \
   freetype-dev \
   gcc \
-  highlight \
   jpeg \
   jpeg-dev \
   musl-dev \
@@ -25,7 +25,13 @@ buildah run $ccb -- apk add \
   s6 \
   zlib \
   zlib-dev
+
 buildah run $ccb -- pip3 install -U -r /home/$appname/requirements.txt
+buildah run $ccb -- sed -i 's/background-color: #f0f0f0; //g' /usr/lib/python$pyver/site-packages/pygments/formatters/html.py
+
+buildah run $ccb -- mkdir -p /usr/share/fonts/TTF
+buildah add $ccb /usr/share/fonts/TTF/iosevka-custom-{regular,italic,bold}.ttf /usr/share/fonts/TTF
+
 buildah run $ccb -- apk del \
   freetype-dev \
   gcc \
@@ -35,13 +41,5 @@ buildah run $ccb -- apk del \
   zlib-dev
 buildah run $ccb -- rm -r /var/cache/apk
 
-buildah run $ccb -- mkdir -p /usr/share/fonts/TTF
-buildah add $ccb /usr/share/fonts/TTF/iosevka-custom-regular.ttf /usr/share/fonts/TTF
-buildah add $ccb /usr/share/fonts/TTF/iosevka-custom-italic.ttf /usr/share/fonts/TTF
-buildah add $ccb /usr/share/fonts/TTF/iosevka-custom-bold.ttf /usr/share/fonts/TTF
-
 buildah config --cmd "s6-svscan /home/$appname/svcs" $ccb
 buildah commit --rm $ccb $appname:$version
-
-# buildah push $appname-$version oci-archive:$appname-$version.oci.tar:$appname:$version
-# buildah push $appname-$version docker-archive:$appname-$version.docker.tar:$appname:$version

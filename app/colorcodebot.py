@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 import io
 
-from plumbum.cmd import highlight
-from pygments import lexers, formatters
-from telebot import TeleBot
-from telebot.apihelper import ApiException
-from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 import pygments
 import strictyaml
 import structlog
+
+from pygments import formatters, lexers
+from telebot import TeleBot
+from telebot.apihelper import ApiException
+from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 
 from vault import TG_API_KEY
 
@@ -40,19 +40,28 @@ def ydump(data: dict) -> str:
 
 def mk_html(code: str, ext: str) -> str:
     """Return HTML content"""
-    return (highlight[
-        '--inline-css',
-        '--style', 'molokai',
-        '--syntax', ext
-    ] << code)()
+    return pygments.highlight(
+        code,
+        lexers.get_lexer_by_name(ext),
+        formatters.HtmlFormatter(
+            linenos='table',
+            full=True,
+            style='monokai'
+        )
+    )
 
 
 def mk_png(code: str, ext: str) -> str:
     """Return path of generated png"""
     return pygments.highlight(
         code,
-        lexers.get_lexer_by_name({'rs': 'rust', 'py': 'py3'}.get(ext, ext)),
-        formatters.ImageFormatter(font_name='Iosevka Custom', font_size=35, style='monokai')
+        lexers.get_lexer_by_name(ext),
+        formatters.ImageFormatter(
+            font_name='Iosevka Custom',
+            font_size=35,
+            line_number_chars=3,
+            style='monokai'
+        )
     )
 
 
@@ -105,9 +114,9 @@ def intake_snippet(message):
             ('NGINX', 'nginx'),
             ('Objective C', 'objc'),
             ('PHP', 'php'),
-            ('Python', 'py'),
+            ('Python', 'py3'),
             ('Ruby', 'rb'),
-            ('Rust', 'rs'),
+            ('Rust', 'rust'),
             ('Swift', 'swift')
         )
     ))
