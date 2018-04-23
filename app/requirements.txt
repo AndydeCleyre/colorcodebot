@@ -1,6 +1,8 @@
+apsw==3.9.2.post1
 certifi==2018.4.16        # via requests
 chardet==3.0.4            # via requests
 idna==2.6                 # via requests
+peewee==3.2.5
 pillow==5.1.0
 pygments==2.2.0
 pytelegrambotapi==3.6.2

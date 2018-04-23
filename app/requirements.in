@@ -1,6 +1,9 @@
 # python 3
-pillow
+apsw    # used by peewee
+peewee
+pillow  # used by pygments
 pygments
 pyTelegramBotAPI
 strictyaml
 structlog
+
