@@ -32,16 +32,16 @@ LANG = {
 
 
 THEME_PREVIEWS = {
-    'fruity': 'AgADAQAD16cxG6740EbJBJkibn0eXmN9DDAABP12cwlgnA3FbUIBAAEC',
-    'monokai': 'AgADAQAD2KcxG6740Eb_OHvxwUT6AAGc7gowAATxXt7XTH7vQIoeAAIC',
-    'native': 'AgADAQAD2acxG6740EYT4UagKXEU-ZFrDDAABPUd8ym4FCHpbjkBAAEC',
-    'paraiso-dark': 'AgADAQADBKgxG2L70UY7DpabDNR0k68sAzAABEXw70NhrDkAAVwQAgABAg',
-    'paraiso-light': 'AgADAQADBagxG2L70UaVnuFyHbb831NmAzAABG_AdzOOepiiLR8AAgI',
-    'perldoc': 'AgADAQAD2qcxG6740EYtInOr7Xauq1J1DDAABJM5f6Za8wOdsD8BAAEC',
-    'tango': 'AgADAQADBqgxG2L70UaSs0z6tj6N4-qxCjAABId5KwXH50Q_IWgAAgI',
-    'vim': 'AgADAQADB6gxG2L70UbfCMU2Gcd6dKorAzAABKwFyXeR7JAdZggCAAEC',
-    'vs': 'AgADAQADCKgxG2L70UaAkQGpD3sdZ_ca9y8ABHP076VPTwNdI9gCAAEC',
-    'xcode': 'AgADAQADCagxG2L70UYzS2l7HpqH1WbsCjAABGFru9UH8jXMdR8AAgI'
+    'fruity': 'AgADAQAD16cxG6740EbLRtkzb4IjE2N9DDAABP12cwlgnA3FbUIBAAEC',
+    'monokai': 'AgADAQAD2KcxG6740EbUclJ3FAZihZzuCjAABPFe3tdMfu9Aih4AAgI',
+    'native': 'AgADAQAD2acxG6740EZXZlZ6Mcu9jJFrDDAABPUd8ym4FCHpbjkBAAEC',
+    'paraiso-dark': 'AgADAQADBKgxG2L70UZ9oGAV3e3mEK8sAzAABEXw70NhrDkAAVwQAgABAg',
+    'paraiso-light': 'AgADAQADBagxG2L70UbCrGikx5AIk1NmAzAABG_AdzOOepiiLR8AAgI',
+    'perldoc': 'AgADAQAD2qcxG6740EZfoPhbCzL-flJ1DDAABJM5f6Za8wOdsD8BAAEC',
+    'tango': 'AgADAQADBqgxG2L70UbZ31ds6VjfJuqxCjAABId5KwXH50Q_IWgAAgI',
+    'vim': 'AgADAQADB6gxG2L70UbXgz-9lLxTHKorAzAABKwFyXeR7JAdZggCAAEC',
+    'vs': 'AgADAQADCKgxG2L70UZZOnXzVkGNxfca9y8ABHP076VPTwNdI9gCAAEC',
+    'xcode': 'AgADAQADCagxG2L70Ub_89UsAAGWzL1m7AowAARha7vVB_I1zHUfAAIC'
 }
 
 
@@ -143,8 +143,7 @@ def browse_themes(message):
     LOG.msg(
         "browsing themes",
         user_id=message.from_user.id,
-        user_first_name=message.from_user.first_name,
-        chat_id=message.chat.id
+        user_first_name=message.from_user.first_name
     )
     BOT.send_media_group(
         message.chat.id,
@@ -228,6 +227,11 @@ def set_snippet_filetype(cb_query):
     theme = USER_THEMES.get(cb_query.message.reply_to_message.from_user.id, 'native')
     send_html(snippet, data['ext'], theme)
     send_image(snippet, data['ext'], theme)
+
+
+@BOT.message_handler(content_types=['photo'])
+def recv_photo(message):
+    LOG.msg('received photo', file_id=message.photo[0].file_id)
 
 
 if __name__ == '__main__':
