@@ -5,12 +5,15 @@ import pygments
 import strictyaml
 import structlog
 
+from peewee import IntegerField, CharField
+from playhouse.kv import KeyValue
+from playhouse.apsw_ext import APSWDatabase
 from pygments import formatters, lexers
 from telebot import TeleBot
 from telebot.apihelper import ApiException
-from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
+from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup, Message, InputMediaPhoto
 
-from vault import TG_API_KEY
+from vault import TG_API_KEY, ADMIN_CHAT_ID
 
 
 LANG = {
@@ -22,11 +25,57 @@ LANG = {
         "Fantastic! What type of code is this?\n\n"
         "To add more types, message @andykluger."
     ),
-    'switch to direct': "Let's color some code!"
+    'switch to direct': "Let's color some code!",
+    'select theme': "Which theme should we use?",
+    'acknowledge theme': "Right on, your theme is now {}!"
 }
 
 
+THEME_PREVIEWS = {
+    'fruity': 'AgADAQAD16cxG6740EbJBJkibn0eXmN9DDAABP12cwlgnA3FbUIBAAEC',
+    'monokai': 'AgADAQAD2KcxG6740Eb_OHvxwUT6AAGc7gowAATxXt7XTH7vQIoeAAIC',
+    'native': 'AgADAQAD2acxG6740EYT4UagKXEU-ZFrDDAABPUd8ym4FCHpbjkBAAEC',
+    'paraiso-dark': 'AgADAQADBKgxG2L70UY7DpabDNR0k68sAzAABEXw70NhrDkAAVwQAgABAg',
+    'paraiso-light': 'AgADAQADBagxG2L70UaVnuFyHbb831NmAzAABG_AdzOOepiiLR8AAgI',
+    'perldoc': 'AgADAQAD2qcxG6740EYtInOr7Xauq1J1DDAABJM5f6Za8wOdsD8BAAEC',
+    'tango': 'AgADAQADBqgxG2L70UaSs0z6tj6N4-qxCjAABId5KwXH50Q_IWgAAgI',
+    'vim': 'AgADAQADB6gxG2L70UbfCMU2Gcd6dKorAzAABKwFyXeR7JAdZggCAAEC',
+    'vs': 'AgADAQADCKgxG2L70UaAkQGpD3sdZ_ca9y8ABHP076VPTwNdI9gCAAEC',
+    'xcode': 'AgADAQADCagxG2L70UYzS2l7HpqH1WbsCjAABGFru9UH8jXMdR8AAgI'
+}
+
+
+SYNTAXES = (
+    ('Bash', 'sh'),
+    ('C#', 'csharp'),
+    ('C', 'c'),
+    ('CSS', 'css'),
+    ('Go', 'go'),
+    ('HTML', 'html'),
+    ('Java', 'java'),
+    ('JavaScript', 'js'),
+    ('JSON', 'json'),
+    ('Kotlin', 'kotlin'),
+    ('NGINX', 'nginx'),
+    ('Objective C', 'objc'),
+    ('PHP', 'php'),
+    ('Python', 'py3'),
+    ('Ruby', 'rb'),
+    ('Rust', 'rust'),
+    ('Swift', 'swift')
+)
+
+
+USER_THEMES = KeyValue(
+    key_field=IntegerField(primary_key=True),
+    value_field=CharField(),
+    database=APSWDatabase('user_themes.sqlite')
+)
+
+
 LOG = structlog.get_logger()
+
+
 BOT = TeleBot(TG_API_KEY)
 
 
@@ -89,6 +138,44 @@ def welcome(message):
     BOT.reply_to(message, LANG['welcome'])
 
 
+@BOT.message_handler(commands=['theme', 'themes'])
+def browse_themes(message):
+    LOG.msg(
+        "browsing themes",
+        user_id=message.from_user.id,
+        user_first_name=message.from_user.first_name,
+        chat_id=message.chat.id
+    )
+    BOT.send_media_group(
+        message.chat.id,
+        map(InputMediaPhoto, THEME_PREVIEWS.values()),
+        reply_to_message_id=message.message_id
+    )
+    kb = InlineKeyboardMarkup()
+    kb.add(*(
+        InlineKeyboardButton(
+            name, callback_data=ydump({'action': 'set theme', 'theme': name})
+        ) for name in THEME_PREVIEWS.keys()
+    ))
+    BOT.reply_to(message, LANG['select theme'], reply_markup=kb)
+
+
+@BOT.callback_query_handler(lambda q: yload(q.data)['action'] == 'set theme')
+def set_theme(cb_query):
+    data = yload(cb_query.data)
+    LOG.msg(
+        "setting theme",
+        user_id=cb_query.message.reply_to_message.from_user.id,
+        user_first_name=cb_query.message.reply_to_message.from_user.first_name,
+        theme=data['theme']
+    )
+    USER_THEMES[cb_query.message.reply_to_message.from_user.id] = data['theme']
+    BOT.reply_to(cb_query.message, LANG['acknowledge theme'].format(data['theme']))
+    if ADMIN_CHAT_ID:
+        with open('user_themes.sqlite', 'rb') as doc:
+            BOT.send_document(ADMIN_CHAT_ID, doc)
+
+
 @BOT.message_handler(func=lambda m: m.content_type == 'text')
 def intake_snippet(message):
     LOG.msg(
@@ -100,25 +187,7 @@ def intake_snippet(message):
     kb.add(*(
         InlineKeyboardButton(
             name, callback_data=ydump({'action': 'set ext', 'ext': ext})
-        ) for name, ext in (
-            ('Bash', 'sh'),
-            ('C#', 'csharp'),
-            ('C', 'c'),
-            ('CSS', 'css'),
-            ('Go', 'go'),
-            ('HTML', 'html'),
-            ('Java', 'java'),
-            ('JavaScript', 'js'),
-            ('JSON', 'json'),
-            ('Kotlin', 'kotlin'),
-            ('NGINX', 'nginx'),
-            ('Objective C', 'objc'),
-            ('PHP', 'php'),
-            ('Python', 'py3'),
-            ('Ruby', 'rb'),
-            ('Rust', 'rust'),
-            ('Swift', 'swift')
-        )
+        ) for name, ext in SYNTAXES
     ))
     BOT.reply_to(message, LANG['query ext'], reply_markup=kb)
 
@@ -156,8 +225,9 @@ def set_snippet_filetype(cb_query):
         syntax=data['ext']
     )
     snippet = cb_query.message.reply_to_message
-    send_html(snippet, data['ext'])
-    send_image(snippet, data['ext'])
+    theme = USER_THEMES.get(cb_query.message.reply_to_message.from_user.id, 'native')
+    send_html(snippet, data['ext'], theme)
+    send_image(snippet, data['ext'], theme)
 
 
 if __name__ == '__main__':
