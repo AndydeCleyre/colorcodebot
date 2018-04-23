@@ -19,7 +19,8 @@ from vault import TG_API_KEY, ADMIN_CHAT_ID
 LANG = {
     'welcome': (
         "Hello! Send me a snippet of code as your message text, "
-        "and I'll send you a colorized HTML file."
+        "and I'll send you a colorized HTML file.\n\n"
+        "Don't like the theme? Pick another, with /theme !"
     ),
     'query ext': (
         "Fantastic! What type of code is this?\n\n"
