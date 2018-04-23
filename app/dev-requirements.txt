@@ -1,1 +1,16 @@
+backcall==0.1.0           # via ipython
 colorama==0.3.9
+decorator==4.3.0          # via ipython, traitlets
+ipython-genutils==0.2.0   # via traitlets
+ipython==6.3.1
+jedi==0.12.0              # via ipython
+parso==0.2.0              # via jedi
+pexpect==4.5.0            # via ipython
+pickleshare==0.7.4        # via ipython
+prompt-toolkit==1.0.15    # via ipython
+ptyprocess==0.5.2         # via pexpect
+pygments==2.2.0           # via ipython
+simplegeneric==0.8.1      # via ipython
+six==1.11.0               # via prompt-toolkit, traitlets
+traitlets==4.3.2          # via ipython
+wcwidth==0.1.7            # via prompt-toolkit
