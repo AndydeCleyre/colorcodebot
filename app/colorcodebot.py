@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 import io
+from time import time
 
 import strictyaml
 import structlog
-
 from peewee import IntegerField, CharField
 from playhouse.kv import KeyValue
 from playhouse.apsw_ext import APSWDatabase
@@ -24,14 +24,11 @@ def ydump(data: dict) -> str:
 with open('vault.yml', 'r') as y:
     data = yload(y.read())
 TG_API_KEY = data['TG_API_KEY']
-ADMIN_CHAT_ID = data['ADMIN_CHAT_ID']
-
+ADMIN_CHAT_ID = data.get('ADMIN_CHAT_ID')
 with open('theme_previews.yml', 'r') as y:
     THEME_PREVIEWS = yload(y.read())
-
 with open('english.yml', 'r') as y:
     LANG = yload(y.read())
-
 with open('syntaxes.yml', 'r') as y:
     SYNTAXES = yload(y.read())
 
@@ -151,7 +148,9 @@ def intake_snippet(message):
 
 def send_html(snippet: Message, ext: str, theme: str='native'):
     bot.send_chat_action(snippet.chat.id, 'upload_document')
+    start = time()
     html = mk_html(snippet.text, ext, theme)
+    log.msg('completed mk_html', seconds=time() - start)
     with io.StringIO(html) as doc:
         doc.name = 'code.html'
         bot.send_document(snippet.chat.id, doc, reply_to_message_id=snippet.message_id)
@@ -159,7 +158,9 @@ def send_html(snippet: Message, ext: str, theme: str='native'):
 
 def send_image(snippet: Message, ext: str, theme: str='native', max_lines_for_compressed: int=80):
     bot.send_chat_action(snippet.chat.id, 'upload_photo')
+    start = time()
     png = mk_png(snippet.text, ext, theme)
+    log.msg('completed mk_png', seconds=time() - start)
     with io.BytesIO(png) as doc:
         doc.name = 'code.png'
         if snippet.text.count('\n') <= max_lines_for_compressed:
