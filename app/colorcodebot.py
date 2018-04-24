@@ -63,7 +63,8 @@ SYNTAXES = (
     ('Python', 'py3'),
     ('Ruby', 'rb'),
     ('Rust', 'rust'),
-    ('Swift', 'swift')
+    ('Swift', 'swift'),
+    ('XML', 'xml')
 )
 
 
