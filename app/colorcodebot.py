@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import io
+from pathlib import Path
 from time import time
 
 import strictyaml
@@ -21,16 +22,19 @@ def ydump(data: dict) -> str:
     return strictyaml.as_document(data).as_yaml()
 
 
-with open('vault.yml', 'r') as y:
+home = Path(__file__).parent
+with open(home / 'vault.yml', 'r') as y:
     data = yload(y.read())
 TG_API_KEY = data['TG_API_KEY']
 ADMIN_CHAT_ID = data.get('ADMIN_CHAT_ID')
-with open('theme_previews.yml', 'r') as y:
+del data
+with open(home / 'theme_previews.yml', 'r') as y:
     THEME_PREVIEWS = yload(y.read())
-with open('english.yml', 'r') as y:
+with open(home / 'english.yml', 'r') as y:
     LANG = yload(y.read())
-with open('syntaxes.yml', 'r') as y:
+with open(home / 'syntaxes.yml', 'r') as y:
     SYNTAXES = yload(y.read())
+del home
 
 
 user_themes = KeyValue(
