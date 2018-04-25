@@ -1,5 +1,6 @@
 # python 3
 apsw    # used by peewee
+joblib
 peewee
 pillow  # used by pygments
 pygments
