@@ -3,6 +3,7 @@ import io
 from pathlib import Path
 from time import time
 
+from joblib import Parallel, delayed
 import strictyaml
 import structlog
 from peewee import IntegerField, CharField
@@ -188,8 +189,9 @@ def set_snippet_filetype(cb_query):
     )
     snippet = cb_query.message.reply_to_message
     theme = user_themes.get(cb_query.message.reply_to_message.from_user.id, 'native')
-    send_html(snippet, data['ext'], theme)
-    send_image(snippet, data['ext'], theme)
+    Parallel(n_jobs=2, backend="threading")(
+        delayed(snd)(snippet, data['ext'], theme) for snd in (send_html, send_image)
+    )
 
 
 @bot.message_handler(content_types=['photo'])
