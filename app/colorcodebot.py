@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import io
 from pathlib import Path
-from time import time
 
 from joblib import Parallel, delayed
 import strictyaml
@@ -23,19 +22,15 @@ def ydump(data: dict) -> str:
     return strictyaml.as_document(data).as_yaml()
 
 
-home = Path(__file__).parent
-with open(home / 'vault.yml', 'r') as y:
-    data = yload(y.read())
-TG_API_KEY = data['TG_API_KEY']
-ADMIN_CHAT_ID = data.get('ADMIN_CHAT_ID')
-del data
-with open(home / 'theme_previews.yml', 'r') as y:
-    THEME_PREVIEWS = yload(y.read())
-with open(home / 'english.yml', 'r') as y:
-    LANG = yload(y.read())
-with open(home / 'syntaxes.yml', 'r') as y:
-    SYNTAXES = yload(y.read())
-del home
+appdir = Path(__file__).parent
+THEME_PREVIEWS    = yload((appdir / 'theme_previews.yml').read_text())
+LANG              = yload((appdir / 'english.yml').read_text())
+SYNTAXES          = yload((appdir / 'syntaxes.yml').read_text())
+secrets           = yload((appdir / 'vault.yml').read_text())
+del appdir
+TG_API_KEY = secrets['TG_API_KEY']
+ADMIN_CHAT_ID = secrets.get('ADMIN_CHAT_ID')
+del secrets
 
 
 user_themes = KeyValue(
@@ -49,7 +44,8 @@ bot = TeleBot(TG_API_KEY)
 
 def mk_html(code: str, ext: str, theme: str='native') -> str:
     """Return HTML content"""
-    return highlight(
+    log.msg('started mk_html')
+    html = highlight(
         code,
         lexers.get_lexer_by_name(ext),
         formatters.HtmlFormatter(
@@ -58,11 +54,14 @@ def mk_html(code: str, ext: str, theme: str='native') -> str:
             style=theme
         )
     )
+    log.msg('completed mk_html')
+    return html
 
 
 def mk_png(code: str, ext: str, theme: str='native') -> str:
     """Return path of generated png"""
-    return highlight(
+    log.msg('started mk_png')
+    png = highlight(
         code,
         lexers.get_lexer_by_name(ext),
         formatters.ImageFormatter(
@@ -72,6 +71,8 @@ def mk_png(code: str, ext: str, theme: str='native') -> str:
             style=theme
         )
     )
+    log.msg('completed mk_png')
+    return png
 
 
 @bot.inline_handler(lambda q: True)
@@ -153,9 +154,7 @@ def intake_snippet(message):
 
 def send_html(snippet: Message, ext: str, theme: str='native'):
     bot.send_chat_action(snippet.chat.id, 'upload_document')
-    start = time()
     html = mk_html(snippet.text, ext, theme)
-    log.msg('completed mk_html', seconds=time() - start)
     with io.StringIO(html) as doc:
         doc.name = 'code.html'
         bot.send_document(snippet.chat.id, doc, reply_to_message_id=snippet.message_id)
@@ -163,9 +162,7 @@ def send_html(snippet: Message, ext: str, theme: str='native'):
 
 def send_image(snippet: Message, ext: str, theme: str='native', max_lines_for_compressed: int=80):
     bot.send_chat_action(snippet.chat.id, 'upload_photo')
-    start = time()
     png = mk_png(snippet.text, ext, theme)
-    log.msg('completed mk_png', seconds=time() - start)
     with io.BytesIO(png) as doc:
         doc.name = 'code.png'
         if snippet.text.count('\n') <= max_lines_for_compressed:
@@ -190,7 +187,8 @@ def set_snippet_filetype(cb_query):
     snippet = cb_query.message.reply_to_message
     theme = user_themes.get(cb_query.message.reply_to_message.from_user.id, 'native')
     Parallel(n_jobs=2, backend="threading")(
-        delayed(snd)(snippet, data['ext'], theme) for snd in (send_html, send_image)
+        delayed(snd)(snippet, data['ext'], theme)
+        for snd in (send_html, send_image)
     )
 
 
