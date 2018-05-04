@@ -13,7 +13,8 @@ sudo -E buildah run $ccb -- rm -rf /home/$appname/__pycache__ /home/$appname/ven
 
 # strip sensitive data, if directed to:
 if [ $1 = "--no-vault" ]; then
-  sudo -E buildah run $ccb -- rm /home/$appname/vault.yml
+  sudo -E buildah run $ccb -- rm -f /home/$appname/vault.yml
+  sudo -E buildah run $ccb -- rm -f /home/$appname/user_themes.sqlite
 fi
 
 # update packages; install runtime and build-time dependencies:
