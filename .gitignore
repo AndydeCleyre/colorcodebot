@@ -1,4 +1,5 @@
 vault.yml
 venv
+log_files.yml
 __pycache__
 user_themes.sqlite
