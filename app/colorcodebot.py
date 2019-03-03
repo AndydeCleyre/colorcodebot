@@ -2,7 +2,6 @@
 import io
 from pathlib import Path
 
-# from joblib import Parallel, delayed
 import strictyaml
 import structlog
 from peewee import IntegerField, CharField
@@ -11,7 +10,12 @@ from playhouse.apsw_ext import APSWDatabase
 from pygments import formatters, lexers, highlight
 from telebot import TeleBot
 from telebot.apihelper import ApiException
-from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup, Message, InputMediaPhoto
+from telebot.types import (
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    Message,
+    InputMediaPhoto
+)
 
 
 def yload(yamltxt: str) -> dict:
@@ -20,6 +24,31 @@ def yload(yamltxt: str) -> dict:
 
 def ydump(data: dict) -> str:
     return strictyaml.as_document(data).as_yaml()
+
+
+def load_configs() -> {
+    'lang': {str: str},
+    'theme_image_ids': [str],
+    'kb': {str: InlineKeyboardMarkup},
+    'secrets': {str: str}
+}:
+    data = {}
+    data['lang'], secrets, theme_names_ids, syntax_names_exts = (
+        yload((Path(__file__).parent / f'{yml}.yml').read_text())
+        for yml in ('english', 'vault', 'theme_previews', 'syntaxes')
+    )
+    data['secrets'] = secrets
+    data['theme_image_ids'] = tuple(theme_names_ids.values())
+    kb_theme = InlineKeyboardMarkup()
+    kb_theme.add(*(InlineKeyboardButton(
+        name, callback_data=ydump({'action': 'set theme', 'theme': name})
+    ) for name in theme_names_ids.keys()))
+    kb_syntax = InlineKeyboardMarkup()
+    kb_syntax.add(*(InlineKeyboardButton(
+        name, callback_data=ydump({'action': 'set ext', 'ext': ext})
+    ) for name, ext in syntax_names_exts.items()))
+    data['kb'] = {'theme': kb_theme, 'syntax': kb_syntax}
+    return data
 
 
 def mk_html(code: str, ext: str, theme: str='native') -> str:
@@ -49,31 +78,50 @@ def mk_png(code: str, ext: str, theme: str='native') -> str:
     )
 
 
+def minikb(kb_name: str):
+    kb = InlineKeyboardMarkup()
+    kb.add(InlineKeyboardButton(
+        '. . .', callback_data=ydump({'action': 'restore', 'kb_name': kb_name})
+    ))
+    return kb
+
+
 class ColorCodeBot:
 
-    def __init__(self, api_key: str, *args, admin_chat_id: {str, None}=None, **kwargs):
-        self.bot = TeleBot(api_key, *args, **kwargs)
-        self.ADMIN_CHAT_ID = admin_chat_id
-        appdir = Path(__file__).parent
-        self.THEME_PREVIEWS = yload((appdir / 'theme_previews.yml').read_text())
-        self.LANG = yload((appdir / 'english.yml').read_text())
-        self.SYNTAXES = yload((appdir / 'syntaxes.yml').read_text())
-        self.log = structlog.get_logger()
+    def __init__(
+        self,
+        api_key: str,
+        lang: {str: str},
+        theme_image_ids: [str],
+        keyboards: {str: InlineKeyboardMarkup},
+        *args,
+        admin_chat_id: {str, None}=None,
+        db_path: str='user_themes.sqlite',
+        **kwargs
+    ):
+        self.lang = lang
+        self.theme_image_ids = theme_image_ids
+        self.kb = keyboards
+        self.admin_chat_id = admin_chat_id
+        self.db_path = db_path
         self.user_themes = KeyValue(
             key_field=IntegerField(primary_key=True),
             value_field=CharField(),
-            database=APSWDatabase('user_themes.sqlite')
+            database=APSWDatabase(db_path)
         )
+        self.log = structlog.get_logger()
+        self.bot = TeleBot(api_key, *args, **kwargs)
         self.register_handlers()
 
     def register_handlers(self):
-        self.switch_from_inline = self.bot.inline_handler(lambda q: True)(self.switch_from_inline)
-        self.welcome = self.bot.message_handler(commands=['start', 'help'])(self.welcome)
-        self.browse_themes = self.bot.message_handler(commands=['theme', 'themes'])(self.browse_themes)
-        self.set_theme = self.bot.callback_query_handler(lambda q: yload(q.data)['action'] == 'set theme')(self.set_theme)
-        self.intake_snippet = self.bot.message_handler(func=lambda m: m.content_type == 'text')(self.intake_snippet)
+        self.welcome              = self.bot.message_handler(commands=['start', 'help'])(self.welcome)
+        self.browse_themes        = self.bot.message_handler(commands=['theme', 'themes'])(self.browse_themes)
+        self.intake_snippet       = self.bot.message_handler(func=lambda m: m.content_type == 'text')(self.intake_snippet)
+        self.recv_photo           = self.bot.message_handler(content_types=['photo'])(self.recv_photo)
+        self.switch_from_inline   = self.bot.inline_handler(lambda q: True)(self.switch_from_inline)
+        self.restore_kb           = self.bot.callback_query_handler(lambda q: yload(q.data)['action'] == 'restore')(self.restore_kb)
         self.set_snippet_filetype = self.bot.callback_query_handler(lambda q: yload(q.data)['action'] == 'set ext')(self.set_snippet_filetype)
-        self.recv_photo = self.bot.message_handler(content_types=['photo'])(self.recv_photo)
+        self.set_theme            = self.bot.callback_query_handler(lambda q: yload(q.data)['action'] == 'set theme')(self.set_theme)
 
     def switch_from_inline(self, inline_query):
         self.log.msg(
@@ -84,7 +132,8 @@ class ColorCodeBot:
         )
         self.bot.answer_inline_query(
             inline_query.id, [],
-            switch_pm_text=self.LANG['switch to direct'], switch_pm_parameter='x'
+            switch_pm_text=self.lang['switch to direct'],
+            switch_pm_parameter='x'
         )
 
     def welcome(self, message):
@@ -93,7 +142,7 @@ class ColorCodeBot:
             user_id=message.from_user.id,
             user_first_name=message.from_user.first_name
         )
-        self.bot.reply_to(message, self.LANG['welcome'])
+        self.bot.reply_to(message, self.lang['welcome'])
 
     def browse_themes(self, message):
         self.log.msg(
@@ -103,16 +152,14 @@ class ColorCodeBot:
         )
         self.bot.send_media_group(
             message.chat.id,
-            map(InputMediaPhoto, self.THEME_PREVIEWS.values()),
+            map(InputMediaPhoto, self.theme_image_ids),
             reply_to_message_id=message.message_id
         )
-        kb = InlineKeyboardMarkup()
-        kb.add(*(
-            InlineKeyboardButton(
-                name, callback_data=ydump({'action': 'set theme', 'theme': name})
-            ) for name in self.THEME_PREVIEWS.keys()
-        ))
-        self.bot.reply_to(message, self.LANG['select theme'], reply_markup=kb)
+        self.bot.reply_to(
+            message,
+            self.lang['select theme'],
+            reply_markup=self.kb['theme']
+        )
 
     def set_theme(self, cb_query):
         data = yload(cb_query.data)
@@ -123,10 +170,13 @@ class ColorCodeBot:
             theme=data['theme']
         )
         self.user_themes[cb_query.message.reply_to_message.from_user.id] = data['theme']
-        self.bot.reply_to(cb_query.message, self.LANG['acknowledge theme'].format(data['theme']))
-        if self.ADMIN_CHAT_ID:
-            with open('user_themes.sqlite', 'rb') as doc:
-                self.bot.send_document(self.ADMIN_CHAT_ID, doc)
+        self.bot.reply_to(
+            cb_query.message,
+            self.lang['acknowledge theme'].format(data['theme'])
+        )
+        if self.admin_chat_id:
+            with open(self.db_path, 'rb') as doc:
+                self.bot.send_document(self.admin_chat_id, doc)
 
     def intake_snippet(self, message):
         self.log.msg(
@@ -134,13 +184,13 @@ class ColorCodeBot:
             user_id=message.from_user.id,
             user_first_name=message.from_user.first_name
         )
-        kb = InlineKeyboardMarkup()
-        kb.add(*(
-            InlineKeyboardButton(
-                name, callback_data=ydump({'action': 'set ext', 'ext': ext})
-            ) for name, ext in self.SYNTAXES.items()
-        ))
-        self.bot.reply_to(message, self.LANG['query ext'], reply_markup=kb)
+        self.bot.reply_to(
+            message,
+            self.lang['query ext'],
+            reply_markup=self.kb['syntax'],
+            parse_mode='Markdown',
+            disable_web_page_preview=True
+        )
 
     def send_html(self, snippet: Message, ext: str, theme: str='native'):
         self.bot.send_chat_action(snippet.chat.id, 'upload_document')
@@ -149,9 +199,19 @@ class ColorCodeBot:
         self.log.msg('completed mk_html')
         with io.StringIO(html) as doc:
             doc.name = 'code.html'
-            self.bot.send_document(snippet.chat.id, doc, reply_to_message_id=snippet.message_id)
+            self.bot.send_document(
+                snippet.chat.id,
+                doc,
+                reply_to_message_id=snippet.message_id
+            )
 
-    def send_image(self, snippet: Message, ext: str, theme: str='native', max_lines_for_compressed: int=80):
+    def send_image(
+        self,
+        snippet: Message,
+        ext: str,
+        theme: str='native',
+        max_lines_for_compressed: int=12
+    ):
         self.bot.send_chat_action(snippet.chat.id, 'upload_photo')
         self.log.msg('started mk_png')
         png = mk_png(snippet.text, ext, theme)
@@ -160,12 +220,32 @@ class ColorCodeBot:
             doc.name = 'code.png'
             if snippet.text.count('\n') <= max_lines_for_compressed:
                 try:
-                    self.bot.send_photo(snippet.chat.id, doc, reply_to_message_id=snippet.message_id)
+                    self.bot.send_photo(
+                        snippet.chat.id,
+                        doc,
+                        reply_to_message_id=snippet.message_id
+                    )
                 except ApiException as e:
                     self.log.error("failed to send compressed image", exc_info=e)
-                    self.bot.send_document(snippet.chat.id, doc, reply_to_message_id=snippet.message_id)
+                    self.bot.send_document(
+                        snippet.chat.id,
+                        doc,
+                        reply_to_message_id=snippet.message_id
+                    )
             else:
-                self.bot.send_document(snippet.chat.id, doc, reply_to_message_id=snippet.message_id)
+                self.bot.send_document(
+                    snippet.chat.id,
+                    doc,
+                    reply_to_message_id=snippet.message_id
+                )
+
+    def restore_kb(self, cb_query):
+        data = yload(cb_query.data)
+        self.bot.edit_message_reply_markup(
+            cb_query.message.chat.id,
+            cb_query.message.message_id,
+            reply_markup=self.kb[data['kb_name']]
+        )
 
     def set_snippet_filetype(self, cb_query):
         data = yload(cb_query.data)
@@ -175,12 +255,13 @@ class ColorCodeBot:
             user_first_name=cb_query.message.reply_to_message.from_user.first_name,
             syntax=data['ext']
         )
+        self.bot.edit_message_reply_markup(
+            cb_query.message.chat.id,
+            cb_query.message.message_id,
+            reply_markup=minikb('syntax')
+        )
         snippet = cb_query.message.reply_to_message
         theme = self.user_themes.get(cb_query.message.reply_to_message.from_user.id, 'native')
-        # Parallel(n_jobs=2, backend="threading")(
-        #     delayed(snd)(snippet, data['ext'], theme)
-        #     for snd in (self.send_html, self.send_image)
-        # )
         self.send_html(snippet, data['ext'], theme)
         self.send_image(snippet, data['ext'], theme)
 
@@ -189,6 +270,11 @@ class ColorCodeBot:
 
 
 if __name__ == '__main__':
-    secrets = yload((Path(__file__).parent / 'vault.yml').read_text())
-    ColorCodeBot(secrets['TG_API_KEY'], admin_chat_id=secrets['ADMIN_CHAT_ID']).bot.polling()
-
+    cfg = load_configs()
+    ColorCodeBot(
+        api_key=cfg['secrets']['TG_API_KEY'],
+        admin_chat_id=cfg['secrets'].get('ADMIN_CHAT_ID'),
+        lang=cfg['lang'],
+        theme_image_ids=cfg['theme_image_ids'],
+        keyboards=cfg['kb'],
+    ).bot.polling()
