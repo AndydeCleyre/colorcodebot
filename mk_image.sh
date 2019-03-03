@@ -1,41 +1,43 @@
 #!/bin/sh -e
 appname="colorcodebot"
-version="0.1"
+version="0.2"
 pyver="3.6"
-ccb=`sudo buildah from alpine:3.7`
+ctnr=`buildah from alpine:3.9`
+runtime_deps="fontconfig jpeg python3 s6"
+buildtime_deps="freetype-dev gcc jpeg-dev musl-dev python3-dev"
+
+alias bldr="buildah run $ctnr --"
 
 # copy app into container:
-sudo -E buildah run $ccb -- adduser -D $appname
-sudo -E buildah add --chown $appname:$appname $ccb app /home/$appname/
+bldr adduser -D $appname
+buildah add --chown $appname:$appname $ctnr app /home/$appname
 
 # prune junk from build-host, if found:
-sudo -E buildah run $ccb -- rm -rf /home/$appname/__pycache__ /home/$appname/venv
+bldr rm -rf /home/$appname/__pycache__ /home/$appname/venv
 
 # strip sensitive data, if directed to:
 if [ $1 = "--no-vault" ]; then
-  sudo -E buildah run $ccb -- rm -f /home/$appname/vault.yml
-  sudo -E buildah run $ccb -- rm -f /home/$appname/user_themes.sqlite
+  bldr rm -f /home/$appname/vault.yml
+  bldr rm -f /home/$appname/user_themes.sqlite
 fi
 
-# update packages; install runtime and build-time dependencies:
-sudo -E buildah run $ccb -- apk update
-sudo -E buildah run $ccb -- apk upgrade
-sudo -E buildah run $ccb -- apk add fontconfig freetype jpeg python3 s6 zlib
-sudo -E buildah run $ccb -- apk add freetype-dev gcc jpeg-dev musl-dev python3-dev zlib-dev
+# upgrade packages; install runtime and build-time dependencies:
+bldr apk upgrade
+bldr apk add $runtime_deps $buildtime_deps
 
 # install python modules; patch pygments:
-sudo -E buildah run $ccb -- pip3 install -U -r /home/$appname/requirements.txt
-sudo -E buildah run $ccb -- sed -i 's/background-color: #f0f0f0; //g' /usr/lib/python$pyver/site-packages/pygments/formatters/html.py
+bldr pip3 install -Ur /home/$appname/requirements.txt
+bldr sed -i 's/background-color: #f0f0f0; //g' /usr/lib/python$pyver/site-packages/pygments/formatters/html.py
 
 # install fonts:
-sudo -E buildah run $ccb -- mkdir -p /usr/share/fonts/TTF
-sudo -E buildah add $ccb /usr/share/fonts/TTF/iosevka-custom-{regular,italic,bold}.ttf /usr/share/fonts/TTF
+bldr mkdir -p /usr/share/fonts/TTF
+buildah add $ctnr /usr/share/fonts/TTF/iosevka-custom-{regular,italic,bold}.ttf /usr/share/fonts/TTF
 
 # cut the fat:
-sudo -E buildah run $ccb -- apk del freetype-dev gcc jpeg-dev musl-dev python3-dev zlib-dev
-sudo -E buildah run $ccb -- find /var/cache/apk -type f -delete
-sudo -E buildah run $ccb -- rm -rf /root/.cache
+bldr apk del $buildtime_deps
+bldr find /var/cache/apk -type f -delete
+bldr rm -rf /root/.cache
 
 # set default command; commit container to image; remove container:
-sudo -E buildah config --cmd "s6-svscan /home/$appname/svcs" $ccb
-sudo -E buildah commit --rm $ccb $appname:$version
+buildah config --cmd "s6-svscan /home/$appname/svcs" $ctnr
+buildah commit --rm $ctnr $appname:$version
