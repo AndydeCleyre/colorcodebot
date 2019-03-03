@@ -4,7 +4,7 @@ version="0.2.0"
 pyver="3.6"
 ctnr=`buildah from alpine:3.9`
 runtime_deps="fontconfig jpeg python3 s6"
-buildtime_deps="freetype-dev gcc jpeg-dev musl-dev python3-dev"
+buildtime_deps="tzdata freetype-dev gcc jpeg-dev musl-dev python3-dev"
 
 alias bldr="buildah run $ctnr --"
 
@@ -37,6 +37,11 @@ buildah add $ctnr /usr/share/fonts/TTF/iosevka-custom-{regular,italic,bold}.ttf 
 
 # install papertrail agent:
 bldr sh -c 'wget "https://github.com/papertrail/remote_syslog2/releases/download/v0.20/remote_syslog_linux_amd64.tar.gz" -O - | tar xzf - -C /usr/local/bin remote_syslog/remote_syslog --strip-components 1'
+
+# set the timezone:
+tz="America/New_York"
+bldr cp /usr/share/zoneinfo/$tz /etc/localtime
+bldr sh -c "echo $tz > /etc/timezone"
 
 # cut the fat:
 bldr apk del $buildtime_deps
