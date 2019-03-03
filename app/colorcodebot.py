@@ -153,11 +153,7 @@ class ColorCodeBot:
         self.bot.send_media_group(
             message.chat.id,
             map(InputMediaPhoto, self.theme_image_ids),
-            reply_to_message_id=message.message_id
-        )
-        self.bot.reply_to(
-            message,
-            self.lang['select theme'],
+            reply_to_message_id=message.message_id,
             reply_markup=self.kb['theme']
         )
 
