@@ -1,0 +1,4 @@
+#!/bin/execlineb -P
+fdmove -c 2 1                                         # Send stderr to stdout
+foreground { redirfd -w 1 run.md5 md5sum run }        # Generate hashfile, to detect changes since launch
+remote_syslog -D -c /home/colorcodebot/log_files.yml  # Do the thing

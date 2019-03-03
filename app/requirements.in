@@ -1,5 +1,8 @@
 # python 3
-plumbum
+peewee
+apsw    # for peewee
+pygments
+pillow  # for pygments
 pyTelegramBotAPI
 strictyaml
 structlog

@@ -1,0 +1,7 @@
+#!/bin/execlineb -P
+foreground { redirfd -w 1 run.md5 md5sum run }  # Generate hashfile, to detect changes since launch
+s6-log                                          # Receive process output
+  T                                             # Start each line with an ISO 8601 timestamp
+  s4194304                                      # Archive log when it gets this big (bytes)
+  S41943040                                     # Purge oldest archived logs when the archive gets this big (bytes)
+  /home/colorcodebot/svcs-logs/papertrail       # Store logs here

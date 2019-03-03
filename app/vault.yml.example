@@ -1,0 +1,3 @@
+TG_API_KEY: [redacted]     # required
+# TG_API_KEY: [redacted]   # for easy toggling of a secondary, development/testing bot
+ADMIN_CHAT_ID: [redacted]  # optional; will receive user_themes.sqlite backups
