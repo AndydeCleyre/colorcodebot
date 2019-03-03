@@ -1,2 +1,5 @@
 #!/bin/execlineb -P
-foreground { redirfd -w 1 run.md5 md5sum run } fdmove -c 2 1 s6-setuidgid colorcodebot /usr/bin/env python3 /home/colorcodebot/colorcodebot.py
+fdmove -c 2 1                                   # Send stderr to stdout
+foreground { redirfd -w 1 run.md5 md5sum run }  # Generate hashfile, to detect changes since launch
+s6-setuidgid colorcodebot                       # Run as this user
+/home/colorcodebot/colorcodebot.py              # Do the thing
