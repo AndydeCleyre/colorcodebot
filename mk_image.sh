@@ -3,7 +3,7 @@ appname="colorcodebot"
 version="0.2.0"
 pyver="3.6"
 ctnr=`buildah from alpine:3.9`
-runtime_deps="fontconfig jpeg python3 s6"
+runtime_deps="fontconfig jpeg python3 s6 ca-certificates"
 buildtime_deps="tzdata freetype-dev gcc jpeg-dev musl-dev python3-dev"
 
 alias bldr="buildah run $ctnr --"
