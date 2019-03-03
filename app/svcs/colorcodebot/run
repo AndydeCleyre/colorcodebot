@@ -2,4 +2,5 @@
 fdmove -c 2 1                                   # Send stderr to stdout
 foreground { redirfd -w 1 run.md5 md5sum run }  # Generate hashfile, to detect changes since launch
 s6-setuidgid colorcodebot                       # Run as this user
+cd /home/colorcodebot                           # Enter working directory
 /home/colorcodebot/colorcodebot.py              # Do the thing
