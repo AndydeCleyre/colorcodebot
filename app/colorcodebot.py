@@ -52,7 +52,7 @@ def load_configs() -> {
 
 
 def mk_html(code: str, ext: str, theme: str='native') -> str:
-    """Return HTML content"""
+    """Return generated HTML content"""
     return highlight(
         code,
         lexers.get_lexer_by_name(ext),
@@ -65,7 +65,7 @@ def mk_html(code: str, ext: str, theme: str='native') -> str:
 
 
 def mk_png(code: str, ext: str, theme: str='native') -> str:
-    """Return path of generated png"""
+    """Return generated PNG content"""
     return highlight(
         code,
         lexers.get_lexer_by_name(ext),
@@ -216,23 +216,27 @@ class ColorCodeBot:
         self.log.msg('started mk_png')
         png = mk_png(snippet.text, ext, theme)
         self.log.msg('completed mk_png')
-        with io.BytesIO(png) as doc:
-            doc.name = 'code.png'
-            if snippet.text.count('\n') <= max_lines_for_compressed:
-                try:
+        if snippet.text.count('\n') <= max_lines_for_compressed:
+            try:
+                with io.BytesIO(png) as doc:
+                    doc.name = 'code.png'
                     self.bot.send_photo(
                         snippet.chat.id,
                         doc,
                         reply_to_message_id=snippet.message_id
                     )
-                except ApiException as e:
-                    self.log.error("failed to send compressed image", exc_info=e)
+            except ApiException as e:
+                self.log.error("failed to send compressed image", exc_info=e)
+                with io.BytesIO(png) as doc:
+                    doc.name = 'code.png'
                     self.bot.send_document(
                         snippet.chat.id,
                         doc,
                         reply_to_message_id=snippet.message_id
                     )
-            else:
+        else:
+            with io.BytesIO(png) as doc:
+                doc.name = 'code.png'
                 self.bot.send_document(
                     snippet.chat.id,
                     doc,
