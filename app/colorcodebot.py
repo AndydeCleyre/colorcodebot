@@ -169,10 +169,15 @@ class ColorCodeBot:
             user_first_name=cb_query.message.reply_to_message.from_user.first_name,
             theme=data['theme']
         )
+        self.bot.edit_message_reply_markup(
+            cb_query.message.chat.id,
+            cb_query.message.message_id,
+            reply_markup=minikb('theme')
+        )
         self.user_themes[cb_query.message.reply_to_message.from_user.id] = data['theme']
-        self.bot.reply_to(
-            cb_query.message,
-            self.lang['acknowledge theme'].format(data['theme'])
+        self.bot.answer_callback_query(
+            cb_query.id,
+            text=self.lang['acknowledge theme'].format(data['theme'])
         )
         if self.admin_chat_id:
             with open(self.db_path, 'rb') as doc:
@@ -250,6 +255,7 @@ class ColorCodeBot:
             cb_query.message.message_id,
             reply_markup=self.kb[data['kb_name']]
         )
+        self.bot.answer_callback_query(cb_query.id)
 
     def set_snippet_filetype(self, cb_query):
         data = yload(cb_query.data)
@@ -268,6 +274,7 @@ class ColorCodeBot:
         theme = self.user_themes.get(cb_query.message.reply_to_message.from_user.id, 'native')
         self.send_html(snippet, data['ext'], theme)
         self.send_image(snippet, data['ext'], theme)
+        self.bot.answer_callback_query(cb_query.id)
 
     def recv_photo(self, message):
         self.log.msg('received photo', file_id=message.photo[0].file_id)
