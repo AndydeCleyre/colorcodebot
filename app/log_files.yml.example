@@ -4,4 +4,4 @@ files:
 destination:
   host: [redacted]
   port: [redacted]
-protocol: tls
+  protocol: tls
