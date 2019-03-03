@@ -169,6 +169,11 @@ class ColorCodeBot:
             user_first_name=cb_query.message.reply_to_message.from_user.first_name,
             theme=data['theme']
         )
+        self.bot.edit_message_reply_markup(
+            cb_query.message.chat.id,
+            cb_query.message.message_id,
+            reply_markup=minikb('theme')
+        )
         self.user_themes[cb_query.message.reply_to_message.from_user.id] = data['theme']
         self.bot.reply_to(
             cb_query.message,
