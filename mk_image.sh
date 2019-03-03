@@ -36,7 +36,7 @@ bldr mkdir -p /usr/share/fonts/TTF
 buildah add $ctnr /usr/share/fonts/TTF/iosevka-custom-{regular,italic,bold}.ttf /usr/share/fonts/TTF
 
 # install papertrail agent:
-bldr wget "https://github.com/papertrail/remote_syslog2/releases/download/v0.20/remote_syslog_linux_amd64.tar.gz" -O - | tar xzf - -C /usr/local/bin remote_syslog/remote_syslog --strip-components 1
+bldr sh -c 'wget "https://github.com/papertrail/remote_syslog2/releases/download/v0.20/remote_syslog_linux_amd64.tar.gz" -O - | tar xzf - -C /usr/local/bin remote_syslog/remote_syslog --strip-components 1'
 
 # cut the fat:
 bldr apk del $buildtime_deps
