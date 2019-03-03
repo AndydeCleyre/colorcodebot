@@ -1,0 +1,7 @@
+files:
+  - tag: colorcodebot
+    path: /home/colorcodebot/svcs-logs/colorcodebot/current
+destination:
+  host: [redacted]
+  port: [redacted]
+protocol: tls
