@@ -251,9 +251,7 @@ class ColorCodeBot:
     @retry(exceptions=ConnectionError, attempts=6, seconds=3)
     def send_html(self, snippet: Message, ext: str, theme: str='native'):
         self.bot.send_chat_action(snippet.chat.id, 'upload_document')
-        self.log.msg('started mk_html')
         html = mk_html(snippet.text, ext, theme)
-        self.log.msg('completed mk_html')
         with io.StringIO(html) as doc:
             doc.name = 'code.html'
             self.bot.send_document(
@@ -271,9 +269,7 @@ class ColorCodeBot:
         max_lines_for_compressed: int=12
     ):
         self.bot.send_chat_action(snippet.chat.id, 'upload_photo')
-        self.log.msg('started mk_png')  # todo: improve log detail for all started/completed
         png = mk_png(snippet.text, ext, theme)
-        self.log.msg('completed mk_png')
         if snippet.text.count('\n') <= max_lines_for_compressed:
             try:
                 with io.BytesIO(png) as doc:
