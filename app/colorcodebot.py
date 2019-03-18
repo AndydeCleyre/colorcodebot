@@ -123,11 +123,11 @@ def retry(
                 sleep(seconds)
             else:
                 last_error = None
-            finally:
-                log.msg("called retry-able", attempt=attempt, success=not last_error)
-                if last_error:
-                    raise last_error
-                return resp
+                break
+        log.msg("called retry-able", retries=attempt, success=not last_error)
+        if last_error:
+            raise last_error
+        return resp
     return wrapper
 
 
