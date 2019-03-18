@@ -8,9 +8,10 @@ from typing import (
     Iterable,
     List,
     Mapping,
-    OrderedDict,
+    # OrderedDict,  # python >=3.7 ?
     Union
 )
+from collections import OrderedDict  # python 3.6
 
 import strictyaml
 import structlog
