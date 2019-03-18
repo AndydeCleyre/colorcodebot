@@ -1,6 +1,6 @@
 #!/bin/sh -e
 appname="colorcodebot"
-version="0.2.2"
+version="0.2.3"
 pyver="3.6"
 ctnr=`buildah from alpine:3.9`
 runtime_deps="fontconfig jpeg python3 s6 ca-certificates"
