@@ -1,6 +1,16 @@
 #!/usr/bin/env python3
 import io
 from pathlib import Path
+from time import sleep
+from typing import (
+    Any,
+    Callable,
+    Iterable,
+    List,
+    Mapping,
+    OrderedDict,
+    Union
+)
 
 import strictyaml
 import structlog
@@ -8,29 +18,36 @@ from peewee import IntegerField, CharField
 from playhouse.kv import KeyValue
 from playhouse.apsw_ext import APSWDatabase
 from pygments import formatters, lexers, highlight
+from requests.exceptions import ConnectionError
 from telebot import TeleBot
 from telebot.apihelper import ApiException
 from telebot.types import (
+    CallbackQuery,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
-    Message,
-    InputMediaPhoto
+    InlineQuery,
+    InputMediaPhoto,
+    Message
 )
+from wrapt import decorator
 
 
-def yload(yamltxt: str) -> dict:
+WraptFunc = Callable[[Callable[..., Any], Any, Iterable, Mapping], Callable[..., Any]]
+
+
+def yload(yamltxt: str) -> Union[str, List, OrderedDict]:
     return strictyaml.load(yamltxt).data
 
 
-def ydump(data: dict) -> str:
+def ydump(data: Mapping) -> str:
     return strictyaml.as_document(data).as_yaml()
 
 
 def load_configs() -> {
-    'lang': {str: str},
-    'theme_image_ids': [str],
-    'kb': {str: InlineKeyboardMarkup},
-    'secrets': {str: str}
+    'lang': Mapping[str, str],
+    'theme_image_ids': Iterable[str],
+    'kb': Mapping[str, InlineKeyboardMarkup],
+    'secrets': Mapping[str, str]
 }:
     data = {}
     data['lang'], secrets, theme_names_ids, syntax_names_exts = (
@@ -38,7 +55,7 @@ def load_configs() -> {
         for yml in ('english', 'vault', 'theme_previews', 'syntaxes')
     )
     data['secrets'] = secrets
-    data['theme_image_ids'] = tuple(theme_names_ids.values())
+    data['theme_image_ids'] = theme_names_ids.values()
     kb_theme = InlineKeyboardMarkup()
     kb_theme.add(*(InlineKeyboardButton(
         name, callback_data=ydump({'action': 'set theme', 'theme': name})
@@ -78,7 +95,7 @@ def mk_png(code: str, ext: str, theme: str='native') -> str:
     )
 
 
-def minikb(kb_name: str):
+def minikb(kb_name: str) -> InlineKeyboardMarkup:
     kb = InlineKeyboardMarkup()
     kb.add(InlineKeyboardButton(
         '. . .', callback_data=ydump({'action': 'restore', 'kb_name': kb_name})
@@ -86,18 +103,45 @@ def minikb(kb_name: str):
     return kb
 
 
+def retry(
+    exceptions: Union[Exception, Iterable[Exception]],
+    attempts: int,
+    seconds: Union[int, float]
+) -> WraptFunc:
+    @decorator
+    def wrapper(original, instance, args, kwargs):
+        last_error = None
+        log = instance.log.bind(method=original)
+        for attempt in range(attempts):
+            try:
+                resp = original(*args, **kwargs)
+            except exceptions as e:
+                last_error = e
+                log = log.bind(exc_info=e)
+                # exc_info will get overwritten by most recent attempt
+                sleep(seconds)
+            else:
+                last_error = None
+            finally:
+                log.msg("called retry-able", attempt=attempt, success=not last_error)
+                if last_error:
+                    raise last_error
+                return resp
+    return wrapper
+
+
 class ColorCodeBot:
 
     def __init__(
         self,
         api_key: str,
-        lang: {str: str},
-        theme_image_ids: [str],
-        keyboards: {str: InlineKeyboardMarkup},
-        *args,
-        admin_chat_id: {str, None}=None,
+        lang: Mapping[str, str],
+        theme_image_ids: Iterable[str],
+        keyboards: Mapping[str, InlineKeyboardMarkup],
+        *args: Any,
+        admin_chat_id: Union[str, None]=None,
         db_path: str='user_themes.sqlite',
-        **kwargs
+        **kwargs: Any
     ):
         self.lang = lang
         self.theme_image_ids = theme_image_ids
@@ -123,7 +167,8 @@ class ColorCodeBot:
         self.set_snippet_filetype = self.bot.callback_query_handler(lambda q: yload(q.data)['action'] == 'set ext')(self.set_snippet_filetype)
         self.set_theme            = self.bot.callback_query_handler(lambda q: yload(q.data)['action'] == 'set theme')(self.set_theme)
 
-    def switch_from_inline(self, inline_query):
+    @retry(exceptions=ConnectionError, attempts=6, seconds=3)
+    def switch_from_inline(self, inline_query: InlineQuery):
         self.log.msg(
             "receiving inline query",
             user_id=inline_query.from_user.id,
@@ -136,7 +181,8 @@ class ColorCodeBot:
             switch_pm_parameter='x'
         )
 
-    def welcome(self, message):
+    @retry(exceptions=ConnectionError, attempts=6, seconds=3)
+    def welcome(self, message: Message):
         self.log.msg(
             "introducing myself",
             user_id=message.from_user.id,
@@ -144,7 +190,8 @@ class ColorCodeBot:
         )
         self.bot.reply_to(message, self.lang['welcome'])
 
-    def browse_themes(self, message):
+    @retry(exceptions=ConnectionError, attempts=6, seconds=3)
+    def browse_themes(self, message: Message):
         self.log.msg(
             "browsing themes",
             user_id=message.from_user.id,
@@ -161,12 +208,14 @@ class ColorCodeBot:
             reply_markup=self.kb['theme']
         )
 
-    def set_theme(self, cb_query):
+    @retry(exceptions=ConnectionError, attempts=6, seconds=3)
+    def set_theme(self, cb_query: CallbackQuery):
         data = yload(cb_query.data)
+        user = cb_query.message.reply_to_message.from_user
         self.log.msg(
             "setting theme",
-            user_id=cb_query.message.reply_to_message.from_user.id,
-            user_first_name=cb_query.message.reply_to_message.from_user.first_name,
+            user_id=user.id,
+            user_first_name=user.first_name,
             theme=data['theme']
         )
         self.bot.edit_message_reply_markup(
@@ -174,7 +223,7 @@ class ColorCodeBot:
             cb_query.message.message_id,
             reply_markup=minikb('theme')
         )
-        self.user_themes[cb_query.message.reply_to_message.from_user.id] = data['theme']
+        self.user_themes[user.id] = data['theme']
         self.bot.answer_callback_query(
             cb_query.id,
             text=self.lang['acknowledge theme'].format(data['theme'])
@@ -183,7 +232,8 @@ class ColorCodeBot:
             with open(self.db_path, 'rb') as doc:
                 self.bot.send_document(self.admin_chat_id, doc)
 
-    def intake_snippet(self, message):
+    @retry(exceptions=ConnectionError, attempts=6, seconds=3)
+    def intake_snippet(self, message: Message):
         self.log.msg(
             "receiving code",
             user_id=message.from_user.id,
@@ -197,6 +247,7 @@ class ColorCodeBot:
             disable_web_page_preview=True
         )
 
+    @retry(exceptions=ConnectionError, attempts=6, seconds=3)
     def send_html(self, snippet: Message, ext: str, theme: str='native'):
         self.bot.send_chat_action(snippet.chat.id, 'upload_document')
         self.log.msg('started mk_html')
@@ -210,6 +261,7 @@ class ColorCodeBot:
                 reply_to_message_id=snippet.message_id
             )
 
+    @retry(exceptions=ConnectionError, attempts=6, seconds=3)
     def send_image(
         self,
         snippet: Message,
@@ -218,7 +270,7 @@ class ColorCodeBot:
         max_lines_for_compressed: int=12
     ):
         self.bot.send_chat_action(snippet.chat.id, 'upload_photo')
-        self.log.msg('started mk_png')
+        self.log.msg('started mk_png')  # todo: improve log detail for all started/completed
         png = mk_png(snippet.text, ext, theme)
         self.log.msg('completed mk_png')
         if snippet.text.count('\n') <= max_lines_for_compressed:
@@ -248,7 +300,8 @@ class ColorCodeBot:
                     reply_to_message_id=snippet.message_id
                 )
 
-    def restore_kb(self, cb_query):
+    @retry(exceptions=ConnectionError, attempts=6, seconds=3)
+    def restore_kb(self, cb_query: CallbackQuery):
         data = yload(cb_query.data)
         self.bot.edit_message_reply_markup(
             cb_query.message.chat.id,
@@ -257,7 +310,8 @@ class ColorCodeBot:
         )
         self.bot.answer_callback_query(cb_query.id)
 
-    def set_snippet_filetype(self, cb_query):
+    @retry(exceptions=ConnectionError, attempts=6, seconds=3)
+    def set_snippet_filetype(self, cb_query: CallbackQuery):
         data = yload(cb_query.data)
         self.log.msg(
             "colorizing code",
@@ -271,12 +325,12 @@ class ColorCodeBot:
             reply_markup=minikb('syntax')
         )
         snippet = cb_query.message.reply_to_message
-        theme = self.user_themes.get(cb_query.message.reply_to_message.from_user.id, 'native')
+        theme = self.user_themes.get(snippet.from_user.id, 'native')
         self.send_html(snippet, data['ext'], theme)
         self.send_image(snippet, data['ext'], theme)
         self.bot.answer_callback_query(cb_query.id)
 
-    def recv_photo(self, message):
+    def recv_photo(self, message: Message):
         self.log.msg('received photo', file_id=message.photo[0].file_id)
 
 

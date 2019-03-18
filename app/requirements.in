@@ -6,3 +6,4 @@ pillow  # for pygments
 pyTelegramBotAPI
 strictyaml
 structlog
+wrapt

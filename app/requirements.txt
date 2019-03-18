@@ -1,8 +1,8 @@
 apsw==3.9.2.post1
-certifi==2018.11.29       # via requests
+certifi==2019.3.9         # via requests
 chardet==3.0.4            # via requests
 idna==2.8                 # via requests
-peewee==3.8.2
+peewee==3.9.2
 pillow==5.4.1
 pygments==2.3.1
 pytelegrambotapi==3.6.6
@@ -13,3 +13,4 @@ six==1.12.0               # via pytelegrambotapi, python-dateutil, structlog
 strictyaml==1.0.0
 structlog==19.1.0
 urllib3==1.24.1           # via requests
+wrapt==1.11.1
