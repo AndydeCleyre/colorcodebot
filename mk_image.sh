@@ -19,7 +19,7 @@ bldr rm -rf /home/$appname/__pycache__ /home/$appname/venv
 if [ "$1" = "--no-vault" ]; then
   bldr rm -f /home/$appname/vault.yml
   bldr rm -f /home/$appname/log_files.yml
-  bldr rm -f /home/$appname/svcs/papertrail
+  bldr rm -rf /home/$appname/svcs/papertrail
   bldr rm -f /home/$appname/user_themes.sqlite
 fi
 
