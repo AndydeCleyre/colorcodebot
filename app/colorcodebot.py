@@ -112,7 +112,7 @@ def retry(
     @decorator
     def wrapper(original, instance, args, kwargs):
         last_error = None
-        log = instance.log.bind(method=original)
+        log = instance.log.bind(method=original.__name__)
         for attempt in range(attempts):
             try:
                 resp = original(*args, **kwargs)
