@@ -8,6 +8,7 @@ from typing import (
     Iterable,
     List,
     Mapping,
+    Optional,
     # OrderedDict,  # python >=3.7 ?
     Union
 )
@@ -33,7 +34,7 @@ from telebot.types import (
 from wrapt import decorator
 
 
-WraptFunc = Callable[[Callable[..., Any], Any, Iterable, Mapping], Callable[..., Any]]
+WraptFunc = Callable[[Callable, Any, Iterable, Mapping], Callable]
 
 
 def yload(yamltxt: str) -> Union[str, List, OrderedDict]:
@@ -140,7 +141,7 @@ class ColorCodeBot:
         theme_image_ids: Iterable[str],
         keyboards: Mapping[str, InlineKeyboardMarkup],
         *args: Any,
-        admin_chat_id: Union[str, None]=None,
+        admin_chat_id: Optional[str]=None,
         db_path: str='user_themes.sqlite',
         **kwargs: Any
     ):
