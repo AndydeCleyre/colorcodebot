@@ -112,24 +112,37 @@ def retry(
 ) -> WraptFunc:
     @decorator
     def wrapper(original, instance, args, kwargs):
+        has_logger = hasattr(instance, 'log')
         last_error = None
-        log = instance.log.bind(method=original.__name__)
+        if has_logger:
+            log = instance.log.bind(method=original.__name__)
         for attempt in range(attempts):
             try:
                 resp = original(*args, **kwargs)
             except exceptions as e:
                 last_error = e
-                log = log.bind(exc_info=e)
-                # exc_info will get overwritten by most recent attempt
+                if has_logger:
+                    log = log.bind(exc_info=e)
+                    # exc_info will get overwritten by most recent attempt
                 sleep(seconds)
             else:
                 last_error = None
                 break
-        log.msg("called retry-able", retries=attempt, success=not last_error)
+        if has_logger:
+            log.msg("called retry-able", retries=attempt, success=not last_error)
         if last_error:
             raise last_error
         return resp
     return wrapper
+
+
+def mk_logger(json=True):
+    structlog.configure(processors=[
+        structlog.processors.format_exc_info,
+        structlog.processors.JSONRenderer(sort_keys=True) if json
+        else structlog.dev.ConsoleRenderer()
+    ])
+    return structlog.get_logger()
 
 
 class ColorCodeBot:
@@ -155,7 +168,7 @@ class ColorCodeBot:
             value_field=CharField(),
             database=APSWDatabase(db_path)
         )
-        self.log = structlog.get_logger()
+        self.log = mk_logger()
         self.bot = TeleBot(api_key, *args, **kwargs)
         self.register_handlers()
 
