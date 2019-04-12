@@ -118,7 +118,11 @@ def retry(
 
     @decorator
     def wrapper(original, instance, args, kwargs):
-        has_logger = hasattr(instance, 'log')
+        has_logger = (
+            hasattr(instance, 'log')
+            and hasattr(instance.log, 'bind')
+            and hasattr(instance.log, 'msg')
+        )
         last_error = None
         if has_logger:
             log = instance.log.bind(method=original.__name__)
