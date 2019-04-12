@@ -10,10 +10,8 @@ from typing import (
     List,
     Mapping,
     Optional,
-    # OrderedDict,  # python >=3.7 ?
     Union
 )
-from collections import OrderedDict  # python 3.6
 
 import strictyaml
 import structlog
@@ -38,7 +36,7 @@ from wrapt import decorator
 WraptFunc = Callable[[Callable, Any, Iterable, Mapping], Callable]
 
 
-def yload(yamltxt: str) -> Union[str, List, OrderedDict]:
+def yload(yamltxt: str) -> Union[str, List, Mapping]:
     return strictyaml.load(yamltxt).data
 
 
@@ -110,7 +108,7 @@ def retry(
     original: Callable=None,  # needed to make args altogether optional
     exceptions: Union[Exception, Iterable[Exception]]=ConnectionError,
     attempts: int=6,
-    seconds: Union[int, float]=3
+    seconds: float=3
 ) -> WraptFunc:
 
     if not original:  # needed to make args altogether optional
