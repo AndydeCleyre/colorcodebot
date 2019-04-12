@@ -1,3 +1,2 @@
 # python 3
 colorama    # optional colors for structlog
-pyre-check  # optional type checking
