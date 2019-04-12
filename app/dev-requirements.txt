@@ -1,2 +1,1 @@
 colorama==0.4.1
-pyre-check==0.0.20

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import io
+import functools
 from pathlib import Path
 from time import sleep
 from typing import (
@@ -8,10 +9,9 @@ from typing import (
     Iterable,
     List,
     Mapping,
-    # OrderedDict,  # python >=3.7 ?
+    Optional,
     Union
 )
-from collections import OrderedDict  # python 3.6
 
 import strictyaml
 import structlog
@@ -33,10 +33,10 @@ from telebot.types import (
 from wrapt import decorator
 
 
-WraptFunc = Callable[[Callable[..., Any], Any, Iterable, Mapping], Callable[..., Any]]
+WraptFunc = Callable[[Callable, Any, Iterable, Mapping], Callable]
 
 
-def yload(yamltxt: str) -> Union[str, List, OrderedDict]:
+def yload(yamltxt: str) -> Union[str, List, Mapping]:
     return strictyaml.load(yamltxt).data
 
 
@@ -105,30 +105,55 @@ def minikb(kb_name: str) -> InlineKeyboardMarkup:
 
 
 def retry(
-    exceptions: Union[Exception, Iterable[Exception]],
-    attempts: int,
-    seconds: Union[int, float]
+    original: Callable=None,  # needed to make args altogether optional
+    exceptions: Union[Exception, Iterable[Exception]]=ConnectionError,
+    attempts: int=6,
+    seconds: float=3
 ) -> WraptFunc:
+
+    if not original:  # needed to make args altogether optional
+        return functools.partial(
+            retry, exceptions=exceptions, attempts=attempts, seconds=seconds
+        )
+
     @decorator
     def wrapper(original, instance, args, kwargs):
+        has_logger = (
+            hasattr(instance, 'log')
+            and hasattr(instance.log, 'bind')
+            and hasattr(instance.log, 'msg')
+        )
         last_error = None
-        log = instance.log.bind(method=original)
+        if has_logger:
+            log = instance.log.bind(method=original.__name__)
         for attempt in range(attempts):
             try:
                 resp = original(*args, **kwargs)
             except exceptions as e:
                 last_error = e
-                log = log.bind(exc_info=e)
-                # exc_info will get overwritten by most recent attempt
+                if has_logger:
+                    log = log.bind(exc_info=e)
+                    # exc_info will get overwritten by most recent attempt
                 sleep(seconds)
             else:
                 last_error = None
                 break
-        log.msg("called retry-able", retries=attempt, success=not last_error)
+        if has_logger:
+            log.msg("called retry-able", retries=attempt, success=not last_error)
         if last_error:
             raise last_error
         return resp
-    return wrapper
+    # return wrapper
+    return wrapper(original)  # needed to make args altogether optional
+
+
+def mk_logger(json=True):
+    structlog.configure(processors=[
+        structlog.processors.format_exc_info,
+        structlog.processors.JSONRenderer(sort_keys=True) if json
+        else structlog.dev.ConsoleRenderer()
+    ])
+    return structlog.get_logger()
 
 
 class ColorCodeBot:
@@ -140,7 +165,7 @@ class ColorCodeBot:
         theme_image_ids: Iterable[str],
         keyboards: Mapping[str, InlineKeyboardMarkup],
         *args: Any,
-        admin_chat_id: Union[str, None]=None,
+        admin_chat_id: Optional[str]=None,
         db_path: str='user_themes.sqlite',
         **kwargs: Any
     ):
@@ -154,7 +179,7 @@ class ColorCodeBot:
             value_field=CharField(),
             database=APSWDatabase(db_path)
         )
-        self.log = structlog.get_logger()
+        self.log = mk_logger()
         self.bot = TeleBot(api_key, *args, **kwargs)
         self.register_handlers()
 
@@ -168,7 +193,7 @@ class ColorCodeBot:
         self.set_snippet_filetype = self.bot.callback_query_handler(lambda q: yload(q.data)['action'] == 'set ext')(self.set_snippet_filetype)
         self.set_theme            = self.bot.callback_query_handler(lambda q: yload(q.data)['action'] == 'set theme')(self.set_theme)
 
-    @retry(exceptions=ConnectionError, attempts=6, seconds=3)
+    @retry
     def switch_from_inline(self, inline_query: InlineQuery):
         self.log.msg(
             "receiving inline query",
@@ -182,7 +207,7 @@ class ColorCodeBot:
             switch_pm_parameter='x'
         )
 
-    @retry(exceptions=ConnectionError, attempts=6, seconds=3)
+    @retry
     def welcome(self, message: Message):
         self.log.msg(
             "introducing myself",
@@ -191,7 +216,7 @@ class ColorCodeBot:
         )
         self.bot.reply_to(message, self.lang['welcome'])
 
-    @retry(exceptions=ConnectionError, attempts=6, seconds=3)
+    @retry
     def browse_themes(self, message: Message):
         self.log.msg(
             "browsing themes",
@@ -209,7 +234,7 @@ class ColorCodeBot:
             reply_markup=self.kb['theme']
         )
 
-    @retry(exceptions=ConnectionError, attempts=6, seconds=3)
+    @retry
     def set_theme(self, cb_query: CallbackQuery):
         data = yload(cb_query.data)
         user = cb_query.message.reply_to_message.from_user
@@ -233,7 +258,7 @@ class ColorCodeBot:
             with open(self.db_path, 'rb') as doc:
                 self.bot.send_document(self.admin_chat_id, doc)
 
-    @retry(exceptions=ConnectionError, attempts=6, seconds=3)
+    @retry
     def intake_snippet(self, message: Message):
         self.log.msg(
             "receiving code",
@@ -248,7 +273,7 @@ class ColorCodeBot:
             disable_web_page_preview=True
         )
 
-    @retry(exceptions=ConnectionError, attempts=6, seconds=3)
+    @retry
     def send_html(self, snippet: Message, ext: str, theme: str='native'):
         self.bot.send_chat_action(snippet.chat.id, 'upload_document')
         html = mk_html(snippet.text, ext, theme)
@@ -260,7 +285,7 @@ class ColorCodeBot:
                 reply_to_message_id=snippet.message_id
             )
 
-    @retry(exceptions=ConnectionError, attempts=6, seconds=3)
+    @retry
     def send_image(
         self,
         snippet: Message,
@@ -297,7 +322,7 @@ class ColorCodeBot:
                     reply_to_message_id=snippet.message_id
                 )
 
-    @retry(exceptions=ConnectionError, attempts=6, seconds=3)
+    @retry
     def restore_kb(self, cb_query: CallbackQuery):
         data = yload(cb_query.data)
         self.bot.edit_message_reply_markup(
@@ -307,7 +332,7 @@ class ColorCodeBot:
         )
         self.bot.answer_callback_query(cb_query.id)
 
-    @retry(exceptions=ConnectionError, attempts=6, seconds=3)
+    @retry
     def set_snippet_filetype(self, cb_query: CallbackQuery):
         data = yload(cb_query.data)
         self.log.msg(
