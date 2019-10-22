@@ -3,7 +3,7 @@ certifi==2019.6.16        # via requests
 chardet==3.0.4            # via requests
 idna==2.8                 # via requests
 peewee==3.10.0
-pillow==6.1.0
+pillow==6.2.0
 pygments==2.4.2
 pytelegrambotapi==3.6.6
 python-dateutil==2.8.0    # via strictyaml
