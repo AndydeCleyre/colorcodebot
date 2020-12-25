@@ -88,7 +88,7 @@ def mk_png(code: str, ext: str, theme: str='native') -> str:
         code,
         lexers.get_lexer_by_name(ext),
         formatters.ImageFormatter(
-            font_name='Iosevka Custom',
+            font_name='Iosevka Term Custom',
             font_size=35,
             line_number_chars=3,
             style=theme
