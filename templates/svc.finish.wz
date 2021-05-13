@@ -1,0 +1,23 @@
+@require(svc)
+@(from utils import cgdir)\
+#!/bin/execlineb -P
+
+# Note: This whole script must take <5s in total
+
+# Send TERM to any remaining procs in the cgroup:
+foreground {
+  redirfd -r 0 @cgdir(svc)/cgroup.procs
+  forstdin -E -p -C PID kill $PID
+}
+
+# If any procs remain, wait a moment:
+foreground {
+  redirfd -r 0 @cgdir(svc)/cgroup.procs
+  forstdin -p -C PID sleep @{'kill_patience' in svc and svc['kill_patience'] or '1'}
+}
+
+# Send KILL to any remaining procs in the cgroup:
+foreground {
+  redirfd -r 0 @cgdir(svc)/cgroup.procs
+  forstdin -E -p -C PID kill -9 $PID
+}

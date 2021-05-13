@@ -1,5 +1,5 @@
-vault.yml
-venv
-log_files.yml
 __pycache__
 user_themes.sqlite
+/svcs
+/app/logs
+/app/sops/papertrail.log_files.*.yml

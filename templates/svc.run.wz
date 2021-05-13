@@ -1,0 +1,21 @@
+@require(svc)
+@(from utils import cgdir)\
+#!/bin/execlineb -P
+
+fdmove -c 2 1  # Combine stderr and stdout
+
+getpid -E PID  # Assign current PID to a svc-specific cgroup
+foreground {
+  mkdir -p @cgdir(svc)
+}
+foreground {
+  redirfd -w 1 @cgdir(svc)/cgroup.procs
+  printf "%s\n" $PID
+}
+
+@if 'run' in svc['folder']:
+cd @svc['folder']['run']
+@end
+
+# Do the thing:
+@svc['exec']

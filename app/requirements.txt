@@ -1,17 +1,34 @@
 apsw==3.9.2.post1
-certifi==2019.6.16        # via requests
-chardet==3.0.4            # via requests
-idna==2.8                 # via requests
-peewee==3.10.0
-pillow==6.1.0
-pygments==2.4.2
-pytelegrambotapi==3.6.6
-python-dateutil==2.8.0    # via strictyaml
-requests==2.22.0          # via pytelegrambotapi
-ruamel.yaml.clib==0.1.2   # via ruamel.yaml
-ruamel.yaml==0.16.1       # via strictyaml
-six==1.12.0               # via pytelegrambotapi, python-dateutil, structlog
-strictyaml==1.0.3
-structlog==19.1.0
-urllib3==1.25.3           # via requests
-wrapt==1.11.2
+    # via -r requirements.in
+certifi==2020.12.5
+    # via requests
+chardet==4.0.0
+    # via requests
+idna==2.10
+    # via requests
+peewee==3.14.4
+    # via -r requirements.in
+pillow==8.2.0
+    # via -r requirements.in
+pygments==2.9.0
+    # via -r requirements.in
+pytelegrambotapi==3.7.7
+    # via -r requirements.in
+python-dateutil==2.8.1
+    # via strictyaml
+requests==2.25.1
+    # via pytelegrambotapi
+ruamel.yaml.clib==0.2.2
+    # via ruamel.yaml
+ruamel.yaml==0.17.4
+    # via strictyaml
+six==1.16.0
+    # via python-dateutil
+strictyaml==1.4.0
+    # via -r requirements.in
+structlog==21.1.0
+    # via -r requirements.in
+urllib3==1.26.4
+    # via requests
+wrapt==1.12.1
+    # via -r requirements.in

@@ -5,6 +5,7 @@ C: c
 CSS: css
 Go: go
 HTML: html
+INI: ini
 Java: java
 JavaScript: js
 JSON: json
@@ -17,5 +18,6 @@ Ruby: rb
 Rust: rust
 Swift: swift
 SQL: sql
+TOML: toml
 XML: xml
 YAML: yaml

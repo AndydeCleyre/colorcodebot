@@ -1,0 +1,46 @@
+svcs:
+
+  - name: colorcodebot
+    enabled: true
+    exec: >-
+      sops exec-env
+      --user colorcodebot
+      sops/colorcodebot.prod.yml
+
+      "python3
+      ./colorcodebot.py"
+    folder:
+      run: /home/colorcodebot
+      log: /home/colorcodebot/logs/colorcodebot
+
+  - name: papertrail
+    enabled: true
+    exec: >-
+      sops exec-file
+      sops/papertrail.log_files.prod.yml
+
+      "remote_syslog -D -c {}"
+    folder:
+      run: /home/colorcodebot
+      log: /home/colorcodebot/logs/papertrail
+    sops_templates:
+      - src: log_files.yml.wz
+        dest: app/sops/papertrail.log_files.prod.yml
+
+# Minimal disabled svc:
+# - name: svc-name-without-spaces
+#   enabled: false
+
+# Minimal enabled svc:
+# - name: svc-name-without-spaces
+#   enabled: true
+#   exec: long-running-command
+#   folder:
+#     log: path/to/log/dir
+
+# Paths:
+# - svcs.*.exec is run from svcs.*.folder.run if provided, otherwise its svcdir
+# - svcs.*.folder.run is interpreted from the svcdir
+# - svcs.*.folder.log is interpreted from <the svcdir>/log
+# - svcs.*.sops_templates.src is implicitly prefixed with REPO/templates/
+# - svcs.*.sops_templates.dest is implicitly prefixed with REPO/

@@ -1,0 +1,7 @@
+@require(svc)
+#!/bin/execlineb -P
+s6-log       # Receive process output
+  t          # Start each line with a TAI64N timestamp
+  s4194304   # Archive log when it gets this big (bytes)
+  S41943040  # Purge oldest archived logs when the archive gets this big (bytes)
+  @svc['folder']['log']  # Store logs here

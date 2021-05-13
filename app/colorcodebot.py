@@ -1,37 +1,25 @@
 #!/usr/bin/env python3
-import io
 import functools
+import io
+import os
 from pathlib import Path
 from time import sleep
-from typing import (
-    Any,
-    Callable,
-    Iterable,
-    List,
-    Mapping,
-    Optional,
-    Union
-)
+from typing import Any, Callable, Iterable, List, Mapping, Optional, Union
 
 import strictyaml
 import structlog
-from peewee import IntegerField, CharField
-from playhouse.kv import KeyValue
+from peewee import CharField, IntegerField
 from playhouse.apsw_ext import APSWDatabase
-from pygments import formatters, lexers, highlight
+from playhouse.kv import KeyValue
+from pygments import formatters, highlight, lexers
 from requests.exceptions import ConnectionError
 from telebot import TeleBot
 from telebot.apihelper import ApiException
 from telebot.types import (
-    CallbackQuery,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    InlineQuery,
-    InputMediaPhoto,
-    Message
+    CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup,
+    InlineQuery, InputMediaPhoto, Message
 )
 from wrapt import decorator
-
 
 WraptFunc = Callable[[Callable, Any, Iterable, Mapping], Callable]
 
@@ -45,18 +33,26 @@ def ydump(data: Mapping) -> str:
 
 
 def load_configs() -> {
-    'lang': Mapping[str, str],
-    'theme_image_ids': Iterable[str],
-    'kb': Mapping[str, InlineKeyboardMarkup],
-    'secrets': Mapping[str, str]
+    'lang':             Mapping[str, str],
+    'theme_image_ids':  Iterable[str],
+    'kb':               Mapping[str, InlineKeyboardMarkup]
 }:
     data = {}
-    data['lang'], secrets, theme_names_ids, syntax_names_exts = (
+    (
+        data['lang'],
+        theme_names_ids,
+        syntax_names_exts
+    ) = (
         yload((Path(__file__).parent / f'{yml}.yml').read_text())
-        for yml in ('english', 'vault', 'theme_previews', 'syntaxes')
+        for yml in (
+            'english',
+            'theme_previews',
+            'syntaxes'
+        )
     )
-    data['secrets'] = secrets
+
     data['theme_image_ids'] = theme_names_ids.values()
+
     kb_theme = InlineKeyboardMarkup()
     kb_theme.add(*(InlineKeyboardButton(
         name, callback_data=ydump({'action': 'set theme', 'theme': name})
@@ -66,10 +62,11 @@ def load_configs() -> {
         name, callback_data=ydump({'action': 'set ext', 'ext': ext})
     ) for name, ext in syntax_names_exts.items()))
     data['kb'] = {'theme': kb_theme, 'syntax': kb_syntax}
+
     return data
 
 
-def mk_html(code: str, ext: str, theme: str='native') -> str:
+def mk_html(code: str, ext: str, theme: str = 'native') -> str:
     """Return generated HTML content"""
     return highlight(
         code,
@@ -82,7 +79,7 @@ def mk_html(code: str, ext: str, theme: str='native') -> str:
     )
 
 
-def mk_png(code: str, ext: str, theme: str='native') -> str:
+def mk_png(code: str, ext: str, theme: str = 'native') -> str:
     """Return generated PNG content"""
     return highlight(
         code,
@@ -97,6 +94,10 @@ def mk_png(code: str, ext: str, theme: str='native') -> str:
 
 
 def minikb(kb_name: str) -> InlineKeyboardMarkup:
+    """
+    Return an inline KB with just one button,
+    which restores the specified KB by name when pressed.
+    """
     kb = InlineKeyboardMarkup()
     kb.add(InlineKeyboardButton(
         '. . .', callback_data=ydump({'action': 'restore', 'kb_name': kb_name})
@@ -105,10 +106,10 @@ def minikb(kb_name: str) -> InlineKeyboardMarkup:
 
 
 def retry(
-    original: Callable=None,  # needed to make args altogether optional
-    exceptions: Union[Exception, Iterable[Exception]]=ConnectionError,
-    attempts: int=6,
-    seconds: float=3
+    original: Callable = None,  # needed to make args altogether optional
+    exceptions: Union[Exception, Iterable[Exception]] = ConnectionError,
+    attempts: int = 6,
+    seconds: float = 3
 ) -> WraptFunc:
 
     if not original:  # needed to make args altogether optional
@@ -165,8 +166,8 @@ class ColorCodeBot:
         theme_image_ids: Iterable[str],
         keyboards: Mapping[str, InlineKeyboardMarkup],
         *args: Any,
-        admin_chat_id: Optional[str]=None,
-        db_path: str='user_themes.sqlite',
+        admin_chat_id: Optional[str] = None,
+        db_path: str = str((Path(__file__).parent / 'user_themes.sqlite').absolute()),
         **kwargs: Any
     ):
         self.lang = lang
@@ -212,7 +213,8 @@ class ColorCodeBot:
         self.log.msg(
             "introducing myself",
             user_id=message.from_user.id,
-            user_first_name=message.from_user.first_name
+            user_first_name=message.from_user.first_name,
+            chat_id=message.chat.id
         )
         self.bot.reply_to(message, self.lang['welcome'])
 
@@ -221,7 +223,8 @@ class ColorCodeBot:
         self.log.msg(
             "browsing themes",
             user_id=message.from_user.id,
-            user_first_name=message.from_user.first_name
+            user_first_name=message.from_user.first_name,
+            chat_id=message.chat.id
         )
         self.bot.send_media_group(
             message.chat.id,
@@ -242,7 +245,8 @@ class ColorCodeBot:
             "setting theme",
             user_id=user.id,
             user_first_name=user.first_name,
-            theme=data['theme']
+            theme=data['theme'],
+            chat_id=message.chat.id
         )
         self.bot.edit_message_reply_markup(
             cb_query.message.chat.id,
@@ -263,7 +267,8 @@ class ColorCodeBot:
         self.log.msg(
             "receiving code",
             user_id=message.from_user.id,
-            user_first_name=message.from_user.first_name
+            user_first_name=message.from_user.first_name,
+            chat_id=message.chat.id
         )
         self.bot.reply_to(
             message,
@@ -274,7 +279,7 @@ class ColorCodeBot:
         )
 
     @retry
-    def send_html(self, snippet: Message, ext: str, theme: str='native'):
+    def send_html(self, snippet: Message, ext: str, theme: str = 'native'):
         self.bot.send_chat_action(snippet.chat.id, 'upload_document')
         html = mk_html(snippet.text, ext, theme)
         with io.StringIO(html) as doc:
@@ -290,8 +295,8 @@ class ColorCodeBot:
         self,
         snippet: Message,
         ext: str,
-        theme: str='native',
-        max_lines_for_compressed: int=12
+        theme: str = 'native',
+        max_lines_for_compressed: int = 12
     ):
         self.bot.send_chat_action(snippet.chat.id, 'upload_photo')
         png = mk_png(snippet.text, ext, theme)
@@ -305,7 +310,11 @@ class ColorCodeBot:
                         reply_to_message_id=snippet.message_id
                     )
             except ApiException as e:
-                self.log.error("failed to send compressed image", exc_info=e)
+                self.log.error(
+                    "failed to send compressed image",
+                    exc_info=e,
+                    chat_id=snippet.chat.id
+                )
                 with io.BytesIO(png) as doc:
                     doc.name = 'code.png'
                     self.bot.send_document(
@@ -339,7 +348,8 @@ class ColorCodeBot:
             "colorizing code",
             user_id=cb_query.message.reply_to_message.from_user.id,
             user_first_name=cb_query.message.reply_to_message.from_user.first_name,
-            syntax=data['ext']
+            syntax=data['ext'],
+            chat_id=cb_query.message.chat.id
         )
         self.bot.edit_message_reply_markup(
             cb_query.message.chat.id,
@@ -353,14 +363,18 @@ class ColorCodeBot:
         self.bot.answer_callback_query(cb_query.id)
 
     def recv_photo(self, message: Message):
-        self.log.msg('received photo', file_id=message.photo[0].file_id)
+        self.log.msg(
+            'received photo',
+            file_id=message.photo[0].file_id,
+            chat_id=message.chat.id
+        )
 
 
 if __name__ == '__main__':
     cfg = load_configs()
     ColorCodeBot(
-        api_key=cfg['secrets']['TG_API_KEY'],
-        admin_chat_id=cfg['secrets'].get('ADMIN_CHAT_ID'),
+        api_key=os.environ['TG_API_KEY'],
+        admin_chat_id=os.environ.get('ADMIN_CHAT_ID'),
         lang=cfg['lang'],
         theme_image_ids=cfg['theme_image_ids'],
         keyboards=cfg['kb'],

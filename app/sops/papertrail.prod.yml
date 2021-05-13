@@ -1,0 +1,23 @@
+# Required: host, port
+host: ENC[AES256_GCM,data:076I2IMEi8QMPuV+6m/WlNl41V8TD9g=,iv:6nA25Phfjiv+aHmE17zdpwQetb4D0oebEZlgAGGxxRQ=,tag:M5z8+BxVMTg5ajOTsMuYNw==,type:str]
+port: ENC[AES256_GCM,data:OTXjMZQ=,iv:TOa/F+NHpmz8RpyI2ylb6knmwFtK1z+BEjXbjwERaH0=,tag:hYOs7n/y1ThZHUuV6bNfVw==,type:str]
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age:
+        - recipient: age1ejj70hky4zsve69h4shdkfvzy93ftazpp3e22xj0w054wy2ktuwss0yxrd
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBmYU5UYlA1NWJkUjdGblMx
+            STJtSVlQUEF6YTk4WEJBVTJWa3lyVEVqWmdNCnFNRUsxdy9WaGpwbnZoSWVMQzVC
+            d0pZWUtxOUltaG4yK3FXZXNBNTlKcVkKLS0tIDg0T0FmMS9iRTREcE13eDRyc1RP
+            VmFnTjg4VWJnOXlPQkd2SDE1K2c5b1EK9MZTpotXykQRfp2k9e2aCjghb/79q9zf
+            zue9ZPzjD50aiRnApU1SezsXYMREsHDDm7M5nyhfi01zobt1axhlTA==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2021-04-21T20:17:22Z"
+    mac: ENC[AES256_GCM,data:qIjaKaEBo2UccyJ7dsHreNmLPrdzcCeKHB2ZaOubVgo6c56Cb9fnPTCd6kot0Vr60Wl6QasP3f5zz9GZnrk3bbQeXfhew+ShFUFK0yda0t9Vcv/uSOVGShp+mHtnv15f/sJo19ohyl5fw/exEqtHdf0A9rcEKcvBW0zVe3jEh/w=,iv:MZpx1/83vNKld9noSdTf3TlMrcnpyL8MP+4adS6Avxk=,tag:Te16jY30YUa9cYVO2+/Ogg==,type:str]
+    pgp: []
+    encrypted_regex: (^(host|port)$|_(KEY|ID)$)
+    version: 3.7.1
