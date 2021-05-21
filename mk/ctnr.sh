@@ -11,16 +11,17 @@ if [ "$1" = -d ]; then
   shift 2
 fi
 
-if [ "$1" ]; then
+if [ "$1" ] && [ "$1" != --push ]; then
   printf '%s\n' 'Args: [-d <deployment>=dev]'
   exit 1
 fi
 
 repo=$(git -C "$(dirname "$0")" rev-parse --show-toplevel)
 version=$(git -C "$repo" describe)
+branch=$(git -C "$repo" branch --show-current)
 
 appname=colorcodebot
-img=quay.io/andykluger/${appname}-alpine
+img=quay.io/andykluger/${appname}-${deployment}-alpine
 ctnr=${img}-building
 
 user=$appname
@@ -81,7 +82,6 @@ ctnr_pkg_add $pkgs $build_pkgs
 # Set the timezone
 ctnr_run cp /usr/share/zoneinfo/$tz /etc/localtime
 printf '%s\n' "$tz" | ctnr_append /etc/timezone
-# TODO: not right for ubu or fedora?
 
 # Add user
 ctnr_mkuser $user || true
@@ -153,7 +153,7 @@ buildah config --cmd "s6-svscan $svcs_dir" "$ctnr"
 
 # Press container as image
 buildah rmi "$img:$today" "$img:latest" "$img:$version" 2>/dev/null || true
-buildah tag "$(buildah commit -q --rm "$ctnr" "$img:$today")" "$img:latest" "$img:$version"
+buildah tag "$(buildah commit -q --rm "$ctnr" "$img:latest")" "$img:$today" "$img:$version" "$img:$branch"
 
 printf '%s\n' '' \
   '###################' \
@@ -163,3 +163,10 @@ printf '%s\n' '' \
   ">>> For the internal process supervision to work, you'll need to unmask /sys/fs/cgroup" \
   ">>> e.g.:" '' \
   "  podman run -v ~/.config/sops/age/keys.txt:/root/.config/sops/age/keys.txt:ro --security-opt unmask=/sys/fs/cgroup $img" ''
+
+if [ "$1" = --push ]; then
+  podman push "$img:latest"
+  podman push "$img:$today"
+  podman push "$img:$version"
+  podman push "$img:$branch"
+fi
