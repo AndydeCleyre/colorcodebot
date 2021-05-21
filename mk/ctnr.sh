@@ -92,7 +92,7 @@ ctnr_run sh -c "rm -rf /home/$user/*"
 tmp=$(mktemp -d)
 git -C "$repo" archive HEAD:app >"$tmp/app.tar"
 ctnr_fetch -u "$tmp/app.tar" /home/$user
-"$repo/mk/svcs.zsh" -d "$deployment" "$tmp/svcs"
+zsh -fe "$repo/mk/svcs.zsh" -d "$deployment" "$tmp/svcs"
 ctnr_fetch "$tmp/svcs" "$svcs_dir"
 rm -rf "$tmp"
 
