@@ -1,4 +1,4 @@
-#!/bin/zsh -fe
+#!/bin/zsh -fex
 
 render_svcs () {  # [-d dev|prod|<any>=dev] [SVCS_DIR=app/svcs]
   emulate -L zsh -o errreturn
