@@ -16,5 +16,9 @@ jobs:
           QUAY_USER: ${{ secrets.QUAY_USER }}
           QUAY_TOKEN: ${{ secrets.QUAY_TOKEN }}
 
+      - run: sudo apt -yqq --no-install-recommends install zsh
+        env:
+          DEBIAN_FRONTEND: noninteractive
+
       - name: do the thing
         run: ./mk/ctnr.sh -d prod --push
