@@ -10,15 +10,17 @@ jobs:
         with:
           fetch-depth: 0
 
+      - run: sudo apt -yqq --no-install-recommends install zsh
+        env:
+          DEBIAN_FRONTEND: noninteractive
+
+      - run: pip3 install -r dev-requirements.txt
+
       - name: login to container registry
         run: podman login -u "$QUAY_USER" -p "$QUAY_TOKEN" quay.io
         env:
           QUAY_USER: ${{ secrets.QUAY_USER }}
           QUAY_TOKEN: ${{ secrets.QUAY_TOKEN }}
-
-      - run: sudo apt -yqq --no-install-recommends install zsh
-        env:
-          DEBIAN_FRONTEND: noninteractive
 
       - name: do the thing
         run: ./mk/ctnr.sh -d prod --push
