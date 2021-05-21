@@ -7,6 +7,8 @@ jobs:
     steps:
 
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: login to container registry
         run: podman login -u "$QUAY_USER" -p "$QUAY_TOKEN" quay.io
