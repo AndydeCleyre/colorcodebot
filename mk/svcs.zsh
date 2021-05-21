@@ -1,6 +1,6 @@
 #!/bin/zsh -fe
 
-render_svcs () {  # [-d dev|prod|<any>=dev] [SVCS_DIR=svcs]
+render_svcs () {  # [-d dev|prod|<any>=dev] [SVCS_DIR=app/svcs]
   emulate -L zsh -o errreturn
 
   cd "$(git -C $0:P:h rev-parse --show-toplevel)"
@@ -9,7 +9,7 @@ render_svcs () {  # [-d dev|prod|<any>=dev] [SVCS_DIR=svcs]
   local yml svcs_dir deployment=dev
   if [[ $1 == -d ]] { deployment=$2; shift 2 }
   yml=vars.$deployment.yml
-  svcs_dir=${1:-svcs}
+  svcs_dir=${1:-app/svcs}
 
   local name data src dest
   for name ( $(yaml-get -p svcs.name $yml) ) {

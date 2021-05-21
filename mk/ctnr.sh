@@ -1,21 +1,43 @@
 #!/bin/sh -ex
-# [<deployment>=dev]
+# [-d <deployment>=dev]
 
 #######################
 ### Configure Build ###
 #######################
 
-appname='colorcodebot'
-version='0.2.7'
-base_img='docker.io/library/alpine:3.13'
-deployment=$1
+deployment=dev
+if [ "$1" = -d ]; then
+  deployment=$2
+  shift 2
+fi
 
-ctnr=${appname}-alpine
-img=quay.io/andykluger/$ctnr
+if [ "$1" ]; then
+  printf '%s\n' 'Args: [-d <deployment>=dev]'
+  exit 1
+fi
+
+repo=$(git -C "$(dirname "$0")" rev-parse --show-toplevel)
+version=$(git -C "$repo" describe)
+
+appname=colorcodebot
+img=quay.io/andykluger/${appname}-alpine
+ctnr=${img}-building
+
 user=$appname
-today=$(date +%Y.%j)
+svcs_dir=/home/$user/svcs
 
+sops_ver=3.7.1
+today=$(date +%Y.%j)
 tz="America/New_York"
+
+base_img='docker.io/library/alpine:3.13'
+pkgs='ca-certificates execline fontconfig jpeg python3 s6'
+build_pkgs='tzdata freetype-dev gcc jpeg-dev musl-dev python3-dev tar zstd'
+fat="/tmp/* /usr/lib/python3.*/__pycache__ /home/$user/.cache /root/.cache /home/$user/.local/bin /root/.local/bin /var/cache/apk/*"
+
+#################
+### Functions ###
+#################
 
 ctnr_run () {  # [-u] <cmd> [<cmd-arg>...]
   _u=root
@@ -35,26 +57,18 @@ ctnr_append () {  # [-u] <dest-path>
   ctnr_run $_u sh -c "cat >>$1"
 }
 
-alias ctnr_mkuser="ctnr_run adduser -D"
-
 alias ctnr_pkg="ctnr_run apk -q --no-progress"
 alias ctnr_pkg_upgrade="ctnr_pkg upgrade"
 alias ctnr_pkg_add="ctnr_pkg add"
 alias ctnr_pkg_del="ctnr_pkg del --purge -r"
-
-repo=$(git -C "$(dirname "$0")" rev-parse --show-toplevel)
-
-pkgs='ca-certificates execline fontconfig jpeg python3 s6'
-build_pkgs='tzdata freetype-dev gcc jpeg-dev musl-dev py3-pip py3-wheel python3-dev tar zstd'
-# fat='/var/cache/apk/* /tmp/* /usr/lib/python3.*/__pycache__ /home/colorcodebot/.cache'
-fat='/var/cache/apk/* /tmp/* /usr/lib/python3.*/__pycache__'
+alias ctnr_mkuser="ctnr_run adduser -D"
 
 #############
 ### Build ###
 #############
 
 # Start fresh, or from a daily "jumpstart" image if available
-buildah rm $ctnr 2>/dev/null || true
+buildah rm "$ctnr" 2>/dev/null || true
 if ! buildah from -q --name "$ctnr" "$img-jumpstart:$today" 2>/dev/null; then
   buildah from -q --name "$ctnr" "$base_img"
   make_jumpstart_img=1
@@ -64,32 +78,39 @@ fi
 ctnr_pkg_upgrade
 ctnr_pkg_add $pkgs $build_pkgs
 
-# Save this stage as a daily "jumpstart" image
-if [ $make_jumpstart_img ]; then
-  buildah commit -q --rm "$ctnr" "$img-jumpstart:$today"
-  buildah from -q --name "$ctnr" "$img-jumpstart:$today"
-fi
-
 # Set the timezone
 ctnr_run cp /usr/share/zoneinfo/$tz /etc/localtime
 printf '%s\n' "$tz" | ctnr_append /etc/timezone
+# TODO: not right for ubu or fedora?
 
 # Add user
-ctnr_mkuser $user
+ctnr_mkuser $user || true
 
 # Copy app and svcs into container
+ctnr_run rm -rf "$svcs_dir"
+ctnr_run sh -c "rm -rf /home/$user/*"
 tmp=$(mktemp -d)
-git -C "$repo" archive "HEAD:$repo/app" >"$tmp/app.tar"
+git -C "$repo" archive HEAD:app >"$tmp/app.tar"
 ctnr_fetch -u "$tmp/app.tar" /home/$user
 "$repo/mk/svcs.zsh" -d "$deployment" "$tmp/svcs"
-ctnr_fetch "$tmp/svcs" /var/svcs
+ctnr_fetch "$tmp/svcs" "$svcs_dir"
 rm -rf "$tmp"
 
 # Install python modules
-ctnr_run -u pip install -Ur /home/$user/requirements.txt
-# Patch pygments:
-# pyver='3.8'
-# bldr sed -i 's/background-color: #f0f0f0; //g' /usr/lib/python$pyver/site-packages/pygments/formatters/html.py
+ctnr_run -u python3 -m venv /home/$user/venv
+ctnr_run /home/$user/venv/bin/pip install -U wheel
+ctnr_run /home/$user/venv/bin/pip install -Ur /home/$user/requirements.txt
+ctnr_run /home/$user/venv/bin/pip uninstall -y wheel
+
+# Save this stage as a daily "jumpstart" image
+if [ $make_jumpstart_img ]; then
+  ctnr_pkg_del $build_pkgs
+  ctnr_run sh -c "rm -rf $fat"
+  buildah commit -q --rm "$ctnr" "$img-jumpstart:$today"
+  buildah from -q --name "$ctnr" "$img-jumpstart:$today"
+  ctnr_pkg_upgrade
+  ctnr_pkg_add $pkgs $build_pkgs
+fi
 
 # Install fonts
 ctnr_fetch \
@@ -97,10 +118,17 @@ ctnr_fetch \
   /tmp
 ctnr_run tar xf \
   /tmp/ttf-iosevka-term-custom-git-1619959084-1-any.pkg.tar.zst \
-  -C / \
-  usr/share/fonts/TTF/iosevka-term-custom-{regular,italic,bold}.ttf
+  -C / --wildcards --wildcards-match-slash \
+  '*-regular.ttf' '*-italic.ttf' '*-bold.ttf' '*-bolditalic.ttf'
 
-# Install papertrail agent
+# Install sops
+ctnr_fetch \
+  "https://github.com/mozilla/sops/releases/download/v${sops_ver}/sops-v${sops_ver}.linux" \
+  /usr/local/bin/sops
+ctnr_run chmod 0555 /usr/local/bin/sops
+ctnr_run mkdir -p /root/.config/sops
+
+# Install papertrail agent, if enabled
 if [ "$(yaml-get -p 'svcs[name == papertrail].enabled' "$repo/vars.$deployment.yml")" = True ]; then
   ctnr_fetch \
     'https://github.com/papertrail/remote_syslog2/releases/download/v0.20/remote_syslog_linux_amd64.tar.gz' \
@@ -118,16 +146,20 @@ fi
 
 # Cut the fat:
 ctnr_pkg_del $build_pkgs
-if [ -n "$fat" ]; then
-  ctnr_run sh -c "rm -rf $fat"
-fi
+ctnr_run sh -c "rm -rf $fat"
 
 # Set default command
-buildah config --cmd "s6-svscan /var/svcs" $ctnr
+buildah config --cmd "s6-svscan $svcs_dir" "$ctnr"
 
 # Press container as image
 buildah rmi "$img:$today" "$img:latest" "$img:$version" 2>/dev/null || true
 buildah tag "$(buildah commit -q --rm "$ctnr" "$img:$today")" "$img:latest" "$img:$version"
 
-printf '%s\n' \
-  ">>> To deploy, you'll need to add or mount your age encryption keys as /root/.config/sops/keys.txt"
+printf '%s\n' '' \
+  '###################' \
+  "### BUILT IMAGE ###" \
+  '###################' '' \
+  ">>> To decrypt credentials, you'll need to add or mount your age encryption keys as /root/.config/sops/age/keys.txt" \
+  ">>> For the internal process supervision to work, you'll need to unmask /sys/fs/cgroup" \
+  ">>> e.g.:" '' \
+  "  podman run -v ~/.config/sops/age/keys.txt:/root/.config/sops/age/keys.txt:ro --security-opt unmask=/sys/fs/cgroup $img" ''

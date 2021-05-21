@@ -1,5 +1,6 @@
 __pycache__
 user_themes.sqlite
-/svcs
+/app/svcs
 /app/logs
+/app/venv
 /app/sops/papertrail.log_files.*.yml
