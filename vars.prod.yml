@@ -7,7 +7,7 @@ svcs:
       --user colorcodebot
       sops/colorcodebot.prod.yml
 
-      "python3
+      "./venv/bin/python
       ./colorcodebot.py"
     folder:
       run: /home/colorcodebot
