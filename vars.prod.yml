@@ -15,7 +15,7 @@ svcs:
 # TODO: Figure out why sops exec-env --user colorcodebot... didn't work
 
   - name: papertrail
-    enabled: true
+    enabled: false
     exec: >-
       sops exec-file
       papertrail.log_files.prod.yml
