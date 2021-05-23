@@ -18,15 +18,14 @@ svcs:
     enabled: true
     exec: >-
       sops exec-file
-      sops/papertrail.log_files.prod.yml
+      papertrail.log_files.prod.yml
 
       "remote_syslog -D -c {}"
     folder:
-      run: /home/colorcodebot
       log: /home/colorcodebot/logs/papertrail
     sops_templates:
       - src: log_files.yml.wz
-        dest: app/sops/papertrail.log_files.prod.yml
+        dest: papertrail.log_files.prod.yml
 
 # Minimal disabled svc:
 # - name: svc-name-without-spaces
@@ -44,4 +43,4 @@ svcs:
 # - svcs.*.folder.run is interpreted from the svcdir
 # - svcs.*.folder.log is interpreted from <the svcdir>/log
 # - svcs.*.sops_templates.src is implicitly prefixed with REPO/templates/
-# - svcs.*.sops_templates.dest is implicitly prefixed with REPO/
+# - svcs.*.sops_templates.dest is implicitly prefixed with <the svcdir>

@@ -35,14 +35,14 @@ render_svcs () {  # [-d dev|prod|<any>=dev] [SVCS_DIR=app/svcs]
     }
 
     for dest ( ${(f)"$(yaml-get -S -p "svcs[name == $name].sops_templates.dest" $yml 2>/dev/null)"} ) {
-      print -ru2 -- '***' Generating $dest '<-' app/sops/$name.$deployment.yml '***'
+      print -ru2 -- '***' Generating "$svcs_dir/$name/$dest" '<-' app/sops/$name.$deployment.yml '***'
 
       src=$(yaml-get -S -p "svcs[name == $name].sops_templates[dest == $dest].src" $yml)
       data=$(yaml-merge -S $yml =(sops -d app/sops/$name.$deployment.yml) -D json)
 
-      render $src =(<<<$data) >"$dest"
+      render $src =(<<<$data) >"$svcs_dir/$name/$dest"
 
-      if [[ $dest:a:h:t == sops ]] sops -e -i $dest
+      sops -e -i "$svcs_dir/$name/$dest"
     }
   }
 }
