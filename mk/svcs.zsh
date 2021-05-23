@@ -1,10 +1,15 @@
 #!/bin/zsh -fex
 
+render () {  # <template-name> <json>
+  emulate -L zsh -o errreturn
+  local templates=$(git -C $0:P:h rev-parse --show-toplevel)/templates
+  PYTHONPATH="$templates" wheezy.template -s "$templates" $@
+}
+
 render_svcs () {  # [-d dev|prod|<any>=dev] [SVCS_DIR=app/svcs]
   emulate -L zsh -o errreturn
 
   cd "$(git -C $0:P:h rev-parse --show-toplevel)"
-  export PYTHONPATH=$PWD/templates
 
   local yml svcs_dir deployment=dev
   if [[ $1 == -d ]] { deployment=$2; shift 2 }
@@ -25,7 +30,7 @@ render_svcs () {  # [-d dev|prod|<any>=dev] [SVCS_DIR=app/svcs]
       svc.finish.wz  "$svcs_dir/$name/finish"
       svc.log.run.wz "$svcs_dir/$name/log/run"
     ) {
-      wheezy.template -s templates $src =(<<<$data) >"$dest"
+      render $src =(<<<$data) >"$dest"
       chmod 0700 $dest
     }
 
@@ -35,7 +40,7 @@ render_svcs () {  # [-d dev|prod|<any>=dev] [SVCS_DIR=app/svcs]
       src=$(yaml-get -p "svcs[name == $name].sops_templates[dest == $dest].src" $yml)
       data=$(yaml-merge $yml =(sops -d app/sops/$name.$deployment.yml) -D json)
 
-      wheezy.template -s templates $src =(<<<$data) >"$dest"
+      render $src =(<<<$data) >"$dest"
 
       if [[ $dest:a:h:t == sops ]] sops -e -i $dest
     }
