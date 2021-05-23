@@ -23,7 +23,7 @@ render_svcs () {  # [-d dev|prod|<any>=dev] [SVCS_DIR=app/svcs]
 
     mkdir -p $svcs_dir/$name/log
 
-    data=$(yaml-merge -m svc =(<<<'{"svc": {}}') =(yaml-get -p "svcs[name == $name]" $yml))
+    data=$(yaml-merge -S -m svc =(<<<'{"svc": {}}') =(yaml-get -p "svcs[name == $name]" $yml))
 
     for src dest (
       svc.run.wz     "$svcs_dir/$name/run"
@@ -38,7 +38,7 @@ render_svcs () {  # [-d dev|prod|<any>=dev] [SVCS_DIR=app/svcs]
       print -ru2 -- '***' Generating $dest '<-' app/sops/$name.$deployment.yml '***'
 
       src=$(yaml-get -p "svcs[name == $name].sops_templates[dest == $dest].src" $yml)
-      data=$(yaml-merge $yml =(sops -d app/sops/$name.$deployment.yml) -D json)
+      data=$(yaml-merge -S $yml =(sops -d app/sops/$name.$deployment.yml) -D json)
 
       render $src =(<<<$data) >"$dest"
 
