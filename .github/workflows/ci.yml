@@ -22,5 +22,12 @@ jobs:
           QUAY_USER: ${{ secrets.QUAY_USER }}
           QUAY_TOKEN: ${{ secrets.QUAY_TOKEN }}
 
+      - name: configure sops secrets
+        run: >-
+          mkdir -p "$HOME/.config/sops/age" &&
+          echo "$SOPS_SECRET" >"$HOME/.config/sops/age/keys.txt"
+        env:
+          SOPS_SECRET: ${{ secrets.SOPS_SECRET }}
+
       - name: do the thing
         run: ./mk/ctnr.sh -d prod --push
