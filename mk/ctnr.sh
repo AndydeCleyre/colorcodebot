@@ -129,7 +129,7 @@ ctnr_run chmod 0555 /usr/local/bin/sops
 ctnr_run mkdir -p /root/.config/sops
 
 # Install papertrail agent, if enabled
-if [ "$(yaml-get -p 'svcs[name == papertrail].enabled' "$repo/vars.$deployment.yml")" = True ]; then
+if [ "$(yaml-get -S -p 'svcs[name == papertrail].enabled' "$repo/vars.$deployment.yml")" = True ]; then
   ctnr_fetch \
     'https://github.com/papertrail/remote_syslog2/releases/download/v0.20/remote_syslog_linux_amd64.tar.gz' \
     /tmp
