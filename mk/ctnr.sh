@@ -165,6 +165,7 @@ printf '%s\n' '' \
   "  podman run -v ~/.config/sops/age/keys.txt:/root/.config/sops/age/keys.txt:ro --security-opt unmask=/sys/fs/cgroup $img" ''
 
 if [ "$1" = --push ]; then
+  podman push "$img-jumpstart:$today"
   podman push "$img:latest"
   podman push "$img:$today"
   podman push "$img:$version"
