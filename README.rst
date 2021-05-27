@@ -5,6 +5,11 @@ Color Code Bot
 - container images built by GitHub Actions: |actions|
 - container images pushed to |quay|
 
+To use it, chat directly with the bot.
+
+As a convenience, you can get to a direct chat with it from any other chat by typing
+``@colorcodebot`` and tapping the inline "result" button.
+
 .. |telegram| image:: https://img.shields.io/badge/Telegram-%40colorcodebot-blue?logo=telegram&style=for-the-badge
    :alt: Telegram user @colorcodebot
    :target: https://t.me/colorcodebot
