@@ -5,3 +5,6 @@ creation_rules:
 - path_regex: \.dev\.yml$
   encrypted_regex: (^(host|port)$|_(KEY|ID)$)
   age: age10qrj02xnpzxs5kykmyan4nwvhjln9cnslr6jkskcpwj086aghvvqpmr4rj
+- path_regex: \.[^.]+\.yml$
+  encrypted_regex: (^(host|port)$|_(KEY|ID)$)
+  age: age10qrj02xnpzxs5kykmyan4nwvhjln9cnslr6jkskcpwj086aghvvqpmr4rj
