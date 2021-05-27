@@ -6,23 +6,22 @@ svcs:
       sops exec-env
       sops/colorcodebot.dev.yml
 
-      "./venv/bin/python
+      "s6-setuidgid colorcodebot ./venv/bin/python
       ./colorcodebot.py"
     folder:
       run: ../../
       log: ../../../logs/colorcodebot
-      cgroups: /sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/svcs
 
   - name: papertrail
-    enabled: false
+    enabled: true
     exec: >-
-      sops exec-file
-      papertrail.log_files.dev.yml
+      sops exec-file --filename log_files.yml
+      ../papertrail.log_files.dev.yml
 
-      "remote_syslog2 -D -c {}"
+      "remote_syslog -D -c {}"
     folder:
-      log: ../../logs/papertrail
-      cgroups: /sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/svcs
+      run: log
+      log: ../../../logs/papertrail
     sops_templates:
       - src: log_files.yml.wz
         dest: papertrail.log_files.dev.yml

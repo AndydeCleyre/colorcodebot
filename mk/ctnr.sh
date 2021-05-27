@@ -1,4 +1,4 @@
-#!/bin/sh -ex
+#!/bin/sh -e
 # [-d <deployment>=dev]
 
 #######################
@@ -28,6 +28,7 @@ user=$appname
 svcs_dir=/home/$user/svcs
 
 sops_ver=3.7.1
+iosevka_pkg='https://github.com/AndydeCleyre/archbuilder_iosevka/releases/download/no-more-epsilon/ttf-iosevka-term-custom-git-1621995162-1-any.pkg.tar.zst'
 today=$(date +%Y.%j)
 tz="America/New_York"
 
@@ -76,6 +77,7 @@ if ! buildah from -q --name "$ctnr" "$img-jumpstart:$today" 2>/dev/null; then
 fi
 
 # Upgrade and install packages
+printf '%s\n' 'Upgrading and installing distro packages . . .' >&2
 ctnr_pkg_upgrade
 ctnr_pkg_add $pkgs $build_pkgs
 
@@ -98,9 +100,9 @@ rm -rf "$tmp"
 
 # Install python modules
 ctnr_run -u python3 -m venv /home/$user/venv
-ctnr_run /home/$user/venv/bin/pip install -U wheel
-ctnr_run /home/$user/venv/bin/pip install -Ur /home/$user/requirements.txt
-ctnr_run /home/$user/venv/bin/pip uninstall -y wheel
+ctnr_run /home/$user/venv/bin/pip install -qU wheel
+ctnr_run /home/$user/venv/bin/pip install -qUr /home/$user/requirements.txt
+ctnr_run /home/$user/venv/bin/pip uninstall -qy wheel
 
 # Save this stage as a daily "jumpstart" image
 if [ $make_jumpstart_img ]; then
@@ -113,13 +115,8 @@ if [ $make_jumpstart_img ]; then
 fi
 
 # Install fonts
-ctnr_fetch \
-  'https://github.com/AndydeCleyre/archbuilder_iosevka/releases/download/https-aur/ttf-iosevka-term-custom-git-1619959084-1-any.pkg.tar.zst' \
-  /tmp
-ctnr_run tar xf \
-  /tmp/ttf-iosevka-term-custom-git-1619959084-1-any.pkg.tar.zst \
-  -C / --wildcards --wildcards-match-slash \
-  '*-regular.ttf' '*-italic.ttf' '*-bold.ttf' '*-bolditalic.ttf'
+ctnr_fetch "$iosevka_pkg" /tmp
+ctnr_run sh -c "tar xf /tmp/ttf-iosevka-*.pkg.tar.zst -C / --wildcards --wildcards-match-slash '*-regular.ttf' '*-italic.ttf' '*-bold.ttf' '*-bolditalic.ttf'"
 
 # Install sops
 ctnr_fetch \
@@ -162,7 +159,9 @@ printf '%s\n' '' \
   ">>> To decrypt credentials, you'll need to add or mount your age encryption keys as /root/.config/sops/age/keys.txt" \
   ">>> For the internal process supervision to work, you'll need to unmask /sys/fs/cgroup" \
   ">>> e.g.:" '' \
-  "  podman run -v ~/.config/sops/age/keys.txt:/root/.config/sops/age/keys.txt:ro --security-opt unmask=/sys/fs/cgroup $img" ''
+  "  podman run -v ~/.config/sops/age/keys.txt:/root/.config/sops/age/keys.txt:ro --security-opt unmask=/sys/fs/cgroup $img" '' \
+  ">>> You may also wish to mount an external sqlite db, e.g.:" '' \
+  "  podman run -v ~/.config/sops/age/keys.txt:/root/.config/sops/age/keys.txt:ro --security-opt unmask=/sys/fs/cgroup -v ~/user_themes.sqlite:/home/colorcodebot/user_themes.sqlite:rw $img" ''
 
 if [ "$1" = --push ]; then
   podman push "$img-jumpstart:$today"
