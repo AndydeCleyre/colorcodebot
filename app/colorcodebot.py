@@ -366,6 +366,8 @@ class ColorCodeBot:
         self.log.msg(
             'received photo',
             file_id=message.photo[0].file_id,
+            user_id=message.from_user.id,
+            user_first_name=message.from_user.first_name,
             chat_id=message.chat.id
         )
 
