@@ -246,7 +246,7 @@ class ColorCodeBot:
             user_id=user.id,
             user_first_name=user.first_name,
             theme=data['theme'],
-            chat_id=message.chat.id
+            chat_id=cb_query.message.chat.id
         )
         self.bot.edit_message_reply_markup(
             cb_query.message.chat.id,
