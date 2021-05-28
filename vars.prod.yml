@@ -18,7 +18,7 @@ svcs:
     enabled: true
     exec: >-
       sops exec-file --filename log_files.yml
-      ../papertrail.log_files.dev.yml
+      ../papertrail.log_files.prod.yml
 
       "remote_syslog -D -c {}"
     folder:
