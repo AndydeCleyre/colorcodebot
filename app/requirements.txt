@@ -28,7 +28,7 @@ strictyaml==1.4.0
     # via -r requirements.in
 structlog==21.1.0
     # via -r requirements.in
-urllib3==1.26.4
+urllib3==1.26.5
     # via requests
 wrapt==1.12.1
     # via -r requirements.in
