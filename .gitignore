@@ -3,4 +3,5 @@ user_themes.sqlite
 /app/svcs
 /app/logs
 /app/venv
-/app/sops/papertrail.log_files.*.yml
+/app/sops/*.yml
+/vars.*.yml
