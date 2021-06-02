@@ -1,6 +1,6 @@
 apsw==3.9.2.post1
     # via -r requirements.in
-certifi==2020.12.5
+certifi==2021.5.30
     # via requests
 chardet==4.0.0
     # via requests
@@ -24,11 +24,11 @@ ruamel.yaml==0.17.4
     # via strictyaml
 six==1.16.0
     # via python-dateutil
-strictyaml==1.4.0
+strictyaml==1.4.2
     # via -r requirements.in
 structlog==21.1.0
     # via -r requirements.in
-urllib3==1.26.4
+urllib3==1.26.5
     # via requests
 wrapt==1.12.1
     # via -r requirements.in

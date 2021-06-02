@@ -1,7 +1,7 @@
 Color Code Bot
 ==============
 
-- up and running at on |telegram|
+- up and running on |telegram|
 - container images built by GitHub Actions: |actions|
 - container images pushed to |quay|
 
