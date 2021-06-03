@@ -34,7 +34,7 @@ tz="America/New_York"
 
 base_img='docker.io/library/alpine:3.13'
 pkgs='ca-certificates execline fontconfig jpeg python3 s6'
-build_pkgs='tzdata freetype-dev gcc jpeg-dev musl-dev python3-dev tar zstd'
+build_pkgs='tzdata freetype-dev g++ gcc jpeg-dev musl-dev python3-dev tar zstd'
 fat="/tmp/* /usr/lib/python3.*/__pycache__ /home/$user/.cache /root/.cache /home/$user/.local/bin /root/.local/bin /var/cache/apk/*"
 
 #################
@@ -99,10 +99,11 @@ ctnr_fetch "$tmp/svcs" "$svcs_dir"
 rm -rf "$tmp"
 
 # Install python modules
+printf '%s\n' 'Installing PyPI packages . . .' >&2
 ctnr_run -u python3 -m venv /home/$user/venv
-ctnr_run /home/$user/venv/bin/pip install -qU wheel
+ctnr_run /home/$user/venv/bin/pip install -qU pip wheel
 ctnr_run /home/$user/venv/bin/pip install -qUr /home/$user/requirements.txt
-ctnr_run /home/$user/venv/bin/pip uninstall -qy wheel
+ctnr_run /home/$user/venv/bin/pip uninstall -qy pip wheel
 
 # Save this stage as a daily "jumpstart" image
 if [ $make_jumpstart_img ]; then
