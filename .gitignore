@@ -1,7 +1,7 @@
 __pycache__
 user_themes.sqlite
-/app/svcs
+venv
 /app/logs
-/app/venv
 /app/sops/*.yml
+/app/svcs
 /vars.*.yml
