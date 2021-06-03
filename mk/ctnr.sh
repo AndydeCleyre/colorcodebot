@@ -28,7 +28,7 @@ user=$appname
 svcs_dir=/home/$user/svcs
 
 sops_ver=3.7.1
-iosevka_pkg='https://github.com/AndydeCleyre/archbuilder_iosevka/releases/download/no-more-epsilon/ttf-iosevka-term-custom-git-1621995162-1-any.pkg.tar.zst'
+iosevka_pkg='https://github.com/AndydeCleyre/archbuilder_iosevka/releases/download/slashed-oval-zero/ttf-iosevka-term-custom-git-1622540711-1-any.pkg.tar.zst'
 today=$(date +%Y.%j)
 tz="America/New_York"
 
