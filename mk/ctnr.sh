@@ -102,7 +102,7 @@ rm -rf "$tmp"
 printf '%s\n' 'Installing PyPI packages . . .' >&2
 ctnr_run -u python3 -m venv /home/$user/venv
 ctnr_run /home/$user/venv/bin/pip install -qU pip wheel
-ctnr_run /home/$user/venv/bin/pip install -qUr /home/$user/requirements.txt
+ctnr_run /home/$user/venv/bin/pip install -Ur /home/$user/requirements.txt
 ctnr_run /home/$user/venv/bin/pip uninstall -qy pip wheel
 
 # Save this stage as a daily "jumpstart" image
