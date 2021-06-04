@@ -1,5 +1,5 @@
 #!/bin/sh -e
-# [-d <deployment>=dev]
+# [-d <deployment>=dev] [--push]
 
 #######################
 ### Configure Build ###
@@ -12,7 +12,7 @@ if [ "$1" = -d ]; then
 fi
 
 if [ "$1" ] && [ "$1" != --push ]; then
-  printf '%s\n' 'Args: [-d <deployment>=dev]'
+  printf '%s\n' 'Args: [-d <deployment>=dev] [--push]'
   exit 1
 fi
 
