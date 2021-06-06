@@ -18,24 +18,26 @@ fi
 
 repo=$(git -C "$(dirname "$0")" rev-parse --show-toplevel)
 version=$(git -C "$repo" describe)
-branch=$(git -C "$repo" branch --show-current)
+branch=$(git -C "$repo" branch --show-current | sed 's/[^[:alnum:]\.\_\-]/_/g')
 
 appname=colorcodebot
-img=quay.io/andykluger/${appname}-${deployment}-alpine
+img=quay.io/andykluger/${appname}-${deployment}-archlinux
 ctnr=${img}-building
 
 user=$appname
 svcs_dir=/home/$user/svcs
 
-sops_ver=3.7.1
 iosevka_pkg='https://github.com/AndydeCleyre/archbuilder_iosevka/releases/download/slashed-oval-zero/ttf-iosevka-term-custom-git-1622540711-1-any.pkg.tar.zst'
 today=$(date +%Y.%j)
 tz="America/New_York"
 
-base_img='docker.io/library/alpine:3.13'
-pkgs='ca-certificates execline fontconfig jpeg python3 s6'
-build_pkgs='tzdata freetype-dev g++ gcc jpeg-dev musl-dev python3-dev tar zstd'
-fat="/tmp/* /usr/lib/python3.*/__pycache__ /home/$user/.cache /root/.cache /home/$user/.local/bin /root/.local/bin /var/cache/apk/*"
+base_img='docker.io/library/archlinux:base'
+pkgs='fontconfig python sops'
+aur_pkgs='s6'
+build_pkgs='git'
+build_groups='base-devel'
+
+fat="/tmp/* /usr/lib/python3.*/__pycache__ /home/$user/.cache /root/.cache /home/$user/.local/bin /root/.local/bin /var/cache/pacman/pkg/* /var/lib/pacman/*/*"
 
 #################
 ### Functions ###
@@ -43,7 +45,13 @@ fat="/tmp/* /usr/lib/python3.*/__pycache__ /home/$user/.cache /root/.cache /home
 
 ctnr_run () {  # [-u] <cmd> [<cmd-arg>...]
   _u=root
-  if [ "$1" = -u ]; then _u=$user; shift; fi
+  if [ "$1" = -u ]; then
+    _u=$user
+    shift
+  elif [ "$1" = -b ]; then
+    _u=builder
+    shift
+  fi
   buildah run --user $_u "$ctnr" "$@"
 }
 
@@ -59,11 +67,11 @@ ctnr_append () {  # [-u] <dest-path>
   ctnr_run $_u sh -c "cat >>$1"
 }
 
-alias ctnr_pkg="ctnr_run apk -q --no-progress"
-alias ctnr_pkg_upgrade="ctnr_pkg upgrade"
-alias ctnr_pkg_add="ctnr_pkg add"
-alias ctnr_pkg_del="ctnr_pkg del --purge -r"
-alias ctnr_mkuser="ctnr_run adduser -D"
+alias ctnr_pkg="ctnr_run pacman --noconfirm"
+alias ctnr_pkg_upgrade="ctnr_pkg -Syu"
+alias ctnr_pkg_add="ctnr_pkg -S --needed"
+alias ctnr_pkg_del="ctnr_pkg -Rsn"
+alias ctnr_mkuser="ctnr_run useradd -m"
 
 #############
 ### Build ###
@@ -76,17 +84,29 @@ if ! buildah from -q --name "$ctnr" "$img-jumpstart:$today" 2>/dev/null; then
   make_jumpstart_img=1
 fi
 
-# Upgrade and install packages
-printf '%s\n' 'Upgrading and installing distro packages . . .' >&2
-ctnr_pkg_upgrade
-ctnr_pkg_add $pkgs $build_pkgs
-
 # Set the timezone
-ctnr_run cp /usr/share/zoneinfo/$tz /etc/localtime
-printf '%s\n' "$tz" | ctnr_append /etc/timezone
+ctnr_run ln -sf /usr/share/zoneinfo/$tz /etc/localtime
+
+# Upgrade and install official packages
+printf '%s\n' '' '>>> Upgrading and installing distro packages . . .' '' >&2
+ctnr_pkg_upgrade
+ctnr_pkg_add $pkgs $build_pkgs $build_groups
 
 # Add user
 ctnr_mkuser $user || true
+
+# Install AUR packages
+printf '%s\n' '' '>>> Installing AUR packages . . .' '' >&2
+ctnr_mkuser builder || true
+ctnr_run rm -f /etc/sudoers.d/builder
+printf '%s\n' 'builder ALL=(ALL) NOPASSWD: ALL' \
+| ctnr_append '/etc/sudoers.d/builder'
+ctnr_run -b git clone 'https://aur.archlinux.org/paru-bin' /tmp/paru-bin
+buildah config --workingdir /tmp/paru-bin "$ctnr"
+ctnr_run -b makepkg --noconfirm -si
+buildah config --workingdir "/home/$user" "$ctnr"
+ctnr_run -b paru -S --noconfirm $aur_pkgs
+ctnr_pkg_del paru-bin
 
 # Copy app and svcs into container
 ctnr_run rm -rf "$svcs_dir"
@@ -99,7 +119,7 @@ ctnr_fetch "$tmp/svcs" "$svcs_dir"
 rm -rf "$tmp"
 
 # Install python modules
-printf '%s\n' 'Installing PyPI packages . . .' >&2
+printf '%s\n' '' '>>> Installing PyPI packages . . .' '' >&2
 ctnr_run -u python3 -m venv /home/$user/venv
 ctnr_run /home/$user/venv/bin/pip install -qU pip wheel
 ctnr_run /home/$user/venv/bin/pip install -Ur /home/$user/requirements.txt
@@ -107,24 +127,18 @@ ctnr_run /home/$user/venv/bin/pip uninstall -qy pip wheel
 
 # Save this stage as a daily "jumpstart" image
 if [ $make_jumpstart_img ]; then
-  ctnr_pkg_del $build_pkgs
+  printf '%s\n' '' '>>> Making jumpstart image . . .' '' >&2
+  ctnr_pkg_del $build_pkgs $(ctnr_run pacman -Qqgtt $build_groups)
   ctnr_run sh -c "rm -rf $fat"
   buildah commit -q --rm "$ctnr" "$img-jumpstart:$today"
   buildah from -q --name "$ctnr" "$img-jumpstart:$today"
   ctnr_pkg_upgrade
-  ctnr_pkg_add $pkgs $build_pkgs
+  ctnr_pkg_add $build_pkgs $build_groups
 fi
 
 # Install fonts
 ctnr_fetch "$iosevka_pkg" /tmp
 ctnr_run sh -c "tar xf /tmp/ttf-iosevka-*.pkg.tar.zst -C / --wildcards --wildcards-match-slash '*-regular.ttf' '*-italic.ttf' '*-bold.ttf' '*-bolditalic.ttf'"
-
-# Install sops
-ctnr_fetch \
-  "https://github.com/mozilla/sops/releases/download/v${sops_ver}/sops-v${sops_ver}.linux" \
-  /usr/local/bin/sops
-ctnr_run chmod 0555 /usr/local/bin/sops
-ctnr_run mkdir -p /root/.config/sops
 
 # Install papertrail agent, if enabled
 if [ "$(yaml-get -S -p 'svcs[name == papertrail].enabled' "$repo/vars.$deployment.yml")" = True ]; then
@@ -143,7 +157,7 @@ fi
 ###############
 
 # Cut the fat:
-ctnr_pkg_del $build_pkgs
+ctnr_pkg_del $build_pkgs $(ctnr_run pacman -Qqgtt $build_groups)
 ctnr_run sh -c "rm -rf $fat"
 
 # Set default command

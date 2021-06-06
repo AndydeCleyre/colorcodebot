@@ -25,9 +25,9 @@ This is *not* done for the currently hosted container images.
    :alt: GitHub Actions Status
    :target: https://github.com/AndydeCleyre/colorcodebot/actions
 
-.. |quay| image:: https://img.shields.io/badge/Quay.io-andykluger%2Fcolorcodebot--prod--alpine-lightgrey?logo=redhat&style=for-the-badge
+.. |quay| image:: https://img.shields.io/badge/Quay.io-andykluger%2Fcolorcodebot--prod--archlinux-lightgrey?logo=redhat&style=for-the-badge
    :alt: Telegram user @colorcodebot
-   :target: https://quay.io/repository/andykluger/colorcodebot-prod-alpine?tab=tags
+   :target: https://quay.io/repository/andykluger/colorcodebot-prod-archlinux?tab=tags
 
 .. |telegram| image:: https://img.shields.io/badge/Telegram-%40colorcodebot-blue?logo=telegram&style=for-the-badge
    :alt: Telegram user @colorcodebot
