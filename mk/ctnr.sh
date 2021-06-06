@@ -37,7 +37,7 @@ aur_pkgs='s6'
 build_pkgs='git'
 build_groups='base-devel'
 
-fat="/tmp/* /usr/lib/python3.*/__pycache__ /home/$user/.cache /root/.cache /home/$user/.local/bin /root/.local/bin /var/cache/pacman/pkg/* /var/lib/pacman/*/*"
+fat="/tmp/* /usr/lib/python3.*/__pycache__ /home/$user/.cache /root/.cache /home/$user/.local/bin /root/.local/bin /var/cache/pacman/pkg/*"
 
 #################
 ### Functions ###
