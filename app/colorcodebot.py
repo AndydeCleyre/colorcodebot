@@ -399,8 +399,8 @@ class ColorCodeBot:
             )
         snippet = query_message.reply_to_message
         theme = self.user_themes.get(snippet.from_user.id, 'native')
-        self.send_html(snippet, ext, theme)
         self.send_image(snippet, ext, theme)
+        self.send_html(snippet, ext, theme)
         if cb_query:
             self.bot.answer_callback_query(cb_query.id)
 
