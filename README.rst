@@ -10,16 +10,20 @@ To use it, chat directly with `@colorcodebot`_.
 As a convenience, you can get to a direct chat with it from any other chat,
 by typing ``@colorcodebot`` and tapping the button that pops up.
 
-Development
------------
+Development & Deployment
+------------------------
 
 Depending on your hardware, you may see faster syntax guessing (from guesslang_)
 by installing ``cuda`` and ``cudnn`` packages.
 This is *not* done for the currently hosted container images.
 
+I will probably add more info here eventually,
+but please do `send a message`_ or open an issue with any questions.
+
 
 .. _@colorcodebot: https://t.me/colorcodebot
 .. _guesslang: https://github.com/yoeo/guesslang
+.. _send a message: https://t.me/andykluger
 
 .. |actions| image:: https://img.shields.io/github/workflow/status/andydecleyre/colorcodebot/Build%20and%20push%20a%20container%20image?logo=github&style=for-the-badge
    :alt: GitHub Actions Status
