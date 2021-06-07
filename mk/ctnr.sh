@@ -110,7 +110,7 @@ ctnr_pkg_del paru-bin
 
 # Copy app and svcs into container
 ctnr_run rm -rf "$svcs_dir"
-ctnr_run sh -c "rm -rf /home/$user/*"
+# Don't delete /home/$user/*, to preserve any jumpstart venv
 tmp=$(mktemp -d)
 git -C "$repo" archive HEAD:app >"$tmp/app.tar"
 ctnr_fetch -u "$tmp/app.tar" /home/$user
