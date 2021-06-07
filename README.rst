@@ -1,9 +1,9 @@
 Color Code Bot
 ==============
 
-- up and running on |telegram|
-- container images built by GitHub Actions: |actions|
-- container images pushed to |quay|
+- |telegram|
+- |actions|
+- |quay|
 
 To use it, chat directly with `@colorcodebot`_.
 
