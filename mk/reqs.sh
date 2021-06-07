@@ -1,4 +1,4 @@
-#!/bin/sh -ex
+#!/bin/sh -e
 
 root="$(git -C "$(dirname -- "$0")" rev-parse --show-toplevel)"
 
