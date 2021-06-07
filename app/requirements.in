@@ -6,3 +6,4 @@ pyTelegramBotAPI
 strictyaml
 structlog
 wrapt
+guesslang

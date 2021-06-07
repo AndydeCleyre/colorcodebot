@@ -1,24 +1,15 @@
-Assembly: nasm
-Bash: sh
 C: c
 'C#': csharp
 CSS: css
 Go: go
 HTML: html
-INI: ini
 Java: java
 JavaScript: js
-JSON: json
-Kotlin: kotlin
 Lua: lua
-NGINX: nginx
-Objective C: objc
+Objective-C: objc
 PHP: php
 Python: py3
 Ruby: rb
-Rust: rust
+Shell: sh
 Swift: swift
 SQL: sql
-TOML: toml
-XML: xml
-YAML: yaml

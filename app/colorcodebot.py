@@ -8,6 +8,7 @@ from typing import Any, Callable, Iterable, List, Mapping, Optional, Union
 
 import strictyaml
 import structlog
+from guesslang import Guess
 from peewee import CharField, IntegerField
 from playhouse.apsw_ext import APSWDatabase
 from playhouse.kv import KeyValue
@@ -35,19 +36,22 @@ def ydump(data: Mapping) -> str:
 def load_configs() -> {
     'lang':             Mapping[str, str],
     'theme_image_ids':  Iterable[str],
-    'kb':               Mapping[str, InlineKeyboardMarkup]
+    'kb':               Mapping[str, InlineKeyboardMarkup],
+    'guesslang':        Mapping[str, str]
 }:
     data = {}
     (
         data['lang'],
         theme_names_ids,
-        syntax_names_exts
+        syntax_names_exts,
+        data['guesslang']
     ) = (
         yload((Path(__file__).parent / f'{yml}.yml').read_text())
         for yml in (
             'english',
             'theme_previews',
-            'syntaxes'
+            'syntaxes',
+            'guesslang'
         )
     )
 
@@ -93,14 +97,14 @@ def mk_png(code: str, ext: str, theme: str = 'native') -> str:
     )
 
 
-def minikb(kb_name: str) -> InlineKeyboardMarkup:
+def minikb(kb_name: str, mini_text: str = '. . .') -> InlineKeyboardMarkup:
     """
     Return an inline KB with just one button,
     which restores the specified KB by name when pressed.
     """
     kb = InlineKeyboardMarkup()
     kb.add(InlineKeyboardButton(
-        '. . .', callback_data=ydump({'action': 'restore', 'kb_name': kb_name})
+        mini_text, callback_data=ydump({'action': 'restore', 'kb_name': kb_name})
     ))
     return kb
 
@@ -165,6 +169,7 @@ class ColorCodeBot:
         lang: Mapping[str, str],
         theme_image_ids: Iterable[str],
         keyboards: Mapping[str, InlineKeyboardMarkup],
+        guesslang_syntaxes: Mapping[str, str],
         *args: Any,
         admin_chat_id: Optional[str] = None,
         db_path: str = str((Path(__file__).parent / 'user_themes.sqlite').absolute()),
@@ -173,6 +178,7 @@ class ColorCodeBot:
         self.lang = lang
         self.theme_image_ids = theme_image_ids
         self.kb = keyboards
+        self.guesslang_syntaxes = guesslang_syntaxes
         self.admin_chat_id = admin_chat_id
         self.db_path = db_path
         self.user_themes = KeyValue(
@@ -183,6 +189,7 @@ class ColorCodeBot:
         self.log = mk_logger()
         self.bot = TeleBot(api_key, *args, **kwargs)
         self.register_handlers()
+        self.guesser = Guess()
 
     def register_handlers(self):
         self.welcome              = self.bot.message_handler(commands=['start', 'help'])(self.welcome)
@@ -262,6 +269,19 @@ class ColorCodeBot:
             with open(self.db_path, 'rb') as doc:
                 self.bot.send_document(self.admin_chat_id, doc)
 
+    def guess_ext(self, code, probability_min=.12) -> Optional[str]:
+        syntax, probability = self.guesser.probabilities(code)[0]
+        ext = self.guesslang_syntaxes.get(syntax)
+        self.log.msg(
+            "guessed syntax",
+            probability_min=probability_min,
+            probability=probability,
+            syntax=syntax,
+            ext=ext
+        )
+        if probability >= probability_min:
+            return ext
+
     @retry
     def intake_snippet(self, message: Message):
         self.log.msg(
@@ -270,13 +290,24 @@ class ColorCodeBot:
             user_first_name=message.from_user.first_name,
             chat_id=message.chat.id
         )
-        self.bot.reply_to(
-            message,
-            self.lang['query ext'],
-            reply_markup=self.kb['syntax'],
-            parse_mode='Markdown',
-            disable_web_page_preview=True
-        )
+        ext = self.guess_ext(message.text)
+        if ext:
+            kb_msg = self.bot.reply_to(
+                message,
+                f"{self.lang['query ext']}\n\n{self.lang['guessed syntax'].format(ext)}",
+                reply_markup=minikb('syntax', self.lang['syntax picker']),
+                parse_mode='Markdown',
+                disable_web_page_preview=True
+            )
+            self.set_snippet_filetype(cb_query=None, query_message=kb_msg, ext=ext)
+        else:
+            self.bot.reply_to(
+                message,
+                self.lang['query ext'],
+                reply_markup=self.kb['syntax'],
+                parse_mode='Markdown',
+                disable_web_page_preview=True
+            )
 
     @retry
     def send_html(self, snippet: Message, ext: str, theme: str = 'native'):
@@ -342,25 +373,36 @@ class ColorCodeBot:
         self.bot.answer_callback_query(cb_query.id)
 
     @retry
-    def set_snippet_filetype(self, cb_query: CallbackQuery):
-        data = yload(cb_query.data)
+    def set_snippet_filetype(
+        self,
+        cb_query: Optional[CallbackQuery] = None,
+        query_message: Optional[Message] = None,
+        ext: Optional[str] = None
+    ):
+        if cb_query:
+            query_message = cb_query.message
+            ext = yload(cb_query.data)['ext']
+        elif not (query_message and ext):
+            raise Exception("Either cb_query or both query_message and ext are required")
         self.log.msg(
             "colorizing code",
-            user_id=cb_query.message.reply_to_message.from_user.id,
-            user_first_name=cb_query.message.reply_to_message.from_user.first_name,
-            syntax=data['ext'],
-            chat_id=cb_query.message.chat.id
+            user_id=query_message.reply_to_message.from_user.id,
+            user_first_name=query_message.reply_to_message.from_user.first_name,
+            syntax=ext,
+            chat_id=query_message.chat.id
         )
-        self.bot.edit_message_reply_markup(
-            cb_query.message.chat.id,
-            cb_query.message.message_id,
-            reply_markup=minikb('syntax')
-        )
-        snippet = cb_query.message.reply_to_message
+        if cb_query:
+            self.bot.edit_message_reply_markup(
+                query_message.chat.id,
+                query_message.message_id,
+                reply_markup=minikb('syntax', self.lang['syntax picker'])
+            )
+        snippet = query_message.reply_to_message
         theme = self.user_themes.get(snippet.from_user.id, 'native')
-        self.send_html(snippet, data['ext'], theme)
-        self.send_image(snippet, data['ext'], theme)
-        self.bot.answer_callback_query(cb_query.id)
+        self.send_html(snippet, ext, theme)
+        self.send_image(snippet, ext, theme)
+        if cb_query:
+            self.bot.answer_callback_query(cb_query.id)
 
     def recv_photo(self, message: Message):
         self.log.msg(
@@ -380,4 +422,5 @@ if __name__ == '__main__':
         lang=cfg['lang'],
         theme_image_ids=cfg['theme_image_ids'],
         keyboards=cfg['kb'],
+        guesslang_syntaxes=cfg['guesslang']
     ).bot.polling()
