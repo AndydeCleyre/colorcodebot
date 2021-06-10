@@ -73,6 +73,12 @@ alias ctnr_pkg_add="ctnr_pkg -S --needed"
 alias ctnr_pkg_del="ctnr_pkg -Rsn"
 alias ctnr_mkuser="ctnr_run useradd -m"
 
+ctnr_trim () {
+  # shellcheck disable=SC2046
+  ctnr_pkg_del $build_pkgs $(ctnr_run pacman -Qqgtt $build_groups)
+  ctnr_run sh -c "rm -rf $fat"
+}
+
 #############
 ### Build ###
 #############
@@ -90,6 +96,7 @@ ctnr_run ln -sf /usr/share/zoneinfo/$tz /etc/localtime
 # Upgrade and install official packages
 printf '%s\n' '' '>>> Upgrading and installing distro packages . . .' '' >&2
 ctnr_pkg_upgrade
+# shellcheck disable=SC2086
 ctnr_pkg_add $pkgs $build_pkgs $build_groups
 
 # Add user
@@ -128,8 +135,7 @@ ctnr_run /home/$user/venv/bin/pip uninstall -qy pip wheel
 # Save this stage as a daily "jumpstart" image
 if [ $make_jumpstart_img ]; then
   printf '%s\n' '' '>>> Making jumpstart image . . .' '' >&2
-  ctnr_pkg_del $build_pkgs $(ctnr_run pacman -Qqgtt $build_groups)
-  ctnr_run sh -c "rm -rf $fat"
+  ctnr_trim
   buildah commit -q --rm "$ctnr" "$img-jumpstart:$today"
   buildah from -q --name "$ctnr" "$img-jumpstart:$today"
   ctnr_pkg_upgrade
@@ -157,8 +163,7 @@ fi
 ###############
 
 # Cut the fat:
-ctnr_pkg_del $build_pkgs $(ctnr_run pacman -Qqgtt $build_groups)
-ctnr_run sh -c "rm -rf $fat"
+ctnr_trim
 
 # Set default command
 buildah config --cmd "s6-svscan $svcs_dir" "$ctnr"
