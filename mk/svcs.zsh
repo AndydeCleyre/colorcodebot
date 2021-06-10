@@ -16,8 +16,8 @@ render_svcs () {  # [-d <deployment>=dev] [<svcs-dir>=app/svcs]
   if [[ $1 =~ '^-(h|-help)$' ]] {
     print -rlu2 \
       'Generate svcs dir, with enabled svcs from vars.<deployment>.yml' \
-      'ARGS: [-d <deployment>=dev] [<svcs-dir>=app/svcs]'
-    return
+      'Args: [-d <deployment>=dev] [<svcs-dir>=app/svcs]'
+    return 1
   }
 
   cd "$(git -C $0:P:h rev-parse --show-toplevel)"
