@@ -12,7 +12,7 @@ if [ "$1" = -d ]; then
 fi
 
 if [ "$1" ] && [ "$1" != --push ]; then
-  printf '%s\n' 'Args: [-d <deployment>=dev] [--push]'
+  printf '%s\n' 'Build a container image' 'Args: [-d <deployment>=dev] [--push]' 1>&2
   exit 1
 fi
 
@@ -173,10 +173,7 @@ printf '%s\n' '' \
   '###################' '' \
   ">>> To decrypt credentials, you'll need to add or mount your age encryption keys as /root/.config/sops/age/keys.txt" \
   ">>> For the internal process supervision to work, you'll need to unmask /sys/fs/cgroup" \
-  ">>> e.g.:" '' \
-  "  podman run -v ~/.config/sops/age/keys.txt:/root/.config/sops/age/keys.txt:ro --security-opt unmask=/sys/fs/cgroup $img" '' \
-  ">>> You may also wish to mount an external sqlite db, e.g.:" '' \
-  "  podman run -v ~/.config/sops/age/keys.txt:/root/.config/sops/age/keys.txt:ro --security-opt unmask=/sys/fs/cgroup -v ~/user_themes.sqlite:/home/colorcodebot/user_themes.sqlite:rw $img" ''
+  ">>> See start/podman.sh, which uses the host user's encryption keys and mounts a DB if present" ''
 
 if [ "$1" = --push ]; then
   podman push "$img-jumpstart:$today"
