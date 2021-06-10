@@ -18,7 +18,7 @@ gast==0.4.0
     # via tensorflow
 google-auth-oauthlib==0.4.4
     # via tensorboard
-google-auth==1.30.1
+google-auth==1.30.2
     # via
     #   google-auth-oauthlib
     #   tensorboard
@@ -55,7 +55,7 @@ peewee==3.14.4
     # via -r requirements.in
 pillow==8.2.0
     # via -r requirements.in
-protobuf==3.17.2
+protobuf==3.17.3
     # via
     #   tensorboard
     #   tensorflow
