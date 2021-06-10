@@ -3,5 +3,5 @@ user_themes.sqlite
 venv
 /app/logs
 /app/sops/*.yml
-/app/svcs
+/app/svcs*
 /vars.*.yml
