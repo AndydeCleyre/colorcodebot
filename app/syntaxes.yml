@@ -1,4 +1,4 @@
-Assembly: nasm
+Assembly: asm
 Bash: sh
 C: c
 'C#': csharp
@@ -12,13 +12,15 @@ JSON: json
 Kotlin: kotlin
 Lua: lua
 NGINX: nginx
+Nim: nim
 Objective C: objc
 PHP: php
 Python: py3
 Ruby: rb
 Rust: rust
-Swift: swift
+reStructuredText: rst
 SQL: sql
+Swift: swift
 TOML: toml
 XML: xml
 YAML: yaml
