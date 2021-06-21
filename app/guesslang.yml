@@ -1,4 +1,5 @@
 C: c
+C++: c
 'C#': csharp
 CSS: css
 Go: go
@@ -11,5 +12,5 @@ PHP: php
 Python: py3
 Ruby: rb
 Shell: sh
-Swift: swift
 SQL: sql
+Swift: swift
