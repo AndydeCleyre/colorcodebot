@@ -1,0 +1,25 @@
+@require(roles, options)
+<?xml version='1.0'?>
+<!DOCTYPE fontconfig SYSTEM 'fonts.dtd'>
+<fontconfig>
+
+    <dir>/usr/share/fonts</dir>
+
+    <match target="font">
+        @for key, val in options.items():
+        @(otype = 'bool' if val in ('true', 'false') else 'const')\
+        <edit mode="assign" name="@key"><@otype>@val</@otype></edit>
+        @end
+    </match>
+    @for role, prefs in roles.items():
+
+    <match target="pattern">
+        <test qual="any" name="family"><string>@role</string></test>
+        <edit name="family" mode="assign" binding="same"><string>@{prefs[0]}</string></edit>
+        @for pref in prefs[1:]:
+        <edit name="family" mode="append" binding="weak"><string>@pref</string></edit>
+        @end
+    </match>
+    @end
+
+</fontconfig>

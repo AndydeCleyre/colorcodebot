@@ -12,7 +12,7 @@ svcs:
       run: ../../
       log: ../../../logs/colorcodebot
 
-# TODO: Figure out why sops exec-env --user colorcodebot... didn't work
+# TODO: https://github.com/mozilla/sops/issues/872
 
   - name: papertrail
     enabled: true
@@ -45,3 +45,19 @@ svcs:
 # - svcs.*.folder.log is interpreted from <the svcdir>/log
 # - svcs.*.sops_templates.src is implicitly prefixed with REPO/templates/
 # - svcs.*.sops_templates.dest is implicitly prefixed with <the svcdir>
+
+fonts:
+  roles:
+    monospace:
+    - Iosevka Term Custom
+    - Symbols Nerd Font
+    - JoyPixels
+    - NanumGothicCoding
+    - Unifont
+    - Code2000
+  options:
+    autohint: 'false'
+    hinting: 'false'
+    hintstyle: hintnone
+    lcdfilter: lcddefault
+    rgba: rgb
