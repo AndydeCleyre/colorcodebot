@@ -65,13 +65,22 @@ podman rm -i $ctnr
 ### Long Live the King ###
 ##########################
 
-podman run \
-  -d \
-  -v ~/.config/sops/age/keys.txt:/root/.config/sops/age/keys.txt:ro \
-  ${do_mount_db:+-v} "${do_mount_db:+${db_file}:/home/${ctnr_user}/user_themes.sqlite:rw}" \
-  --security-opt unmask=/sys/fs/cgroup \
-  --name $ctnr \
-  "$img"
+if [ $do_mount_db ]; then
+  podman run \
+    -d \
+    -v ~/.config/sops/age/keys.txt:/root/.config/sops/age/keys.txt:ro \
+    -v "${db_file}:/home/${ctnr_user}/user_themes.sqlite:rw" \
+    --security-opt unmask=/sys/fs/cgroup \
+    --name $ctnr \
+    "$img"
+else
+  podman run \
+    -d \
+    -v ~/.config/sops/age/keys.txt:/root/.config/sops/age/keys.txt:ro \
+    --security-opt unmask=/sys/fs/cgroup \
+    --name $ctnr \
+    "$img"
+fi
 
 ##############
 ### Report ###
