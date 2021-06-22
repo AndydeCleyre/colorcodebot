@@ -21,7 +21,7 @@ from telebot import TeleBot
 from telebot.apihelper import ApiException
 from telebot.types import (
     CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup,
-    InlineQuery, InputMediaPhoto, Message
+    InlineQuery, InlineQueryResultCachedPhoto, InputMediaPhoto, Message
 )
 from weasyprint import HTML
 from wrapt import decorator
@@ -55,7 +55,6 @@ def load_configs() -> {
         syntax_names_exts,
         data['guesslang']
     ) = (
-        # yload((Path(__file__).parent / f'{yml}.yml').read_text())
         yload((local.path(__file__).up() / f'{yml}.yml').read())
         for yml in (
             'english',
@@ -179,11 +178,11 @@ def mk_logger(json=True):
 
 
 @retry
-def send_html(bot, chat_id, html: str, reply_msg_id=None):
+def send_html(bot, chat_id, html: str, reply_msg_id=None) -> Message:
     bot.send_chat_action(chat_id, 'upload_document')
     with io.StringIO(html) as doc:
         doc.name = 'code.html'
-        bot.send_document(
+        return bot.send_document(
             chat_id,
             doc,
             reply_to_message_id=reply_msg_id
@@ -191,13 +190,13 @@ def send_html(bot, chat_id, html: str, reply_msg_id=None):
 
 
 @retry
-def send_image(bot, chat_id, png_path: str, reply_msg_id=None, compress=True):
+def send_image(bot, chat_id, png_path: str, reply_msg_id=None, compress=True) -> Message:
     bot.send_chat_action(chat_id, 'upload_photo')
     with open(png_path, 'rb') as doc:
         if compress:
-            bot.send_photo(chat_id, doc, reply_to_message_id=reply_msg_id)
+            return bot.send_photo(chat_id, doc, reply_to_message_id=reply_msg_id)
         else:
-            bot.send_document(chat_id, doc, reply_to_message_id=reply_msg_id)
+            return bot.send_document(chat_id, doc, reply_to_message_id=reply_msg_id)
 
 
 class ColorCodeBot:
@@ -211,7 +210,6 @@ class ColorCodeBot:
         guesslang_syntaxes: Mapping[str, str],
         *args: Any,
         admin_chat_id: Optional[str] = None,
-        # db_path: str = str((Path(__file__).parent / 'user_themes.sqlite').absolute()),
         db_path: str = str(local.path(__file__).up() / 'user_themes.sqlite'),
         **kwargs: Any
     ):
@@ -237,10 +235,11 @@ class ColorCodeBot:
         self.mk_theme_previews    = self.bot.message_handler(commands=['previews'])(self.mk_theme_previews)
         self.intake_snippet       = self.bot.message_handler(func=lambda m: m.content_type == 'text')(self.intake_snippet)
         self.recv_photo           = self.bot.message_handler(content_types=['photo'])(self.recv_photo)
-        self.switch_from_inline   = self.bot.inline_handler(lambda q: True)(self.switch_from_inline)
         self.restore_kb           = self.bot.callback_query_handler(lambda q: yload(q.data)['action'] == 'restore')(self.restore_kb)
         self.set_snippet_filetype = self.bot.callback_query_handler(lambda q: yload(q.data)['action'] == 'set ext')(self.set_snippet_filetype)
         self.set_theme            = self.bot.callback_query_handler(lambda q: yload(q.data)['action'] == 'set theme')(self.set_theme)
+        self.send_photo_elsewhere = self.bot.inline_handler(lambda q: q.query.startswith("img "))(self.send_photo_elsewhere)
+        self.switch_from_inline   = self.bot.inline_handler(lambda q: True)(self.switch_from_inline)
 
     @retry
     def switch_from_inline(self, inline_query: InlineQuery):
@@ -403,6 +402,24 @@ class ColorCodeBot:
             )
 
     @retry
+    def send_photo_elsewhere(self, inline_query: InlineQuery):
+        file_id=inline_query.query.split('img ', 1)[-1]
+        self.log.msg(
+            "creating inline query result",
+            file_id=file_id,
+            file_info=self.bot.get_file(file_id)
+        )
+        self.bot.answer_inline_query(
+            inline_query.id,
+            [InlineQueryResultCachedPhoto(
+                id=str(uuid4()),
+                photo_file_id=file_id,
+                title="Send Image"
+            )],
+            is_personal=True
+        )
+
+    @retry
     def restore_kb(self, cb_query: CallbackQuery):
         data = yload(cb_query.data)
         self.bot.edit_message_reply_markup(
@@ -453,7 +470,7 @@ class ColorCodeBot:
             did_send = False
             if len(snippet.text.splitlines()) <= 14:
                 try:
-                    send_image(
+                    photo_msg = send_image(
                         bot=self.bot,
                         chat_id=snippet.chat.id,
                         png_path=png_path,
@@ -467,6 +484,16 @@ class ColorCodeBot:
                     )
                 else:
                     did_send = True
+                    kb_to_chat = InlineKeyboardMarkup()
+                    kb_to_chat.add(InlineKeyboardButton(
+                        self.lang['send to chat'],
+                        switch_inline_query=f"img {photo_msg.photo[-1].file_id}"
+                    ))
+                    self.bot.edit_message_reply_markup(
+                        photo_msg.chat.id,
+                        photo_msg.message_id,
+                        reply_markup=kb_to_chat
+                    )
             if not did_send:
                 send_image(
                     bot=self.bot,

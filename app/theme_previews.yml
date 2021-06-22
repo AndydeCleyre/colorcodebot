@@ -5,8 +5,8 @@ base16/brewer: Try /previews, then forward back to the bot to get IDs in the log
 oxygenated: Try /previews, then forward back to the bot to get IDs in the log
 base16/default-dark: Try /previews, then forward back to the bot to get IDs in the log
 base16/atelier-forest: Try /previews, then forward back to the bot to get IDs in the log
-base16/tomorrow-night: Try /previews, then forward back to the bot to get IDs in the log
 base16/gruvbox-dark-hard: Try /previews, then forward back to the bot to get IDs in the log
+base16/tomorrow-night: Try /previews, then forward back to the bot to get IDs in the log
 base16/gruvbox-dark-pale: Try /previews, then forward back to the bot to get IDs in the log
 base16/monokai: Try /previews, then forward back to the bot to get IDs in the log
 base16/harmonic-dark: Try /previews, then forward back to the bot to get IDs in the log

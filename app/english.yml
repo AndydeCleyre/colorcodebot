@@ -8,3 +8,4 @@ syntax picker: Pick syntax
 switch to direct: Let's color some code!
 select theme: Which theme should we use?
 acknowledge theme: Right on, your theme is now {}!
+send to chat: Send this to another chat
