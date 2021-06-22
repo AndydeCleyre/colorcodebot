@@ -2,9 +2,11 @@
 import functools
 import io
 import os
-from pathlib import Path
+from itertools import chain
+from textwrap import dedent
 from time import sleep
 from typing import Any, Callable, Iterable, List, Mapping, Optional, Union
+from uuid import uuid4
 
 import strictyaml
 import structlog
@@ -12,7 +14,8 @@ from guesslang import Guess
 from peewee import CharField, IntegerField
 from playhouse.apsw_ext import APSWDatabase
 from playhouse.kv import KeyValue
-from pygments import formatters, highlight, lexers
+from plumbum import local, CommandNotFound
+from plumbum.cmd import highlight
 from requests.exceptions import ConnectionError
 from telebot import TeleBot
 from telebot.apihelper import ApiException
@@ -20,9 +23,15 @@ from telebot.types import (
     CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup,
     InlineQuery, InputMediaPhoto, Message
 )
+from weasyprint import HTML
 from wrapt import decorator
 
 WraptFunc = Callable[[Callable, Any, Iterable, Mapping], Callable]
+
+try:
+    convert = local['gm']['convert']
+except CommandNotFound:
+    convert = local['convert']
 
 
 def yload(yamltxt: str) -> Union[str, List, Mapping]:
@@ -35,7 +44,7 @@ def ydump(data: Mapping) -> str:
 
 def load_configs() -> {
     'lang':             Mapping[str, str],
-    'theme_image_ids':  Iterable[str],
+    'theme_image_ids':  tuple[str],
     'kb':               Mapping[str, InlineKeyboardMarkup],
     'guesslang':        Mapping[str, str]
 }:
@@ -46,7 +55,8 @@ def load_configs() -> {
         syntax_names_exts,
         data['guesslang']
     ) = (
-        yload((Path(__file__).parent / f'{yml}.yml').read_text())
+        # yload((Path(__file__).parent / f'{yml}.yml').read_text())
+        yload((local.path(__file__).up() / f'{yml}.yml').read())
         for yml in (
             'english',
             'theme_previews',
@@ -55,46 +65,53 @@ def load_configs() -> {
         )
     )
 
-    data['theme_image_ids'] = theme_names_ids.values()
+    data['theme_image_ids'] = tuple(theme_names_ids.values())
 
     kb_theme = InlineKeyboardMarkup()
-    kb_theme.add(*(InlineKeyboardButton(
+
+    kb_theme.add(*[InlineKeyboardButton(
         name, callback_data=ydump({'action': 'set theme', 'theme': name})
-    ) for name in theme_names_ids.keys()))
+    ) for name in theme_names_ids.keys()])
+
     kb_syntax = InlineKeyboardMarkup()
-    kb_syntax.add(*(InlineKeyboardButton(
+
+    kb_syntax.add(*[InlineKeyboardButton(
         name, callback_data=ydump({'action': 'set ext', 'ext': ext})
-    ) for name, ext in syntax_names_exts.items()))
+    ) for name, ext in syntax_names_exts.items()])
+
     data['kb'] = {'theme': kb_theme, 'syntax': kb_syntax}
 
     return data
 
 
-def mk_html(code: str, ext: str, theme: str = 'native') -> str:
+def mk_html(code: str, ext: str, theme: str = 'base16/gruvbox-dark-hard') -> str:
     """Return generated HTML content"""
-    return highlight(
-        code,
-        lexers.get_lexer_by_name(ext),
-        formatters.HtmlFormatter(
-            linenos='table',
-            full=True,
-            style=theme
-        )
-    )
+    return (
+        highlight[
+            f"--syntax={ext}",
+            f"--style={theme}",
+            '--line-numbers',
+            '--out-format=html',
+            '--include-style',
+            '--encoding=UTF-8',
+            '--font=monospace'
+        ] <<code
+    )()
 
 
-def mk_png(code: str, ext: str, theme: str = 'native') -> str:
-    """Return generated PNG content"""
-    return highlight(
-        code,
-        lexers.get_lexer_by_name(ext),
-        formatters.ImageFormatter(
-            font_name='Iosevka Term Custom',
-            font_size=35,
-            line_number_chars=3,
-            style=theme
-        )
-    )
+def mk_png(html: str, folder=None) -> str:
+    """Return generated PNG file path"""
+    folder = (local.path(folder) if folder else local.path('/tmp/ccb_png')) / uuid4()
+    folder.mkdir()
+    png = folder / 'code.png'
+    (
+        convert['-trim', '-trim', '-', png]
+        <<HTML(
+            string=html,
+            media_type='screen'
+        ).write_png(resolution=384)
+    )()
+    return png
 
 
 def minikb(kb_name: str, mini_text: str = '. . .') -> InlineKeyboardMarkup:
@@ -161,18 +178,41 @@ def mk_logger(json=True):
     return structlog.get_logger()
 
 
+@retry
+def send_html(bot, chat_id, html: str, reply_msg_id=None):
+    bot.send_chat_action(chat_id, 'upload_document')
+    with io.StringIO(html) as doc:
+        doc.name = 'code.html'
+        bot.send_document(
+            chat_id,
+            doc,
+            reply_to_message_id=reply_msg_id
+        )
+
+
+@retry
+def send_image(bot, chat_id, png_path: str, reply_msg_id=None, compress=True):
+    bot.send_chat_action(chat_id, 'upload_photo')
+    with open(png_path, 'rb') as doc:
+        if compress:
+            bot.send_photo(chat_id, doc, reply_to_message_id=reply_msg_id)
+        else:
+            bot.send_document(chat_id, doc, reply_to_message_id=reply_msg_id)
+
+
 class ColorCodeBot:
 
     def __init__(
         self,
         api_key: str,
         lang: Mapping[str, str],
-        theme_image_ids: Iterable[str],
+        theme_image_ids: tuple[str],
         keyboards: Mapping[str, InlineKeyboardMarkup],
         guesslang_syntaxes: Mapping[str, str],
         *args: Any,
         admin_chat_id: Optional[str] = None,
-        db_path: str = str((Path(__file__).parent / 'user_themes.sqlite').absolute()),
+        # db_path: str = str((Path(__file__).parent / 'user_themes.sqlite').absolute()),
+        db_path: str = str(local.path(__file__).up() / 'user_themes.sqlite'),
         **kwargs: Any
     ):
         self.lang = lang
@@ -194,6 +234,7 @@ class ColorCodeBot:
     def register_handlers(self):
         self.welcome              = self.bot.message_handler(commands=['start', 'help'])(self.welcome)
         self.browse_themes        = self.bot.message_handler(commands=['theme', 'themes'])(self.browse_themes)
+        self.mk_theme_previews    = self.bot.message_handler(commands=['previews'])(self.mk_theme_previews)
         self.intake_snippet       = self.bot.message_handler(func=lambda m: m.content_type == 'text')(self.intake_snippet)
         self.recv_photo           = self.bot.message_handler(content_types=['photo'])(self.recv_photo)
         self.switch_from_inline   = self.bot.inline_handler(lambda q: True)(self.switch_from_inline)
@@ -226,6 +267,44 @@ class ColorCodeBot:
         self.bot.reply_to(message, self.lang['welcome'])
 
     @retry
+    def mk_theme_previews(self, message: Message):
+        if not self.admin_chat_id or str(message.chat.id) != self.admin_chat_id:
+            self.log.msg(
+                "naughty preview attempt",
+                user_id=message.from_user.id,
+                user_first_name=message.from_user.first_name,
+                chat_id=message.chat.id,
+                admin_chat_id=self.admin_chat_id
+            )
+            return
+        sample_code = dedent("""
+            # palinDay :: Int -> [ISO Date]
+            def palinDay(y):
+                '''A possibly empty list containing the palindromic
+                   date for the given year, if such a date exists.
+                '''
+                s = str(y)
+                r = s[::-1]
+                iso = '-'.join([s, r[0:2], r[2:]])
+                try:
+                    datetime.strptime(iso, '%Y-%m-%d')
+                    return [iso]
+                except ValueError:
+                    return []
+        """)
+        for button in chain.from_iterable(self.kb['theme'].keyboard):
+            theme = button.text
+            html = mk_html(f"# {theme}{sample_code}", 'py', theme)
+            with local.tempdir() as folder:
+                png_path=mk_png(html, folder=folder)
+                send_image(
+                    bot=self.bot,
+                    chat_id=message.chat.id,
+                    png_path=png_path,
+                    reply_msg_id=message.message_id
+                )
+
+    @retry
     def browse_themes(self, message: Message):
         self.log.msg(
             "browsing themes",
@@ -233,11 +312,16 @@ class ColorCodeBot:
             user_first_name=message.from_user.first_name,
             chat_id=message.chat.id
         )
-        self.bot.send_media_group(
-            message.chat.id,
-            map(InputMediaPhoto, self.theme_image_ids),
-            reply_to_message_id=message.message_id
-        )
+        albums = [
+            self.theme_image_ids[i:i+10]
+            for i in range(0, len(self.theme_image_ids), 10)
+        ]
+        for album in albums:
+            self.bot.send_media_group(
+                message.chat.id,
+                map(InputMediaPhoto, album),
+                reply_to_message_id=message.message_id
+            )
         self.bot.reply_to(
             message,
             self.lang['select theme'],
@@ -269,7 +353,7 @@ class ColorCodeBot:
             with open(self.db_path, 'rb') as doc:
                 self.bot.send_document(self.admin_chat_id, doc)
 
-    def guess_ext(self, code, probability_min=.12) -> Optional[str]:
+    def guess_ext(self, code: str, probability_min: float = .12) -> Optional[str]:
         syntax, probability = self.guesser.probabilities(code)[0]
         ext = self.guesslang_syntaxes.get(syntax)
         self.log.msg(
@@ -281,6 +365,15 @@ class ColorCodeBot:
         )
         if probability >= probability_min:
             return ext
+        for start, ext in {
+            '{': 'json',
+            '---\n': 'yaml',
+            '[[': 'toml', '[': 'ini',
+            '<?php': 'php', '<': 'xml',
+            '-- ': 'lua'
+        }.items():
+            if code.startswith(start):
+                return ext
 
     @retry
     def intake_snippet(self, message: Message):
@@ -308,59 +401,6 @@ class ColorCodeBot:
                 parse_mode='Markdown',
                 disable_web_page_preview=True
             )
-
-    @retry
-    def send_html(self, snippet: Message, ext: str, theme: str = 'native'):
-        self.bot.send_chat_action(snippet.chat.id, 'upload_document')
-        html = mk_html(snippet.text, ext, theme)
-        with io.StringIO(html) as doc:
-            doc.name = 'code.html'
-            self.bot.send_document(
-                snippet.chat.id,
-                doc,
-                reply_to_message_id=snippet.message_id
-            )
-
-    @retry
-    def send_image(
-        self,
-        snippet: Message,
-        ext: str,
-        theme: str = 'native',
-        max_lines_for_compressed: int = 12
-    ):
-        self.bot.send_chat_action(snippet.chat.id, 'upload_photo')
-        png = mk_png(snippet.text, ext, theme)
-        if snippet.text.count('\n') <= max_lines_for_compressed:
-            try:
-                with io.BytesIO(png) as doc:
-                    doc.name = 'code.png'
-                    self.bot.send_photo(
-                        snippet.chat.id,
-                        doc,
-                        reply_to_message_id=snippet.message_id
-                    )
-            except ApiException as e:
-                self.log.error(
-                    "failed to send compressed image",
-                    exc_info=e,
-                    chat_id=snippet.chat.id
-                )
-                with io.BytesIO(png) as doc:
-                    doc.name = 'code.png'
-                    self.bot.send_document(
-                        snippet.chat.id,
-                        doc,
-                        reply_to_message_id=snippet.message_id
-                    )
-        else:
-            with io.BytesIO(png) as doc:
-                doc.name = 'code.png'
-                self.bot.send_document(
-                    snippet.chat.id,
-                    doc,
-                    reply_to_message_id=snippet.message_id
-                )
 
     @retry
     def restore_kb(self, cb_query: CallbackQuery):
@@ -398,9 +438,44 @@ class ColorCodeBot:
                 reply_markup=minikb('syntax', self.lang['syntax picker'])
             )
         snippet = query_message.reply_to_message
-        theme = self.user_themes.get(snippet.from_user.id, 'native')
-        self.send_image(snippet, ext, theme)
-        self.send_html(snippet, ext, theme)
+        theme = self.user_themes.get(snippet.from_user.id, 'base16/gruvbox-dark-hard')
+
+        html = mk_html(snippet.text, ext, theme)
+        send_html(
+            bot=self.bot,
+            chat_id=snippet.chat.id,
+            html=html,
+            reply_msg_id=snippet.message_id
+        )
+
+        with local.tempdir() as folder:
+            png_path=mk_png(html, folder=folder)
+            did_send = False
+            if len(snippet.text.splitlines()) <= 14:
+                try:
+                    send_image(
+                        bot=self.bot,
+                        chat_id=snippet.chat.id,
+                        png_path=png_path,
+                        reply_msg_id=snippet.message_id
+                    )
+                except ApiException as e:
+                    self.log.error(
+                        "failed to send compressed image",
+                        exc_info=e,
+                        chat_id=snippet.chat.id
+                    )
+                else:
+                    did_send = True
+            if not did_send:
+                send_image(
+                    bot=self.bot,
+                    chat_id=snippet.chat.id,
+                    png_path=png_path,
+                    reply_msg_id=snippet.message_id,
+                    compress=False
+                )
+
         if cb_query:
             self.bot.answer_callback_query(cb_query.id)
 
