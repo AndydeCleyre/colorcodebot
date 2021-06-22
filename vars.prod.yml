@@ -46,18 +46,22 @@ svcs:
 # - svcs.*.sops_templates.src is implicitly prefixed with REPO/templates/
 # - svcs.*.sops_templates.dest is implicitly prefixed with <the svcdir>
 
-fonts:
-  roles:
-    monospace:
-    - Iosevka Term Custom
-    - Symbols Nerd Font
-    - JoyPixels
-    - NanumGothicCoding
-    - Unifont
-    - Code2000
-  options:
-    autohint: 'false'
-    hinting: 'false'
-    hintstyle: hintnone
-    lcdfilter: lcddefault
-    rgba: rgb
+theme_previews:
+  base16/bright: null
+  candy: null
+  bipolar: null
+  base16/brewer: null
+  oxygenated: null
+  base16/atelier-forest: null
+  base16/default-dark: null
+  base16/tomorrow-night: null
+  base16/gruvbox-dark-hard: null
+  base16/gruvbox-dark-pale: null
+  base16/monokai: null
+  base16/materia: null
+  base16/snazzy: null
+  base16/harmonic-dark: null
+  ekvoli: null
+  base16/solarized-light: null
+  edit-kwrite: null
+
