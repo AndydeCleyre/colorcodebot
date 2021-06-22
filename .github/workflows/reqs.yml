@@ -1,6 +1,5 @@
 name: Bump PyPI requirements
 on:
-  push:
   schedule:
     - cron: '53 8 * * *'
 jobs:
