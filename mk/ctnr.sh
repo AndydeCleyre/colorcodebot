@@ -32,12 +32,13 @@ today=$(date +%Y.%j)
 tz="America/New_York"
 
 base_img='docker.io/library/archlinux:base'
-pkgs='fontconfig python sops'
-aur_pkgs='s6'
+pkgs='cairo fontconfig graphicsmagick highlight pango python sops ttf-joypixels ttf-nerd-fonts-symbols-mono'
+aur_pkgs='s6 ttf-code2000 ttf-nanumgothic_coding ttf-unifont'
 build_pkgs='git'
 build_groups='base-devel'
+gpg_keys='1A09227B1F435A33'
 
-fat="/tmp/* /usr/lib/python3.*/__pycache__ /home/$user/.cache /root/.cache /home/$user/.local/bin /root/.local/bin /var/cache/pacman/pkg/*"
+fat="/tmp/* /usr/lib/python3.*/__pycache__ /home/$user/.cache/* /root/.cache/* /home/$user/.local/bin /root/.local/bin /var/cache/pacman/pkg/*"
 
 #################
 ### Functions ###
@@ -112,17 +113,29 @@ ctnr_run -b git clone 'https://aur.archlinux.org/paru-bin' /tmp/paru-bin
 buildah config --workingdir /tmp/paru-bin "$ctnr"
 ctnr_run -b makepkg --noconfirm -si
 buildah config --workingdir "/home/$user" "$ctnr"
+for key in $gpg_keys; do
+  ctnr_run -b gpg --keyserver keyserver.ubuntu.com --recv-keys "$key"
+done
+# shellcheck disable=SC2086
 ctnr_run -b paru -S --noconfirm $aur_pkgs
 ctnr_pkg_del paru-bin
 
 # Copy app and svcs into container
-ctnr_run rm -rf "$svcs_dir"
-# Don't delete /home/$user/*, to preserve any jumpstart venv
 tmp=$(mktemp -d)
+# First, ready payloads:
 git -C "$repo" archive HEAD:app >"$tmp/app.tar"
-ctnr_fetch -u "$tmp/app.tar" /home/$user
+"$repo/mk/file_ids.sh" -d "$deployment" "$tmp/theme_previews.yml"
 "$repo/mk/svcs.zsh" -d "$deployment" "$tmp/svcs"
+[ -d "/home/$user/venv" ] && ctnr_run mv "/home/$user/venv" "/tmp/jumpstart_venv"
+# Second, burn down home:
+ctnr_run sh -c "rm -rf /home/$user/* /home/$user/.*" || true
+ctnr_run rm -rf "$svcs_dir"
+# Third, deliver:
+ctnr_fetch -u "$tmp/app.tar" /home/$user
+ctnr_fetch -u "$tmp/theme_previews.yml" /home/$user/
 ctnr_fetch "$tmp/svcs" "$svcs_dir"
+[ -d /tmp/jumpstart_venv ] && ctnr_run mv "/tmp/jumpstart_venv" /home/$user/venv
+# Tidy up:
 rm -rf "$tmp"
 
 # Install python modules
@@ -142,7 +155,7 @@ if [ $make_jumpstart_img ]; then
   ctnr_pkg_add $build_pkgs $build_groups
 fi
 
-# Install fonts
+# Install iosevka font
 ctnr_fetch "$iosevka_pkg" /tmp
 ctnr_run sh -c "tar xf /tmp/ttf-iosevka-*.pkg.tar.zst -C / --wildcards --wildcards-match-slash '*-regular.ttf' '*-italic.ttf' '*-bold.ttf' '*-bolditalic.ttf'"
 

@@ -12,7 +12,7 @@ svcs:
       run: ../../
       log: ../../../logs/colorcodebot
 
-# TODO: Figure out why sops exec-env --user colorcodebot... didn't work
+# TODO: https://github.com/mozilla/sops/issues/872
 
   - name: papertrail
     enabled: true
@@ -45,3 +45,23 @@ svcs:
 # - svcs.*.folder.log is interpreted from <the svcdir>/log
 # - svcs.*.sops_templates.src is implicitly prefixed with REPO/templates/
 # - svcs.*.sops_templates.dest is implicitly prefixed with <the svcdir>
+
+theme_previews:
+  base16/bright: null
+  candy: null
+  bipolar: null
+  base16/brewer: null
+  oxygenated: null
+  base16/atelier-forest: null
+  base16/default-dark: null
+  base16/tomorrow-night: null
+  base16/gruvbox-dark-hard: null
+  base16/gruvbox-dark-pale: null
+  base16/monokai: null
+  base16/materia: null
+  base16/snazzy: null
+  base16/harmonic-dark: null
+  ekvoli: null
+  base16/solarized-light: null
+  edit-kwrite: null
+
