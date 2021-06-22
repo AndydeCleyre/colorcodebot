@@ -11,6 +11,8 @@ fi
 
 cd "$(git -C "$(dirname -- "$0")" rev-parse --show-toplevel)"
 
+./mk/file_ids.sh -d "$deployment" || true
+
 if [ ! "$VIRTUAL_ENV" ]; then
   if [ ! -d app/venv ]; then
     python3 -m venv app/venv
