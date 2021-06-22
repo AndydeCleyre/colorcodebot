@@ -468,7 +468,7 @@ class ColorCodeBot:
         with local.tempdir() as folder:
             png_path=mk_png(html, folder=folder)
             did_send = False
-            if len(snippet.text.splitlines()) <= 14:
+            if len(snippet.text.splitlines()) <= 30:
                 try:
                     photo_msg = send_image(
                         bot=self.bot,
