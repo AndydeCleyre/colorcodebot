@@ -47,21 +47,21 @@ svcs:
 # - svcs.*.sops_templates.dest is implicitly prefixed with <the svcdir>
 
 theme_previews:
-  base16/bright: null
-  candy: null
-  bipolar: null
-  base16/brewer: null
-  oxygenated: null
-  base16/atelier-forest: null
-  base16/default-dark: null
-  base16/tomorrow-night: null
-  base16/gruvbox-dark-hard: null
-  base16/gruvbox-dark-pale: null
-  base16/monokai: null
-  base16/materia: null
-  base16/snazzy: null
-  base16/harmonic-dark: null
-  ekvoli: null
-  base16/solarized-light: null
-  edit-kwrite: null
+  base16/bright: pending . . .
+  candy: pending . . .
+  bipolar: pending . . .
+  base16/brewer: pending . . .
+  oxygenated: pending . . .
+  base16/atelier-forest: pending . . .
+  base16/default-dark: pending . . .
+  base16/tomorrow-night: pending . . .
+  base16/gruvbox-dark-hard: pending . . .
+  base16/gruvbox-dark-pale: pending . . .
+  base16/monokai: pending . . .
+  base16/materia: pending . . .
+  base16/snazzy: pending . . .
+  base16/harmonic-dark: pending . . .
+  ekvoli: pending . . .
+  base16/solarized-light: pending . . .
+  edit-kwrite: pending . . .
 
