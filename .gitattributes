@@ -1,0 +1,2 @@
+/app/theme_previews.yml filter=nullify-flat-yaml
+# git config filter.nullify-flat-yaml.clean "sed 's/: .*/: null/g'"
