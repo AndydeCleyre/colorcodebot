@@ -39,15 +39,14 @@ but please do `send a message`_ or open an issue with any questions.
 .. _weasyprint: https://weasyprint.org/
 
 
-.. |actions| image:: https://img.shields.io/github/workflow/status/andydecleyre/colorcodebot/Build%20and%20push%20a%20container%20image?logo=github&style=for-the-badge
-   :alt: GitHub Actions Status
-   :target: https://github.com/AndydeCleyre/colorcodebot/actions
+.. |actions| image:: https://github.com/AndydeCleyre/colorcodebot/actions/workflows/ci.yml/badge.svg?branch=develop
+   :alt: Automated Container Build Status
+   :target: https://github.com/AndydeCleyre/colorcodebot/actions/workflows/ci.yml
 
-.. |quay| image:: https://img.shields.io/badge/Quay.io-andykluger%2Fcolorcodebot--prod--archlinux-lightgrey?logo=redhat&style=for-the-badge
-   :alt: Telegram user @colorcodebot
+.. |quay| image:: https://img.shields.io/badge/Quay.io-andykluger%2Fcolorcodebot--prod--archlinux-green?logo=redhat
+   :alt: Container Image Repository
    :target: https://quay.io/repository/andykluger/colorcodebot-prod-archlinux?tab=tags
 
-.. |telegram| image:: https://img.shields.io/badge/Telegram-%40colorcodebot-blue?logo=telegram&style=for-the-badge
+.. |telegram| image:: https://img.shields.io/badge/Telegram-%40colorcodebot-blue?logo=telegram
    :alt: Telegram user @colorcodebot
    :target: https://t.me/colorcodebot
-
