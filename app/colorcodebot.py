@@ -93,7 +93,7 @@ def mk_html(code: str, ext: str, theme: str = 'base16/gruvbox-dark-hard') -> str
             '--out-format=html',
             '--include-style',
             '--encoding=UTF-8',
-            '--font=monospace'
+            '--font=monospace,mono,ui-monospace'
         ] <<code
     )()
 
