@@ -12,6 +12,13 @@ by typing ``@colorcodebot`` and tapping the button that pops up.
 
 Check out `a demo video`_!
 
+This project uses some excellent existing tools, including:
+
+- pyTelegramBotAPI_
+- highlight_
+- weasyprint_
+- guesslang_
+
 Development & Deployment
 ------------------------
 
@@ -25,8 +32,12 @@ but please do `send a message`_ or open an issue with any questions.
 
 .. _a demo video: https://user-images.githubusercontent.com/1787385/123162011-19275100-d43e-11eb-9788-7defa4bdf1d5.mp4
 .. _@colorcodebot: https://t.me/colorcodebot
+.. _highlight: http://www.andre-simon.de/doku/highlight/highlight.html
 .. _guesslang: https://github.com/yoeo/guesslang
+.. _pyTelegramBotAPI: https://github.com/eternnoir/pyTelegramBotAPI
 .. _send a message: https://t.me/andykluger
+.. _weasyprint: https://weasyprint.org/
+
 
 .. |actions| image:: https://img.shields.io/github/workflow/status/andydecleyre/colorcodebot/Build%20and%20push%20a%20container%20image?logo=github&style=for-the-badge
    :alt: GitHub Actions Status
