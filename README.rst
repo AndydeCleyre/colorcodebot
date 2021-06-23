@@ -10,6 +10,8 @@ To use it, chat directly with `@colorcodebot`_.
 As a convenience, you can get to a direct chat with it from any other chat,
 by typing ``@colorcodebot`` and tapping the button that pops up.
 
+Check out `a demo video`_!
+
 Development & Deployment
 ------------------------
 
@@ -21,6 +23,7 @@ I will probably add more info here eventually,
 but please do `send a message`_ or open an issue with any questions.
 
 
+.. _a demo video: https://user-images.githubusercontent.com/1787385/123162011-19275100-d43e-11eb-9788-7defa4bdf1d5.mp4
 .. _@colorcodebot: https://t.me/colorcodebot
 .. _guesslang: https://github.com/yoeo/guesslang
 .. _send a message: https://t.me/andykluger
