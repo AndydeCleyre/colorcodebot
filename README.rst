@@ -2,8 +2,9 @@ Color Code Bot
 ==============
 
 - |telegram|
-- |actions|
 - |quay|
+- |actions-ctnr|
+- |actions-reqs|
 
 To use it, chat directly with `@colorcodebot`_.
 
@@ -39,9 +40,13 @@ but please do `send a message`_ or open an issue with any questions.
 .. _weasyprint: https://weasyprint.org/
 
 
-.. |actions| image:: https://github.com/AndydeCleyre/colorcodebot/actions/workflows/ci.yml/badge.svg?branch=develop
+.. |actions-ctnr| image:: https://github.com/AndydeCleyre/colorcodebot/actions/workflows/ci.yml/badge.svg?branch=develop
    :alt: Automated Container Build Status
    :target: https://github.com/AndydeCleyre/colorcodebot/actions/workflows/ci.yml
+
+.. |actions-reqs| image:: https://github.com/AndydeCleyre/colorcodebot/actions/workflows/reqs.yml/badge.svg?branch=develop
+   :alt: Automated Python Requirements Bump Status
+   :target: https://github.com/AndydeCleyre/colorcodebot/actions/workflows/reqs.yml
 
 .. |quay| image:: https://img.shields.io/badge/Quay.io-andykluger%2Fcolorcodebot--prod--archlinux-green?logo=redhat
    :alt: Container Image Repository
