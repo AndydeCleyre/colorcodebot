@@ -89,7 +89,7 @@ pyasn1-modules==0.2.8
     # via google-auth
 pycparser==2.20
     # via cffi
-pyphen==0.10.0
+pyphen==0.11.0
     # via weasyprint
 pytelegrambotapi==3.7.9
     # via -r requirements.in
