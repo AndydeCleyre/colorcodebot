@@ -183,7 +183,10 @@ buildah config --cmd "s6-svscan $svcs_dir" "$ctnr"
 
 # Press container as image
 buildah rmi "$img:$today" "$img:latest" "$img:$version" 2>/dev/null || true
-buildah tag "$(buildah commit -q --rm "$ctnr" "$img:latest")" "$img:$today" "$img:$version" "$img:$branch"
+buildah tag "$(buildah commit -q --rm "$ctnr" "$img:latest")" "$img:$today" "$img:$version"
+if [ "$branch" ]; then
+  buildah tag "$img:latest" "$img:$branch"
+fi
 
 printf '%s\n' '' \
   '###################' \
@@ -198,5 +201,7 @@ if [ "$1" = --push ]; then
   podman push "$img:latest"
   podman push "$img:$today"
   podman push "$img:$version"
-  podman push "$img:$branch"
+  if [ "$branch" ]; then
+    podman push "$img:$branch"
+  fi
 fi
