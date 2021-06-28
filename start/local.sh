@@ -5,12 +5,13 @@ deployment=dev
 if [ "$1" = -d ]; then deployment=$2; shift 2; fi
 
 if [ "$1" ]; then
-  printf '%s\n' 'Start the bot locally, without process supervision' 'Args: [-d <deployment>=dev]'
+  printf '%s\n' 'Start the bot locally, without process supervision or other svcs' 'Args: [-d <deployment>=dev]'
   exit 1
 fi
 
 cd "$(git -C "$(dirname -- "$0")" rev-parse --show-toplevel)"
 
+./mk/reqs.sh
 ./mk/file_ids.sh -d "$deployment" || true
 
 if [ ! "$VIRTUAL_ENV" ]; then
