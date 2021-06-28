@@ -1,0 +1,64 @@
+svcs:
+
+  - name: colorcodebot
+    enabled: true
+    exec: >-
+      sops exec-env
+      sops/colorcodebot.dev.yml
+
+      "s6-setuidgid colorcodebot ./venv/bin/python
+      ./colorcodebot.py"
+    folder:
+      run: ../../
+      log: ../../../logs/colorcodebot
+
+  - name: papertrail
+    enabled: true
+    exec: >-
+      sops exec-file --filename log_files.yml
+      ../papertrail.log_files.dev.yml
+
+      "remote_syslog -D -c {}"
+    folder:
+      run: log
+      log: ../../../logs/papertrail
+    sops_templates:
+      - src: log_files.yml.wz
+        dest: papertrail.log_files.dev.yml
+
+# Minimal disabled svc:
+# - name: svc-name-without-spaces
+#   enabled: false
+
+# Minimal enabled svc:
+# - name: svc-name-without-spaces
+#   enabled: true
+#   exec: long-running-command
+#   folder:
+#     log: path/to/log/dir
+
+# Paths:
+# - svcs.*.exec is run from svcs.*.folder.run if provided, otherwise its svcdir
+# - svcs.*.folder.run is interpreted from the svcdir
+# - svcs.*.folder.log is interpreted from <the svcdir>/log
+# - svcs.*.sops_templates.src is implicitly prefixed with REPO/templates/
+# - svcs.*.sops_templates.dest is implicitly prefixed with <the svcdir>
+
+theme_previews:
+  base16/bright: AgACAgEAAxkBAAIEM2DQ4C0xDHIH8mcCzkEfAqDckKdhAAIBqTEbA8WARmUBJ5vBBlZniGBBTBcAAwEAAwIAA3MAA7A0AQABHwQ
+  candy: AgACAgEAAxkBAAIELGDQ4C2530BpsyXLiLUqaYB7QlXVAALyqDEbA8WARg7CoG7QnFzcbtqETRcAAwEAAwIAA3MAA48hAAIfBA
+  bipolar: AgACAgEAAxkBAAIEKmDQ4C0eVeEQ_-Q6AlSQCnAiPZi1AALvqDEbA8WARsEyAv93HZO7vWkSTRcAAwEAAwIAA3MAA2v3AAIfBA
+  base16/brewer: AgACAgEAAxkBAAIEMmDQ4C2zDgdrpN8yIkXkIyeIJ1JZAAOpMRsDxYBGkuD0-PaAq0lw1KtLFwADAQADAgADcwADXCwCAAEfBA
+  oxygenated: AgACAgEAAxkBAAIEMGDQ4C0_MeJIc5bqXJF9GsEekDy4AAL6qDEbA8WARkLRGRRdn86UuWkSTRcAAwEAAwIAA3MAA7H2AAIfBA
+  base16/default-dark: AgACAgEAAxkBAAIENmDQ4C2LSNRPQsn2N4c8JHV-zT_TAAIEqTEbA8WARvYN-GfDUtCCoGbqSxcAAwEAAwIAA3MAA4cJAgABHwQ
+  base16/atelier-forest: AgACAgEAAxkBAAIEMWDQ4C1ggmENKmsfLmYQKJ0oSGLYAAL_qDEbA8WARv69lwukrTM0W2BBTBcAAwEAAwIAA3MAA8wyAQABHwQ
+  base16/gruvbox-dark-hard: AgACAgEAAxkBAAIEN2DQ4C3c7GUrAnRmeGcL-AzA8UkxAAIHqTEbA8WARoMgv4BeMCHnB7ESMAAEAQADAgADcwADPyEAAh8E
+  base16/tomorrow-night: AgACAgEAAxkBAAIEQ2DQ4C3dKxD50ZZe8LNCQNPq7tp8AAIYqTEbA8WARmIV4g3Zdg_RufnuSxcAAwEAAwIAA3MAA5ARAgABHwQ
+  base16/gruvbox-dark-pale: AgACAgEAAxkBAAIEOGDQ4C3x8hkeZ3NJ2qiMxD99xiPtAAIIqTEbA8WARhcJ9rWBYbpTCWbqSxcAAwEAAwIAA3MAAx8EAgABHwQ
+  base16/monokai: AgACAgEAAxkBAAIEPmDQ4C3X3KOT6SuGz0yVVTijKjS8AAIRqTEbA8WARtatVlfkoSGfzXiDSRcAAwEAAwIAA3MAA3voBQABHwQ
+  base16/harmonic-dark: AgACAgEAAxkBAAIEOWDQ4C3whhoLidKVnn0KuuWNfnpjAAIKqTEbA8WARqS5qh3X7TQ3mqshTRcAAwEAAwIAA3MAA6HqAAIfBA
+  base16/snazzy: AgACAgEAAxkBAAIEQGDQ4C15WctMXjX6zXeIpMG45v7pAAIUqTEbA8WARmERXGmLOCM9WrA2TBcAAwEAAwIAA3MAA5xIAQABHwQ
+  base16/materia: AgACAgEAAxkBAAIEPWDQ4C3UaLI1QzTwASXwuA3opXPPAAIQqTEbA8WARr18Z16tUFy6IZ4eTRcAAwEAAwIAA3MAA6vrAAIfBA
+  ekvoli: AgACAgEAAxkBAAIELmDQ4C12QS-IHTwH-oMzDVTO3bS-AAL0qDEbA8WARjqhNG2Y7TjgcVCqSxcAAwEAAwIAA3MAA7YOAgABHwQ
+  base16/solarized-light: AgACAgEAAxkBAAIEQmDQ4C29AyTU8bf9EzAPWOXZL4E5AAIXqTEbA8WARk0RDC_LIvCxPU7aTRcAAwEAAwIAA3MABCIAAh8E
+  edit-kwrite: AgACAgEAAxkBAAIELWDQ4C3x38OW79vly0IqhpPykzJVAALzqDEbA8WARkfYO8HR37u86yYgTRcAAwEAAwIAA3MAA8f7AAIfBA

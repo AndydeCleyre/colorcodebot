@@ -1,0 +1,17 @@
+@require(svc)
+@(from utils import cgdir)\
+#!/bin/execlineb -P
+
+foreground { mkdir -p @cgdir(svc) }
+
+# Send TERM to any remaining procs in the cgroup:
+redirfd -r 0 @cgdir(svc)/cgroup.procs
+foreground { forstdin -E -p -C PID kill $PID }
+
+# If any procs remain, wait a moment:
+redirfd -r 0 @cgdir(svc)/cgroup.procs
+foreground { forstdin -p -C PID sleep 2 }
+
+# Send KILL to any remaining procs in the cgroup:
+redirfd -r 0 @cgdir(svc)/cgroup.procs
+foreground { forstdin -E -p -C PID kill -9 $PID }

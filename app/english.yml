@@ -2,10 +2,11 @@ welcome: |
   Hello! Send me a snippet of code as your message text, and I'll send you a colorized HTML file and image.
 
   Don't like the theme? Pick another, with /theme !
-query ext: |
-  Fantastic! What type of code is this?
-
-  To add more types, open an [issue on GitHub](https://github.com/AndydeCleyre/colorcodebot/issues).
+query ext: Fantastic! What type of code is this?
+guessed syntax: It looks like `{}` to me, so I'll send that right away.
+syntax picker: Pick syntax
 switch to direct: Let's color some code!
 select theme: Which theme should we use?
 acknowledge theme: Right on, your theme is now {}!
+send to chat: Send this to your last chat
+input field placeholder: Type or paste code here!

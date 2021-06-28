@@ -1,0 +1,41 @@
+name: Build and push a container image
+on:
+  push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: install build tools from distro repos
+        run: sudo apt -yqq --no-install-recommends install ca-certificates zsh
+        env:
+          DEBIAN_FRONTEND: noninteractive
+
+      - name: install build tools from PyPI
+        run: pip3 install -r dev-requirements.txt
+
+      - name: install sops from GitHub
+        run: >-
+          wget -P /tmp
+          'https://github.com/mozilla/sops/releases/download/v3.7.1/sops_3.7.1_amd64.deb' &&
+          sudo dpkg -i /tmp/sops_*.deb
+
+      - name: configure sops secrets
+        run: >-
+          mkdir -p "$HOME/.config/sops/age" &&
+          echo "$SOPS_SECRET" >"$HOME/.config/sops/age/keys.txt"
+        env:
+          SOPS_SECRET: ${{ secrets.SOPS_SECRET }}
+
+      - name: login to container registry
+        run: podman login -u "$QUAY_USER" -p "$QUAY_TOKEN" quay.io
+        env:
+          QUAY_USER: ${{ secrets.QUAY_USER }}
+          QUAY_TOKEN: ${{ secrets.QUAY_TOKEN }}
+
+      - name: do the thing
+        run: ./mk/ctnr.sh -d prod --push

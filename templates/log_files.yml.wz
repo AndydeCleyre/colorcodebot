@@ -1,0 +1,10 @@
+@require(svcs, host, port)
+files:
+@for svc in svcs:
+  - tag: @{svc['name']}
+    path: @{svc['folder']['log']}/current
+@end
+destination:
+  host: @host
+  port: @port
+  protocol: tls
