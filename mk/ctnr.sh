@@ -17,8 +17,10 @@ if [ "$1" ] && [ "$1" != --push ]; then
 fi
 
 repo=$(git -C "$(dirname "$0")" rev-parse --show-toplevel)
+set -x
 version=$(git -C "$repo" describe)
 branch=$(git -C "$repo" branch --show-current | sed 's/[^[:alnum:]\.\_\-]/_/g')
+set +x
 
 appname=colorcodebot
 img=quay.io/andykluger/${appname}-${deployment}-archlinux
