@@ -89,9 +89,9 @@ pyasn1-modules==0.2.8
     # via google-auth
 pycparser==2.20
     # via cffi
-pyphen==0.10.0
+pyphen==0.11.0
     # via weasyprint
-pytelegrambotapi==3.7.9
+pytelegrambotapi==3.8.1
     # via -r requirements.in
 python-dateutil==2.8.1
     # via strictyaml
@@ -139,7 +139,7 @@ tinycss2==1.1.0
     #   weasyprint
 typing-extensions==3.7.4.3
     # via tensorflow
-urllib3==1.26.5
+urllib3==1.26.6
     # via requests
 weasyprint==52.5
     # via -r requirements.in

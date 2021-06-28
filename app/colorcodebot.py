@@ -20,7 +20,7 @@ from requests.exceptions import ConnectionError
 from telebot import TeleBot
 from telebot.apihelper import ApiException
 from telebot.types import (
-    CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup,
+    CallbackQuery, ForceReply, InlineKeyboardButton, InlineKeyboardMarkup,
     InlineQuery, InlineQueryResultCachedPhoto, InputMediaPhoto, Message
 )
 from weasyprint import HTML
@@ -274,7 +274,13 @@ class ColorCodeBot:
             user_first_name=message.from_user.first_name,
             chat_id=message.chat.id
         )
-        self.bot.reply_to(message, self.lang['welcome'])
+        self.bot.reply_to(
+            message,
+            self.lang['welcome'],
+            reply_markup=ForceReply(
+                input_field_placeholder=self.lang['input field placeholder']
+            )
+        )
 
     @retry
     def mk_theme_previews(self, message: Message):
