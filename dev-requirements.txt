@@ -1,8 +1,8 @@
-ruamel.yaml==0.17.7
+ruamel.yaml==0.17.10
     # via yamlpath
 ruamel.yaml.clib==0.2.4
     # via ruamel.yaml
 wheezy.template==3.1.0
     # via -r dev-requirements.in
-yamlpath==3.6.0
+yamlpath==3.6.1
     # via -r dev-requirements.in
