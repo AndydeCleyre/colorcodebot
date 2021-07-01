@@ -32,7 +32,7 @@ flatbuffers==1.12
     # via tensorflow
 gast==0.4.0
     # via tensorflow
-google-auth==1.32.0
+google-auth==1.32.1
     # via
     #   google-auth-oauthlib
     #   tensorboard
@@ -71,7 +71,7 @@ opt-einsum==3.3.0
     # via tensorflow
 peewee==3.14.4
     # via -r requirements.in
-pillow==8.2.0
+pillow==8.3.0
     # via
     #   cairosvg
     #   weasyprint
