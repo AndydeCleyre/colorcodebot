@@ -170,7 +170,7 @@ def retry(
             else:
                 last_error = None
                 break
-        if has_logger:
+        if has_logger and attempt > 0:
             log.msg("called retry-able", retries=attempt, success=not last_error)
         if last_error:
             raise last_error
