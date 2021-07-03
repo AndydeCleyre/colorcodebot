@@ -22,5 +22,6 @@ reStructuredText: rst
 SQL: sql
 Swift: swift
 TOML: toml
+TypeScript: ts
 XML: xml
 YAML: yaml
