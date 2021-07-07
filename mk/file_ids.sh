@@ -28,8 +28,8 @@ if [ ! "$VIRTUAL_ENV" ]; then
   fi
   # shellcheck disable=SC1091
   . ./venv/bin/activate
-  pip install -r dev-requirements.txt
 fi
+pip install -r dev-requirements.txt
 
 wheezy.template \
   -s templates \
