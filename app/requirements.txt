@@ -71,7 +71,7 @@ opt-einsum==3.3.0
     # via tensorflow
 peewee==3.14.4
     # via -r requirements.in
-pillow==8.3.0
+pillow==8.3.1
     # via
     #   cairosvg
     #   weasyprint
