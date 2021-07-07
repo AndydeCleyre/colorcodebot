@@ -424,7 +424,7 @@ class ColorCodeBot:
         self.log.msg(
             "creating inline query result",
             file_id=file_id,
-            file_info=self.bot.get_file(file_id)
+            file_info=str(self.bot.get_file(file_id))
         )
         self.bot.answer_inline_query(
             inline_query.id,
