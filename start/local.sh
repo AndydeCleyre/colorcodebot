@@ -21,6 +21,9 @@ if [ ! "$VIRTUAL_ENV" ]; then
   # shellcheck disable=SC1091
   . app/venv/bin/activate
   pip install -r app/requirements.txt
+  if [ -r app/${deployment}-requirements.txt ]; then
+    pip install -r app/${deployment}-requirements.txt
+  fi
 fi
 
 exec sops exec-env "app/sops/colorcodebot.${deployment}.yml" \
