@@ -2,8 +2,8 @@
 Color Code Bot
 ==============
 
-Telegram bot for sharing code snippets as beautiful syntax-highlighted images and HTML
-======================================================================================
+Share code snippets as beautiful syntax-highlighted images and HTML on Telegram
+===============================================================================
 
 .. list-table::
    :widths: auto
