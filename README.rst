@@ -14,9 +14,8 @@ Telegram bot for sharing code snippets as beautiful syntax-highlighted images an
      - |actions-ctnr|
      - |actions-reqs|
 
-.. image:: https://user-images.githubusercontent.com/1787385/124966460-59b3cc80-dff1-11eb-9b79-5fbf8af19be9.png
+.. image:: https://user-images.githubusercontent.com/1787385/124971355-13fa0280-dff7-11eb-901c-73c5347a4e03.png
    :alt: Screenshot of the bot in action
-   :height: 150px
    :align: right
 
 It's a small bit of Python glue between great projects, including:
