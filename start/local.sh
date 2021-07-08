@@ -22,8 +22,8 @@ if [ ! "$VIRTUAL_ENV" ]; then
   . app/venv/bin/activate
 fi
 pip install -r app/requirements.txt
-if [ -r app/${deployment}-requirements.txt ]; then
-  pip install -r app/${deployment}-requirements.txt
+if [ -r "app/${deployment}-requirements.txt" ]; then
+  pip install -r "app/${deployment}-requirements.txt"
 fi
 
 exec sops exec-env "app/sops/colorcodebot.${deployment}.yml" \
