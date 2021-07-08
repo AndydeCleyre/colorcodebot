@@ -1,26 +1,44 @@
+==============
 Color Code Bot
 ==============
 
-- |telegram|
-- |quay|
-- |actions-ctnr|
-- |actions-reqs|
+Telegram bot for sharing code snippets as beautiful syntax-highlighted images and HTML
+======================================================================================
 
-To use it, chat directly with `@colorcodebot`_.
+.. list-table::
+   :widths: auto
+   :align: center
+
+   * - |telegram|
+     - |quay|
+     - |actions-ctnr|
+     - |actions-reqs|
+
+.. image:: https://user-images.githubusercontent.com/1787385/124966460-59b3cc80-dff1-11eb-9b79-5fbf8af19be9.png
+   :alt: Screenshot of the bot in action
+   :height: 720px
+   :align: right
+
+It's a small bit of Python glue between great projects, including:
+
+- highlight_ (lua, renders HTML)
+- pyTelegramBotAPI_
+- weasyprint_ (HTML `->` image)
+- guesslang_ (uses tensorflow; saves you the step of specifying the snippet's language)
+- Iosevka_ (the most wonderful monospaced font)
+
+Usage
+-----
+
+Send `@colorcodebot`_ the code you want highlighted,
+as a forwarded or original direct message.
 
 As a convenience, you can get to a direct chat with it from any other chat,
 by typing ``@colorcodebot`` and tapping the button that pops up.
+A button returning you (with a shiny new image)
+to your original chat will be presented after you send the code.
 
 Click to watch `a demo video`_!
-
-|demo|
-
-This project uses some excellent existing tools, including:
-
-- pyTelegramBotAPI_
-- highlight_
-- weasyprint_
-- guesslang_
 
 Development & Deployment
 ------------------------
@@ -29,17 +47,29 @@ Depending on your hardware, you may see faster syntax guessing (from guesslang_)
 by installing ``cuda`` and ``cudnn`` packages.
 This is *not* done for the currently hosted container images.
 
+Outside of the core Python "app" part of the project,
+sops_ is used for secrets,
+buildah_ for container building,
+GitHub Actions for automated container image builds and other CI tasks,
+and `wheezy.template`_ and yamlpath_ are extremely handy for
+defining+rendering service definitions and other dev/ops maneuvers.
+
 I will probably add more info here eventually,
 but please do `send a message`_ or open an issue with any questions.
 
 
 .. _a demo video: https://user-images.githubusercontent.com/1787385/123204250-ae9a0380-d485-11eb-981d-3302220aad58.mp4
+.. _buildah: https://github.com/containers/buildah
 .. _@colorcodebot: https://t.me/colorcodebot
-.. _highlight: http://www.andre-simon.de/doku/highlight/highlight.html
 .. _guesslang: https://github.com/yoeo/guesslang
+.. _highlight: http://www.andre-simon.de/doku/highlight/highlight.html
+.. _Iosevka: https://github.com/be5invis/Iosevka
 .. _pyTelegramBotAPI: https://github.com/eternnoir/pyTelegramBotAPI
 .. _send a message: https://t.me/andykluger
+.. _sops: https://github.com/mozilla/sops
 .. _weasyprint: https://weasyprint.org/
+.. _wheezy.template: https://github.com/akornatskyy/wheezy.template
+.. _yamlpath: https://github.com/wwkimball/yamlpath
 
 
 .. |actions-ctnr| image:: https://github.com/AndydeCleyre/colorcodebot/actions/workflows/ci.yml/badge.svg?branch=develop
@@ -49,11 +79,6 @@ but please do `send a message`_ or open an issue with any questions.
 .. |actions-reqs| image:: https://github.com/AndydeCleyre/colorcodebot/actions/workflows/reqs.yml/badge.svg?branch=develop
    :alt: Automated Python Requirements Bump Status
    :target: https://github.com/AndydeCleyre/colorcodebot/actions/workflows/reqs.yml
-
-.. |demo| image:: https://user-images.githubusercontent.com/1787385/123205425-dee2a180-d487-11eb-9430-a7f79aecac0c.jpg
-   :alt: Demo of the bot in use
-   :target: https://user-images.githubusercontent.com/1787385/123204250-ae9a0380-d485-11eb-981d-3302220aad58.mp4
-   :height: 720px
 
 .. |quay| image:: https://img.shields.io/badge/Quay.io-andykluger%2Fcolorcodebot--prod--archlinux-green?logo=redhat
    :alt: Container Image Repository
