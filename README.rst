@@ -14,10 +14,6 @@ Telegram bot for sharing code snippets as beautiful syntax-highlighted images an
      - |actions-ctnr|
      - |actions-reqs|
 
-.. image:: https://user-images.githubusercontent.com/1787385/124971355-13fa0280-dff7-11eb-901c-73c5347a4e03.png
-   :alt: Screenshot of the bot in action
-   :align: right
-
 It's a small bit of Python glue between great projects, including:
 
 - highlight_ (lua, renders HTML)
@@ -25,6 +21,10 @@ It's a small bit of Python glue between great projects, including:
 - weasyprint_ (HTML `->` image)
 - guesslang_ (uses tensorflow; saves you the step of specifying the snippet's language)
 - Iosevka_ (the most wonderful monospaced font)
+
+.. image:: https://user-images.githubusercontent.com/1787385/124971355-13fa0280-dff7-11eb-901c-73c5347a4e03.png
+   :alt: Screenshot of the bot in action
+   :align: right
 
 Usage
 -----
