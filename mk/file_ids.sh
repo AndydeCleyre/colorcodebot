@@ -31,6 +31,8 @@ if [ ! "$VIRTUAL_ENV" ]; then
 fi
 pip install -r dev-requirements.txt
 
-data="$(yaml-get -S -p . "vars.$deployment.yml")"
+yaml-get -S -p theme_previews "vars.$deployment.yml" >/dev/null 2>&1
 
-wheezy.template -s templates theme_previews.yml.wz "$data" >"$dest"
+wheezy.template -s templates theme_previews.yml.wz \
+  "$(yaml-get -S -p . "vars.$deployment.yml")" \
+  >"$dest"
