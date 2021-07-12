@@ -56,6 +56,8 @@ def load_configs() -> {
         data['guesslang']
     ) = (
         yload((local.path(__file__).up() / f'{yml}.yml').read())
+        if (local.path(__file__).up() / f'{yml}.yml').exists()
+        else {}
         for yml in (
             'english',
             'theme_previews',
