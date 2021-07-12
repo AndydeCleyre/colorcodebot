@@ -1,10 +1,7 @@
 creation_rules:
 - path_regex: \.prod\.yml$
-  encrypted_regex: (^(host|port)$|_(KEY|ID)$)
   age: age1ejj70hky4zsve69h4shdkfvzy93ftazpp3e22xj0w054wy2ktuwss0yxrd
 - path_regex: \.dev\.yml$
-  encrypted_regex: (^(host|port)$|_(KEY|ID)$)
   age: age10qrj02xnpzxs5kykmyan4nwvhjln9cnslr6jkskcpwj086aghvvqpmr4rj
 - path_regex: \.[^.]+\.yml$
-  encrypted_regex: (^(host|port)$|_(KEY|ID)$)
   age: age10qrj02xnpzxs5kykmyan4nwvhjln9cnslr6jkskcpwj086aghvvqpmr4rj
