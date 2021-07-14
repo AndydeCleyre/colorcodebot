@@ -20,7 +20,7 @@ cffi==1.14.6
     # via
     #   cairocffi
     #   weasyprint
-chardet==4.0.0
+charset-normalizer==2.0.1
     # via requests
 cssselect2==0.4.1
     # via
@@ -50,7 +50,7 @@ h5py==3.1.0
     # via tensorflow
 html5lib==1.1
     # via weasyprint
-idna==2.10
+idna==3.2
     # via requests
 keras-nightly==2.5.0.dev2021032900
     # via tensorflow
@@ -93,9 +93,9 @@ pyphen==0.11.0
     # via weasyprint
 pytelegrambotapi==3.8.1
     # via -r requirements.in
-python-dateutil==2.8.1
+python-dateutil==2.8.2
     # via strictyaml
-requests==2.25.1
+requests==2.26.0
     # via
     #   pytelegrambotapi
     #   requests-oauthlib
