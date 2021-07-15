@@ -56,17 +56,186 @@ defining+rendering service definitions and other dev/ops maneuvers.
 I will probably add more info here eventually,
 but please do `send a message`_ or open an issue with any questions.
 
+Organization
+~~~~~~~~~~~~
 
+.. code::
+
+    colorcodebot
+   ├── app                   # core app that gets deployed, with encrypted secrets
+   │  └── sops               # encrypted deployment-specific data
+   ├── dev-requirements.in   # loosely versioned reqs for mk/ and start/ scripts
+   ├── dev-requirements.txt  # lockfile (made by mk/reqs.sh, automated by .github/workflows/reqs.yml)
+   ├── mk                    # scripts that make things: containers, lockfiles, service definitions, etc.
+   ├── start                 # scripts that help start the bot, from local code or container registry
+   ├── templates             # used by mk/ scripts to make service definitions and config files
+   └── vars.<deployment>.yml # unencrypted deployment-specific data
+
+Getting Started
+~~~~~~~~~~~~~~~
+
+To run ``colorcodebot.py``, the environment variable ``TG_API_KEY`` must be set,
+with a token from `@botfather`_.
+
+.. code:: console
+
+   $ python3 -m venv app/venv
+   $ python -m pip install -r app/requirements.txt
+   $ TG_API_KEY='...' ./app/colorcodebot.py
+
+This will get you going,
+but keep reading to take advantage of the build and encryption scripts,
+get database backups, and enable each user to choose their theme.
+
+Deployments, Secrets, and Scripts
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Unencrypted Variables
+^^^^^^^^^^^^^^^^^^^^^
+
+A deployment configuration ("deployment") is defined by ``vars.<name>.yml``.
+
+There are two top-level keys:
+
+``theme_previews``
+  mapping of theme names to Telegram file IDs; see `Generating Theme Previews`_
+
+  used by: ``mk/file_ids.sh``, ``mk/ctnr.sh``
+
+``svcs``
+  list of mappings that each define a long-running supervised service
+  (the bot and optionally a log sender for Papertrail_)
+
+  used by: ``mk/svcs.sh``, ``mk/ctnr.sh``
+
+The deployments ``dev`` and ``prod`` are both intended to run inside a container,
+built by ``mk/ctnr.sh``.
+Note the difference between ``vars.dev.yml`` and ``vars.prod.yml``:
+
+.. code:: diff
+
+   --- vars.dev.yml  2021-06-28 11:13:46.347838948 -0400
+   +++ vars.prod.yml 2021-07-12 14:22:07.638842356 -0400
+   @@ -4,7 +4,7 @@
+        exec: >-
+          sops exec-env
+   -      sops/colorcodebot.dev.yml
+   +      sops/colorcodebot.prod.yml
+
+          "s6-setuidgid colorcodebot ./venv/bin/python
+          ./colorcodebot.py"
+   @@ -16,7 +16,7 @@
+        exec: >-
+          sops exec-file --filename log_files.yml
+   -      ../papertrail.log_files.dev.yml
+   +      ../papertrail.log_files.prod.yml
+
+          "remote_syslog -D -c {}"
+   @@ -24,7 +24,7 @@
+        sops_templates:
+          - src: log_files.yml.wz
+   -        dest: papertrail.log_files.dev.yml
+   +        dest: papertrail.log_files.prod.yml
+
+- similarities:
+   + ``s6-setuidgid`` is used to run as user ``colorcodebot``
+- differences:
+   + which encrypted variables get set in the environment of the bot process
+   + which encrypted config file is read by the remote logger
+   + which encrypted configs are used
+
+Now let's compare ``vars.dev.yml`` to ``vars.local.yml`` (again ignoring ``theme_previews``):
+
+.. code:: diff
+
+   --- vars.dev.yml  2021-06-28 11:13:46.347838948 -0400
+   +++ vars.local.yml   2021-07-12 13:57:00.414719676 -0400
+   @@ -6,14 +6,15 @@
+   -      "s6-setuidgid colorcodebot ./venv/bin/python
+   +      "./venv/bin/python
+          ./colorcodebot.py"
+        folder:
+          run: ../../
+          log: ../../../logs/colorcodebot
+   +      cgroups: /sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/svcs
+
+      - name: papertrail
+   -    enabled: true
+   +    enabled: false
+   @@ -22,6 +23,7 @@
+        folder:
+          run: log
+          log: ../../../logs/papertrail
+   +      cgroups: /sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/svcs
+
+- similarities:
+   + which encrypted configs are used
+- differences:
+   + ``local``: intended to run on the host
+   + ``local``: no user changing (no ``s6-setuidgid``)
+   + ``local``: overrides the default cgroup path used by services with a systemd-flavored one
+   + ``local``: disables optional Papertrail remote logging service
+
+Modify one of these to your liking, or copy to ``vars.<name>.yml`` with your own deployment name, e.g.:
+
+.. code:: console
+
+   $ cp vars.local.yml "vars.$(hostname).yml"
+
+Encrypted Variables
+^^^^^^^^^^^^^^^^^^^
+
+Configure Sops
+""""""""""""""
+
+Create one or more age_ keys to use with sops_:
+
+.. code:: console
+
+   $ mkdir -p ~/.config/sops/age
+   $ printf '%s\n' '' '# --- colorcodebot ---' >>~/.config/sops/age/keys.txt
+   $ age-keygen >>~/.config/sops/age/keys.txt
+   Public key: age1r50agxl277e24h4ammj0kvpqh224ut8ds67qc2d537dq0uy74shq98dh97
+
+And use that public key in ``.sops.yaml`` to match your desired deployments.
+
+Next Thing
+""""""""""
+
+- overwrite ``app/sops/colorcodebot.<deployment>.yml`` with
+
+.. code:: yaml
+
+   TG_API_KEY: <put-the-real-token-here>
+
+and encrypt it with
+
+.. code:: console
+
+   $ sops -e -i app/sops/colorcodebot.<deployment>.yaml
+
+After that, you can . . . (TODO)
+
+
+Generating Theme Previews
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+TODO: document
+
+
+.. _@botfather: https://t.me/botfather
 .. _a demo video: https://user-images.githubusercontent.com/1787385/123204250-ae9a0380-d485-11eb-981d-3302220aad58.mp4
+.. _age: https://github.com/FiloSottile/age
 .. _buildah: https://github.com/containers/buildah
 .. _@colorcodebot: https://t.me/colorcodebot
 .. _guesslang: https://github.com/yoeo/guesslang
 .. _highlight: http://www.andre-simon.de/doku/highlight/highlight.html
 .. _Iosevka: https://github.com/be5invis/Iosevka
+.. _Papertrail: https://www.papertrail.com
 .. _pyTelegramBotAPI: https://github.com/eternnoir/pyTelegramBotAPI
 .. _send a message: https://t.me/andykluger
 .. _sops: https://github.com/mozilla/sops
-.. _weasyprint: https://weasyprint.org/
+.. _weasyprint: https://weasyprint.org
 .. _wheezy.template: https://github.com/akornatskyy/wheezy.template
 .. _yamlpath: https://github.com/wwkimball/yamlpath
 
