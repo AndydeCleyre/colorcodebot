@@ -16,11 +16,11 @@ cairosvg==2.5.2
     # via weasyprint
 certifi==2021.5.30
     # via requests
-cffi==1.14.5
+cffi==1.14.6
     # via
     #   cairocffi
     #   weasyprint
-chardet==4.0.0
+charset-normalizer==2.0.2
     # via requests
 cssselect2==0.4.1
     # via
@@ -32,7 +32,7 @@ flatbuffers==1.12
     # via tensorflow
 gast==0.4.0
     # via tensorflow
-google-auth==1.32.1
+google-auth==1.33.0
     # via
     #   google-auth-oauthlib
     #   tensorboard
@@ -50,7 +50,7 @@ h5py==3.1.0
     # via tensorflow
 html5lib==1.1
     # via weasyprint
-idna==2.10
+idna==3.2
     # via requests
 keras-nightly==2.5.0.dev2021032900
     # via tensorflow
@@ -93,9 +93,9 @@ pyphen==0.11.0
     # via weasyprint
 pytelegrambotapi==3.8.1
     # via -r requirements.in
-python-dateutil==2.8.1
+python-dateutil==2.8.2
     # via strictyaml
-requests==2.25.1
+requests==2.26.0
     # via
     #   pytelegrambotapi
     #   requests-oauthlib
