@@ -12,8 +12,6 @@ svcs:
       run: ../../
       log: ../../../logs/colorcodebot
 
-# TODO: https://github.com/mozilla/sops/issues/872
-
   - name: papertrail
     enabled: true
     exec: >-
