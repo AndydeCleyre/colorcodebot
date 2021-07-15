@@ -19,7 +19,7 @@ It's a small bit of Python glue between great projects, including:
 - highlight_ (lua, renders HTML)
 - pyTelegramBotAPI_
 - weasyprint_ (HTML `->` image)
-- guesslang_ (uses tensorflow; saves you the step of specifying the snippet's language)
+- guesslang_ (uses TensorFlow; saves you the step of specifying the snippet's language)
 - Iosevka_ (the most wonderful monospaced font)
 
 .. image:: https://user-images.githubusercontent.com/1787385/124971355-13fa0280-dff7-11eb-901c-73c5347a4e03.png
@@ -42,19 +42,26 @@ Click to watch `a demo video`_!
 Development & Deployment
 ------------------------
 
+The bot should run anywhere with Python, fontconfig, highlight_,
+either GraphicsMagick or ImageMagick, and the ability to install TensorFlow.
+Or anywhere that can run a container image.
+
 Depending on your hardware, you may see faster syntax guessing (from guesslang_)
 by installing ``cuda`` and ``cudnn`` packages.
 This is *not* done for the currently hosted container images.
 
-Outside of the core Python "app" part of the project,
+Most of the ``mk/`` scripts are POSIX,
+but ``mk/svcs.zsh`` requires Zsh,
+and ``mk/ctnr.sh`` calls ``mk/svcs.zsh``.
+
+Outside of the core Python app,
 sops_ is used for secrets,
 buildah_ for container building,
 GitHub Actions for automated container image builds and other CI tasks,
 and `wheezy.template`_ and yamlpath_ are extremely handy for
 defining+rendering service definitions and other dev/ops maneuvers.
 
-I will probably add more info here eventually,
-but please do `send a message`_ or open an issue with any questions.
+Please do `send a message`_ or open an issue with any questions.
 
 Organization
 ~~~~~~~~~~~~
@@ -109,22 +116,43 @@ Create one or more age_ keys to use with sops_:
 
 And use that public key in ``.sops.yaml`` to match your desired deployments.
 
-Next Thing
-""""""""""
+Write colorcodebot Variables
+""""""""""""""""""""""""""""
 
-- overwrite ``app/sops/colorcodebot.<deployment>.yml`` with
+Overwrite ``app/sops/colorcodebot.<deployment>.yml`` with
 
 .. code:: yaml
 
    TG_API_KEY: <put-the-real-token-here>
 
-and encrypt it with
+(and optionally ``ADMIN_CHAT_ID``) and encrypt it with
 
 .. code:: console
 
    $ sops -e -i app/sops/colorcodebot.<deployment>.yaml
 
-After that, you can . . . (TODO)
+.. You can set ``host`` and ``port`` in ``app/sops/papertrail.<deployment>.yml``
+.. the same way, if using that service.
+
+Load colorcodebot Variables
+"""""""""""""""""""""""""""
+
+.. code:: console
+
+   $ ./start/local.sh -h
+   Start the bot locally, without process supervision or other svcs
+   Args: [-d <deployment>=dev]
+
+You can use ``start/local.sh`` to:
+- ensure a virtual environment exists, has all Python dependencies installed, and is activated
+- load decrypted values from ``app/sops/colorcodebot.<deployment>.yml`` into environment variables
+- launch the bot (unsupervised, no other services)
+
+You can do just those last two (as seen in the script) with
+
+.. code:: console
+
+   $ sops exec-env "app/sops/colorcodebot.${deployment}.yml" app/colorcodebot.py
 
 Unencrypted Variables
 ^^^^^^^^^^^^^^^^^^^^^
@@ -173,12 +201,9 @@ Note the difference between ``vars.dev.yml`` and ``vars.prod.yml``:
    -        dest: log_files.dev.yml
    +        dest: log_files.prod.yml
 
-- similarities:
-   + ``s6-setuidgid`` is used to run as user ``colorcodebot``
 - differences:
    + which encrypted variables get set in the environment of the bot process
-   + which encrypted config file is read by the remote logger
-   + which encrypted configs are used
+   + which encrypted config file is created for and read by the remote logger
 
 Now let's compare ``vars.dev.yml`` to ``vars.local.yml`` (again ignoring ``theme_previews``):
 
