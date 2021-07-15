@@ -133,7 +133,7 @@ Note the difference between ``vars.dev.yml`` and ``vars.prod.yml``:
           "remote_syslog -D -c {}"
    @@ -24,7 +24,7 @@
         sops_templates:
-          - src: log_files.yml.wz
+          - src: papertrail.log_files.yml.wz
    -        dest: papertrail.log_files.dev.yml
    +        dest: papertrail.log_files.prod.yml
 
