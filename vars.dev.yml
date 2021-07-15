@@ -16,7 +16,7 @@ svcs:
     enabled: true
     exec: >-
       sops exec-file --filename log_files.yml
-      ../papertrail.log_files.dev.yml
+      ../log_files.dev.yml
 
       "remote_syslog -D -c {}"
     folder:
@@ -24,7 +24,7 @@ svcs:
       log: ../../../logs/papertrail
     sops_templates:
       - src: papertrail.log_files.yml.wz
-        dest: papertrail.log_files.dev.yml
+        dest: log_files.dev.yml
 
 # Minimal disabled svc:
 # - name: svc-name-without-spaces

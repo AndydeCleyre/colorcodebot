@@ -127,15 +127,15 @@ Note the difference between ``vars.dev.yml`` and ``vars.prod.yml``:
    @@ -16,7 +16,7 @@
         exec: >-
           sops exec-file --filename log_files.yml
-   -      ../papertrail.log_files.dev.yml
-   +      ../papertrail.log_files.prod.yml
+   -      ../log_files.dev.yml
+   +      ../log_files.prod.yml
 
           "remote_syslog -D -c {}"
    @@ -24,7 +24,7 @@
         sops_templates:
           - src: papertrail.log_files.yml.wz
-   -        dest: papertrail.log_files.dev.yml
-   +        dest: papertrail.log_files.prod.yml
+   -        dest: log_files.dev.yml
+   +        dest: log_files.prod.yml
 
 - similarities:
    + ``s6-setuidgid`` is used to run as user ``colorcodebot``
