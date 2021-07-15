@@ -14,7 +14,7 @@ from guesslang import Guess
 from peewee import CharField, IntegerField
 from playhouse.apsw_ext import APSWDatabase
 from playhouse.kv import KeyValue
-from plumbum import local, CommandNotFound
+from plumbum import CommandNotFound, local
 from plumbum.cmd import highlight
 from requests.exceptions import ConnectionError
 from telebot import TeleBot
@@ -43,42 +43,44 @@ def ydump(data: Mapping) -> str:
 
 
 def load_configs() -> {
+    # fmt: off
     'lang':             Mapping[str, str],
     'theme_image_ids':  tuple[str],
     'kb':               Mapping[str, InlineKeyboardMarkup],
     'guesslang':        Mapping[str, str]
+    # fmt: on
 }:
     data = {}
-    (
-        data['lang'],
-        theme_names_ids,
-        syntax_names_exts,
-        data['guesslang']
-    ) = (
+    (data['lang'], theme_names_ids, syntax_names_exts, data['guesslang']) = (
         yload((local.path(__file__).up() / f'{yml}.yml').read())
         if (local.path(__file__).up() / f'{yml}.yml').exists()
         else {}
-        for yml in (
-            'english',
-            'theme_previews',
-            'syntaxes',
-            'guesslang'
-        )
+        for yml in ('english', 'theme_previews', 'syntaxes', 'guesslang')
     )
 
     data['theme_image_ids'] = tuple(theme_names_ids.values())
 
     kb_theme = InlineKeyboardMarkup()
 
-    kb_theme.add(*[InlineKeyboardButton(
-        name, callback_data=ydump({'action': 'set theme', 'theme': name})
-    ) for name in theme_names_ids.keys()])
+    kb_theme.add(
+        *[
+            InlineKeyboardButton(
+                name, callback_data=ydump({'action': 'set theme', 'theme': name})
+            )
+            for name in theme_names_ids.keys()
+        ]
+    )
 
     kb_syntax = InlineKeyboardMarkup()
 
-    kb_syntax.add(*[InlineKeyboardButton(
-        name, callback_data=ydump({'action': 'set ext', 'ext': ext})
-    ) for name, ext in syntax_names_exts.items()])
+    kb_syntax.add(
+        *[
+            InlineKeyboardButton(
+                name, callback_data=ydump({'action': 'set ext', 'ext': ext})
+            )
+            for name, ext in syntax_names_exts.items()
+        ]
+    )
 
     data['kb'] = {'theme': kb_theme, 'syntax': kb_syntax}
 
@@ -106,8 +108,9 @@ def mk_html(code: str, ext: str, theme: str = 'base16/gruvbox-dark-hard') -> str
                 ',Courier New'
                 ',Courier'
                 ',Bitstream Vera Sans Mono'
-            )
-        ] <<code
+            ),
+        ]
+        << code
     )()
 
 
@@ -118,10 +121,7 @@ def mk_png(html: str, folder=None) -> str:
     png = folder / 'code.png'
     (
         convert['-trim', '-trim', '-', png]
-        <<HTML(
-            string=html,
-            media_type='screen'
-        ).write_png(resolution=384)
+        << HTML(string=html, media_type='screen').write_png(resolution=384)
     )()
     return png
 
@@ -132,9 +132,11 @@ def minikb(kb_name: str, mini_text: str = '. . .') -> InlineKeyboardMarkup:
     which restores the specified KB by name when pressed.
     """
     kb = InlineKeyboardMarkup()
-    kb.add(InlineKeyboardButton(
-        mini_text, callback_data=ydump({'action': 'restore', 'kb_name': kb_name})
-    ))
+    kb.add(
+        InlineKeyboardButton(
+            mini_text, callback_data=ydump({'action': 'restore', 'kb_name': kb_name})
+        )
+    )
     return kb
 
 
@@ -142,7 +144,7 @@ def retry(
     original: Callable = None,  # needed to make args altogether optional
     exceptions: Union[Exception, Iterable[Exception]] = ConnectionError,
     attempts: int = 6,
-    seconds: float = 3
+    seconds: float = 3,
 ) -> WraptFunc:
 
     if not original:  # needed to make args altogether optional
@@ -177,16 +179,20 @@ def retry(
         if last_error:
             raise last_error
         return resp
+
     # return wrapper
     return wrapper(original)  # needed to make args altogether optional
 
 
 def mk_logger(json=True):
-    structlog.configure(processors=[
-        structlog.processors.format_exc_info,
-        structlog.processors.JSONRenderer(sort_keys=True) if json
-        else structlog.dev.ConsoleRenderer()
-    ])
+    structlog.configure(
+        processors=[
+            structlog.processors.format_exc_info,
+            structlog.processors.JSONRenderer(sort_keys=True)
+            if json
+            else structlog.dev.ConsoleRenderer(),
+        ]
+    )
     return structlog.get_logger()
 
 
@@ -195,11 +201,7 @@ def send_html(bot, chat_id, html: str, reply_msg_id=None) -> Message:
     bot.send_chat_action(chat_id, 'upload_document')
     with io.StringIO(html) as doc:
         doc.name = 'code.html'
-        return bot.send_document(
-            chat_id,
-            doc,
-            reply_to_message_id=reply_msg_id
-        )
+        return bot.send_document(chat_id, doc, reply_to_message_id=reply_msg_id)
 
 
 @retry
@@ -213,7 +215,6 @@ def send_image(bot, chat_id, png_path: str, reply_msg_id=None, compress=True) ->
 
 
 class ColorCodeBot:
-
     def __init__(
         self,
         api_key: str,
@@ -224,7 +225,7 @@ class ColorCodeBot:
         *args: Any,
         admin_chat_id: Optional[str] = None,
         db_path: str = str(local.path(__file__).up() / 'user_themes.sqlite'),
-        **kwargs: Any
+        **kwargs: Any,
     ):
         self.lang = lang
         self.theme_image_ids = theme_image_ids
@@ -235,7 +236,7 @@ class ColorCodeBot:
         self.user_themes = KeyValue(
             key_field=IntegerField(primary_key=True),
             value_field=CharField(),
-            database=APSWDatabase(db_path)
+            database=APSWDatabase(db_path),
         )
         self.log = mk_logger()
         self.bot = TeleBot(api_key, *args, **kwargs)
@@ -243,6 +244,7 @@ class ColorCodeBot:
         self.guesser = Guess()
 
     def register_handlers(self):
+        # fmt: off
         self.welcome              = self.bot.message_handler(commands=['start', 'help'])(self.welcome)
         self.browse_themes        = self.bot.message_handler(commands=['theme', 'themes'])(self.browse_themes)
         self.mk_theme_previews    = self.bot.message_handler(commands=['previews'])(self.mk_theme_previews)
@@ -253,6 +255,7 @@ class ColorCodeBot:
         self.set_theme            = self.bot.callback_query_handler(lambda q: yload(q.data)['action'] == 'set theme')(self.set_theme)
         self.send_photo_elsewhere = self.bot.inline_handler(lambda q: q.query.startswith("img "))(self.send_photo_elsewhere)
         self.switch_from_inline   = self.bot.inline_handler(lambda q: True)(self.switch_from_inline)
+        # fmt: on
 
     @retry
     def switch_from_inline(self, inline_query: InlineQuery):
@@ -260,12 +263,13 @@ class ColorCodeBot:
             "receiving inline query",
             user_id=inline_query.from_user.id,
             user_first_name=inline_query.from_user.first_name,
-            query=inline_query.query
+            query=inline_query.query,
         )
         self.bot.answer_inline_query(
-            inline_query.id, [],
+            inline_query.id,
+            [],
             switch_pm_text=self.lang['switch to direct'],
-            switch_pm_parameter='x'
+            switch_pm_parameter='x',
         )
 
     @retry
@@ -274,14 +278,14 @@ class ColorCodeBot:
             "introducing myself",
             user_id=message.from_user.id,
             user_first_name=message.from_user.first_name,
-            chat_id=message.chat.id
+            chat_id=message.chat.id,
         )
         self.bot.reply_to(
             message,
             self.lang['welcome'],
             reply_markup=ForceReply(
                 input_field_placeholder=self.lang['input field placeholder']
-            )
+            ),
         )
 
     @retry
@@ -292,10 +296,11 @@ class ColorCodeBot:
                 user_id=message.from_user.id,
                 user_first_name=message.from_user.first_name,
                 chat_id=message.chat.id,
-                admin_chat_id=self.admin_chat_id
+                admin_chat_id=self.admin_chat_id,
             )
             return
-        sample_code = dedent("""
+        sample_code = dedent(
+            """
             # palinDay :: Int -> [ISO Date]
             def palinDay(y):
                 '''A possibly empty list containing the palindromic
@@ -309,17 +314,18 @@ class ColorCodeBot:
                     return [iso]
                 except ValueError:
                     return []
-        """)
+        """
+        )
         for button in chain.from_iterable(self.kb['theme'].keyboard):
             theme = button.text
             html = mk_html(f"# {theme}{sample_code}", 'py', theme)
             with local.tempdir() as folder:
-                png_path=mk_png(html, folder=folder)
+                png_path = mk_png(html, folder=folder)
                 send_image(
                     bot=self.bot,
                     chat_id=message.chat.id,
                     png_path=png_path,
-                    reply_msg_id=message.message_id
+                    reply_msg_id=message.message_id,
                 )
 
     @retry
@@ -328,22 +334,20 @@ class ColorCodeBot:
             "browsing themes",
             user_id=message.from_user.id,
             user_first_name=message.from_user.first_name,
-            chat_id=message.chat.id
+            chat_id=message.chat.id,
         )
         albums = [
-            self.theme_image_ids[i:i+10]
+            self.theme_image_ids[i : i + 10]
             for i in range(0, len(self.theme_image_ids), 10)
         ]
         for album in albums:
             self.bot.send_media_group(
                 message.chat.id,
                 map(InputMediaPhoto, album),
-                reply_to_message_id=message.message_id
+                reply_to_message_id=message.message_id,
             )
         self.bot.reply_to(
-            message,
-            self.lang['select theme'],
-            reply_markup=self.kb['theme']
+            message, self.lang['select theme'], reply_markup=self.kb['theme']
         )
 
     @retry
@@ -355,23 +359,22 @@ class ColorCodeBot:
             user_id=user.id,
             user_first_name=user.first_name,
             theme=data['theme'],
-            chat_id=cb_query.message.chat.id
+            chat_id=cb_query.message.chat.id,
         )
         self.bot.edit_message_reply_markup(
             cb_query.message.chat.id,
             cb_query.message.message_id,
-            reply_markup=minikb('theme')
+            reply_markup=minikb('theme'),
         )
         self.user_themes[user.id] = data['theme']
         self.bot.answer_callback_query(
-            cb_query.id,
-            text=self.lang['acknowledge theme'].format(data['theme'])
+            cb_query.id, text=self.lang['acknowledge theme'].format(data['theme'])
         )
         if self.admin_chat_id:
             with open(self.db_path, 'rb') as doc:
                 self.bot.send_document(self.admin_chat_id, doc)
 
-    def guess_ext(self, code: str, probability_min: float = .12) -> Optional[str]:
+    def guess_ext(self, code: str, probability_min: float = 0.12) -> Optional[str]:
         syntax, probability = self.guesser.probabilities(code)[0]
         ext = self.guesslang_syntaxes.get(syntax)
         self.log.msg(
@@ -379,16 +382,18 @@ class ColorCodeBot:
             probability_min=probability_min,
             probability=probability,
             syntax=syntax,
-            ext=ext
+            ext=ext,
         )
         if probability >= probability_min:
             return ext
         for start, ext in {
+            # fmt: off
             '{': 'json',
             '---\n': 'yaml',
             '[[': 'toml', '[': 'ini',
             '<?php': 'php', '<': 'xml',
             '-- ': 'lua'
+            # fmt: on
         }.items():
             if code.startswith(start):
                 return ext
@@ -399,7 +404,7 @@ class ColorCodeBot:
             "receiving code",
             user_id=message.from_user.id,
             user_first_name=message.from_user.first_name,
-            chat_id=message.chat.id
+            chat_id=message.chat.id,
         )
         ext = self.guess_ext(message.text)
         if ext:
@@ -408,7 +413,7 @@ class ColorCodeBot:
                 f"{self.lang['query ext']}\n\n{self.lang['guessed syntax'].format(ext)}",
                 reply_markup=minikb('syntax', self.lang['syntax picker']),
                 parse_mode='Markdown',
-                disable_web_page_preview=True
+                disable_web_page_preview=True,
             )
             self.set_snippet_filetype(cb_query=None, query_message=kb_msg, ext=ext)
         else:
@@ -417,25 +422,25 @@ class ColorCodeBot:
                 self.lang['query ext'],
                 reply_markup=self.kb['syntax'],
                 parse_mode='Markdown',
-                disable_web_page_preview=True
+                disable_web_page_preview=True,
             )
 
     @retry
     def send_photo_elsewhere(self, inline_query: InlineQuery):
-        file_id=inline_query.query.split('img ', 1)[-1]
+        file_id = inline_query.query.split('img ', 1)[-1]
         self.log.msg(
             "creating inline query result",
             file_id=file_id,
-            file_info=str(self.bot.get_file(file_id))
+            file_info=str(self.bot.get_file(file_id)),
         )
         self.bot.answer_inline_query(
             inline_query.id,
-            [InlineQueryResultCachedPhoto(
-                id=str(uuid4()),
-                photo_file_id=file_id,
-                title="Send Image"
-            )],
-            is_personal=True
+            [
+                InlineQueryResultCachedPhoto(
+                    id=str(uuid4()), photo_file_id=file_id, title="Send Image"
+                )
+            ],
+            is_personal=True,
         )
 
     @retry
@@ -444,7 +449,7 @@ class ColorCodeBot:
         self.bot.edit_message_reply_markup(
             cb_query.message.chat.id,
             cb_query.message.message_id,
-            reply_markup=self.kb[data['kb_name']]
+            reply_markup=self.kb[data['kb_name']],
         )
         self.bot.answer_callback_query(cb_query.id)
 
@@ -453,7 +458,7 @@ class ColorCodeBot:
         self,
         cb_query: Optional[CallbackQuery] = None,
         query_message: Optional[Message] = None,
-        ext: Optional[str] = None
+        ext: Optional[str] = None,
     ):
         if cb_query:
             query_message = cb_query.message
@@ -465,13 +470,13 @@ class ColorCodeBot:
             user_id=query_message.reply_to_message.from_user.id,
             user_first_name=query_message.reply_to_message.from_user.first_name,
             syntax=ext,
-            chat_id=query_message.chat.id
+            chat_id=query_message.chat.id,
         )
         if cb_query:
             self.bot.edit_message_reply_markup(
                 query_message.chat.id,
                 query_message.message_id,
-                reply_markup=minikb('syntax', self.lang['syntax picker'])
+                reply_markup=minikb('syntax', self.lang['syntax picker']),
             )
         snippet = query_message.reply_to_message
         theme = self.user_themes.get(snippet.from_user.id, 'base16/gruvbox-dark-hard')
@@ -481,11 +486,11 @@ class ColorCodeBot:
             bot=self.bot,
             chat_id=snippet.chat.id,
             html=html,
-            reply_msg_id=snippet.message_id
+            reply_msg_id=snippet.message_id,
         )
 
         with local.tempdir() as folder:
-            png_path=mk_png(html, folder=folder)
+            png_path = mk_png(html, folder=folder)
             did_send = False
             if len(snippet.text.splitlines()) <= 30:
                 try:
@@ -493,25 +498,25 @@ class ColorCodeBot:
                         bot=self.bot,
                         chat_id=snippet.chat.id,
                         png_path=png_path,
-                        reply_msg_id=snippet.message_id
+                        reply_msg_id=snippet.message_id,
                     )
                 except ApiException as e:
                     self.log.error(
                         "failed to send compressed image",
                         exc_info=e,
-                        chat_id=snippet.chat.id
+                        chat_id=snippet.chat.id,
                     )
                 else:
                     did_send = True
                     kb_to_chat = InlineKeyboardMarkup()
-                    kb_to_chat.add(InlineKeyboardButton(
-                        self.lang['send to chat'],
-                        switch_inline_query=f"img {photo_msg.photo[-1].file_id}"
-                    ))
+                    kb_to_chat.add(
+                        InlineKeyboardButton(
+                            self.lang['send to chat'],
+                            switch_inline_query=f"img {photo_msg.photo[-1].file_id}",
+                        )
+                    )
                     self.bot.edit_message_reply_markup(
-                        photo_msg.chat.id,
-                        photo_msg.message_id,
-                        reply_markup=kb_to_chat
+                        photo_msg.chat.id, photo_msg.message_id, reply_markup=kb_to_chat
                     )
             if not did_send:
                 send_image(
@@ -519,7 +524,7 @@ class ColorCodeBot:
                     chat_id=snippet.chat.id,
                     png_path=png_path,
                     reply_msg_id=snippet.message_id,
-                    compress=False
+                    compress=False,
                 )
 
         if cb_query:
@@ -531,7 +536,7 @@ class ColorCodeBot:
             file_id=message.photo[0].file_id,
             user_id=message.from_user.id,
             user_first_name=message.from_user.first_name,
-            chat_id=message.chat.id
+            chat_id=message.chat.id,
         )
 
 
@@ -543,5 +548,5 @@ if __name__ == '__main__':
         lang=cfg['lang'],
         theme_image_ids=cfg['theme_image_ids'],
         keyboards=cfg['kb'],
-        guesslang_syntaxes=cfg['guesslang']
+        guesslang_syntaxes=cfg['guesslang'],
     ).bot.polling()

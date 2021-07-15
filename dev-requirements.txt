@@ -1,7 +1,23 @@
+appdirs==1.4.4
+    # via black
+black==21.6b0
+    # via -r dev-requirements.in
+click==8.0.1
+    # via black
+isort==5.9.2
+    # via -r dev-requirements.in
+mypy-extensions==0.4.3
+    # via black
+pathspec==0.8.1
+    # via black
+regex==2021.7.6
+    # via black
 ruamel.yaml==0.17.10
     # via yamlpath
 ruamel.yaml.clib==0.2.6
     # via ruamel.yaml
+toml==0.10.2
+    # via black
 wheezy.template==3.1.0
     # via -r dev-requirements.in
 yamlpath==3.6.1
