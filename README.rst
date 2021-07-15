@@ -78,6 +78,21 @@ Organization
    ├── templates             # used by mk/ scripts to make service definitions and config files
    └── vars.<deployment>.yml # unencrypted deployment-specific data
 
+When building a container image with the included script,
+``app`` becomes ``/home/colorcodebot``,
+and the following are generated and added into that folder:
+
+- ``theme_previews.yml``
+- ``svcs`` (folder)
+
+If you want to use the container images already built from this repo,
+you'll want to write or mount over:
+
+- ``/home/colorcodebot/theme_previews.yml``
+- ``/home/colorcodebot/svcs``
+- ``/home/colorcodebot/sops``
+- ``/home/colorcodebot/.sops.yaml``
+
 Getting Started
 ~~~~~~~~~~~~~~~
 
@@ -144,7 +159,11 @@ Load colorcodebot Variables
    Args: [-d <deployment>=dev]
 
 You can use ``start/local.sh`` to:
-- ensure a virtual environment exists, has all Python dependencies installed, and is activated
+- ensure Python lockfile is updated
+- ensure a virtual environment exists
+- ensure the venv has all Python dependencies installed
+- ensure the venv is activated if one is not already
+- update or create ``app/theme_previews.yml`` if file IDs are present in ``vars.<deployment>.yml``
 - load decrypted values from ``app/sops/colorcodebot.<deployment>.yml`` into environment variables
 - launch the bot (unsupervised, no other services)
 
@@ -157,7 +176,7 @@ You can do just those last two (as seen in the script) with
 Unencrypted Variables
 ^^^^^^^^^^^^^^^^^^^^^
 
-A deployment configuration ("deployment") is defined by ``vars.<name>.yml``.
+A deployment's unencrypted variables are defined by ``vars.<name>.yml``.
 
 There are two top-level keys:
 
@@ -174,7 +193,8 @@ There are two top-level keys:
 
 The deployments ``dev`` and ``prod`` are both intended to run inside a container,
 built by ``mk/ctnr.sh``.
-Note the difference between ``vars.dev.yml`` and ``vars.prod.yml``:
+Note the difference between the ``svc`` definitions
+of ``vars.dev.yml`` and ``vars.prod.yml``:
 
 .. code:: diff
 
@@ -205,7 +225,7 @@ Note the difference between ``vars.dev.yml`` and ``vars.prod.yml``:
    + which encrypted variables get set in the environment of the bot process
    + which encrypted config file is created for and read by the remote logger
 
-Now let's compare ``vars.dev.yml`` to ``vars.local.yml`` (again ignoring ``theme_previews``):
+Now let's compare ``vars.dev.yml`` to ``vars.local.yml``:
 
 .. code:: diff
 
@@ -232,7 +252,6 @@ Now let's compare ``vars.dev.yml`` to ``vars.local.yml`` (again ignoring ``theme
 - similarities:
    + which encrypted configs are used
 - differences:
-   + ``local``: intended to run on the host
    + ``local``: no user changing (no ``s6-setuidgid``)
    + ``local``: overrides the default cgroup path used by services with a systemd-flavored one
    + ``local``: disables optional Papertrail remote logging service
@@ -246,7 +265,28 @@ Modify one of these to your liking, or copy to ``vars.<name>.yml`` with your own
 Generating Theme Previews
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-TODO: document
+highlight_ has *many* themes, so we picked a subset.
+
+For the user to choose a theme, we need to generate preview images,
+and save their file IDs.
+
+Start by creating ``app/theme_previews.yml`` either manually or with ``./mk/file_ids.sh``
+
+.. code:: console
+
+   $ ./mk/file_ids.sh -h
+   Generate theme_previews.yml, with data from vars.<deployment>.yml
+   Args: [-d <deployment>=dev] [<dest>=app/theme_previews.yml]
+
+For now the value of each entry can be garbage,
+what's important is that the keys are the names of the themes you wish to offer.
+
+Send the ``/previews`` command to the bot, and the file IDs you need
+will show up in the log as preview images are generated and sent your way.
+
+Enter those into ``vars.<deployment>.yml``,
+then generate ``app/theme_previews.yml`` for local deployment with ``mk/file_ids.sh``,
+which is automatically called by ``start/local.sh`` and ``mk/ctnr.sh``.
 
 
 .. _@botfather: https://t.me/botfather
