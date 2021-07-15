@@ -83,12 +83,48 @@ with a token from `@botfather`_.
    $ python -m pip install -r app/requirements.txt
    $ TG_API_KEY='...' ./app/colorcodebot.py
 
-This will get you going,
-but keep reading to take advantage of the build and encryption scripts,
-get database backups, and enable each user to choose their theme.
+After chatting with the bot, check the logs for your ``chat_id``.
+Pass this as an additional environment variable ``ADMIN_CHAT_ID`` to get:
+
+- permission to use the admin ``/previews`` command for `Generating Theme Previews`_
+- an updated SQLite db file sent to that chat whenever a user sets a preferred theme
 
 Deployments, Secrets, and Scripts
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Encrypted Variables
+^^^^^^^^^^^^^^^^^^^
+
+Configure Sops
+""""""""""""""
+
+Create one or more age_ keys to use with sops_:
+
+.. code:: console
+
+   $ mkdir -p ~/.config/sops/age
+   $ printf '%s\n' '' '# --- colorcodebot ---' >>~/.config/sops/age/keys.txt
+   $ age-keygen >>~/.config/sops/age/keys.txt
+   Public key: age1r50agxl277e24h4ammj0kvpqh224ut8ds67qc2d537dq0uy74shq98dh97
+
+And use that public key in ``.sops.yaml`` to match your desired deployments.
+
+Next Thing
+""""""""""
+
+- overwrite ``app/sops/colorcodebot.<deployment>.yml`` with
+
+.. code:: yaml
+
+   TG_API_KEY: <put-the-real-token-here>
+
+and encrypt it with
+
+.. code:: console
+
+   $ sops -e -i app/sops/colorcodebot.<deployment>.yaml
+
+After that, you can . . . (TODO)
 
 Unencrypted Variables
 ^^^^^^^^^^^^^^^^^^^^^
@@ -181,41 +217,6 @@ Modify one of these to your liking, or copy to ``vars.<name>.yml`` with your own
 .. code:: console
 
    $ cp vars.local.yml "vars.$(hostname).yml"
-
-Encrypted Variables
-^^^^^^^^^^^^^^^^^^^
-
-Configure Sops
-""""""""""""""
-
-Create one or more age_ keys to use with sops_:
-
-.. code:: console
-
-   $ mkdir -p ~/.config/sops/age
-   $ printf '%s\n' '' '# --- colorcodebot ---' >>~/.config/sops/age/keys.txt
-   $ age-keygen >>~/.config/sops/age/keys.txt
-   Public key: age1r50agxl277e24h4ammj0kvpqh224ut8ds67qc2d537dq0uy74shq98dh97
-
-And use that public key in ``.sops.yaml`` to match your desired deployments.
-
-Next Thing
-""""""""""
-
-- overwrite ``app/sops/colorcodebot.<deployment>.yml`` with
-
-.. code:: yaml
-
-   TG_API_KEY: <put-the-real-token-here>
-
-and encrypt it with
-
-.. code:: console
-
-   $ sops -e -i app/sops/colorcodebot.<deployment>.yaml
-
-After that, you can . . . (TODO)
-
 
 Generating Theme Previews
 ~~~~~~~~~~~~~~~~~~~~~~~~~
