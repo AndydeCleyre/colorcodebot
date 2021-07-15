@@ -33,6 +33,6 @@ pip install -r dev-requirements.txt
 
 yaml-get -S -p theme_previews "vars.$deployment.yml" >/dev/null 2>&1
 
-wheezy.template -s templates theme_previews.yml.wz \
+wheezy.template -s templates app.theme_previews.yml.wz \
   "$(yaml-get -S -p . "vars.$deployment.yml")" \
   >"$dest"
