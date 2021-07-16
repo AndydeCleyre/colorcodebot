@@ -68,15 +68,15 @@ Organization
 
 .. code::
 
-    colorcodebot
-   ├── app                   # core app that gets deployed, with encrypted secrets
-   │  └── sops               # encrypted deployment-specific data
-   ├── dev-requirements.in   # loosely versioned reqs for mk/ and start/ scripts
-   ├── dev-requirements.txt  # lockfile (made by mk/reqs.sh)
-   ├── mk                    # scripts that make things
-   ├── start                 # scripts that help start the bot
-   ├── templates             # used by mk/ scripts to generate files
-   └── vars.<deployment>.yml # unencrypted deployment-specific data
+   colorcodebot
+   ├──app                   # core app that gets deployed, with encrypted secrets
+   │  └──sops               # encrypted deployment-specific data
+   ├──dev-requirements.in   # loosely versioned reqs for mk/ and start/ scripts
+   ├──dev-requirements.txt  # lockfile (made by mk/reqs.sh)
+   ├──mk                    # scripts that make things
+   ├──start                 # scripts that help start the bot
+   ├──templates             # used by mk/ scripts to generate files
+   └──vars.<deployment>.yml # unencrypted deployment-specific data
 
 When building a container image with the included script,
 ``app`` becomes ``/home/colorcodebot``,
