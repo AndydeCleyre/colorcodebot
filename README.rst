@@ -50,16 +50,16 @@ Depending on your hardware, you may see faster syntax guessing (from guesslang_)
 by installing ``cuda`` and ``cudnn`` packages.
 This is *not* done for the currently hosted container images.
 
-Most of the ``mk/`` scripts are POSIX,
-but ``mk/svcs.zsh`` requires Zsh,
-and ``mk/ctnr.sh`` calls ``mk/svcs.zsh``.
-
 Outside of the core Python app,
 sops_ is used for secrets,
 buildah_ for container building,
 GitHub Actions for automated container image builds and other CI tasks,
 and `wheezy.template`_ and yamlpath_ are extremely handy for
 defining+rendering service definitions and other dev/ops maneuvers.
+
+Most of the ``mk/`` and ``start/`` scripts are POSIX,
+but ``mk/svcs.zsh`` requires Zsh,
+and ``mk/ctnr.sh`` calls ``mk/svcs.zsh``.
 
 Please do `send a message`_ or open an issue with any questions.
 
@@ -72,10 +72,10 @@ Organization
    ├── app                   # core app that gets deployed, with encrypted secrets
    │  └── sops               # encrypted deployment-specific data
    ├── dev-requirements.in   # loosely versioned reqs for mk/ and start/ scripts
-   ├── dev-requirements.txt  # lockfile (made by mk/reqs.sh, automated by .github/workflows/reqs.yml)
-   ├── mk                    # scripts that make things: containers, lockfiles, service definitions, etc.
-   ├── start                 # scripts that help start the bot, from local code or container registry
-   ├── templates             # used by mk/ scripts to make service definitions and config files
+   ├── dev-requirements.txt  # lockfile (made by mk/reqs.sh)
+   ├── mk                    # scripts that make things
+   ├── start                 # scripts that help start the bot
+   ├── templates             # used by mk/ scripts to generate files
    └── vars.<deployment>.yml # unencrypted deployment-specific data
 
 When building a container image with the included script,
