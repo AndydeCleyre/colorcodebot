@@ -159,6 +159,7 @@ Load colorcodebot Variables
    Args: [-d <deployment>=dev]
 
 You can use ``start/local.sh`` to:
+
 - ensure Python lockfile is updated
 - ensure a virtual environment exists
 - ensure the venv has all Python dependencies installed
