@@ -13,6 +13,7 @@ Share code snippets as beautiful syntax-highlighted images and HTML on Telegram
      - |quay|
      - |actions-ctnr|
      - |actions-reqs|
+     - |actions-fmt|
 
 It's a small bit of Python glue between great projects, including:
 
@@ -310,6 +311,10 @@ which is automatically called by ``start/local.sh`` and ``mk/ctnr.sh``.
 .. |actions-ctnr| image:: https://github.com/AndydeCleyre/colorcodebot/actions/workflows/ci.yml/badge.svg?branch=develop
    :alt: Automated Container Build Status
    :target: https://github.com/AndydeCleyre/colorcodebot/actions/workflows/ci.yml
+
+.. |actions-fmt| image:: https://github.com/AndydeCleyre/colorcodebot/actions/workflows/fmt.yml/badge.svg?branch=develop
+   :alt: Format and Lint Status
+   :target: https://github.com/AndydeCleyre/colorcodebot/actions/workflows/fmt.yml
 
 .. |actions-reqs| image:: https://github.com/AndydeCleyre/colorcodebot/actions/workflows/reqs.yml/badge.svg?branch=develop
    :alt: Automated Python Requirements Bump Status
