@@ -1,18 +1,18 @@
 #!/bin/sh -e
 # [-d <deployment>=prod] [-t <image-tag>=develop] [-r <registry-user>=quay.io/andykluger]
 
-###########################
-### Parse Args (barely) ###
-###########################
+##################
+### Parse Args ###
+##################
 
 deployment=prod
-if [ "$1" = -d ]; then deployment=$2; shift 2; fi
-
 tag=develop
-if [ "$1" = -t ]; then tag=$2; shift 2; fi
-
 registry_user=quay.io/andykluger
-if [ "$1" = -r ]; then registry_user=$2; shift 2; fi
+while [ "$1" = -d ] || [ "$1" = -t ] || [ "$1" = -r ]; do
+  if [ "$1" = -d ]; then deployment=$2;    shift 2; fi
+  if [ "$1" = -t ]; then tag=$2;           shift 2; fi
+  if [ "$1" = -r ]; then registry_user=$2; shift 2; fi
+done
 
 if [ "$1" ]; then
   printf '%s\n' 'Start a colorcodebot container with podman' 'Args: [-d <deployment>=prod] [-t <image-tag>=develop] [-r <registry-user>=quay.io/andykluger]' 1>&2
