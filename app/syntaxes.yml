@@ -19,6 +19,7 @@ Python: py3
 Ruby: rb
 Rust: rust
 reStructuredText: rst
+Scala: scala
 SQL: sql
 Swift: swift
 TOML: toml
