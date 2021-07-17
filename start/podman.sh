@@ -87,3 +87,12 @@ fi
 ##############
 
 podman ps
+
+###################
+### Maintenance ###
+###################
+
+# deadbeats=$(podman images -f dangling=true --format '{{.ID}}')
+# if [ $deadbeats ]; then
+#   podman rmi $deadbeats
+# fi
