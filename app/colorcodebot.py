@@ -17,7 +17,6 @@ from playhouse.kv import KeyValue
 from plumbum import CommandNotFound, local
 from plumbum.cmd import highlight
 from requests.exceptions import ConnectionError
-from snoop import snoop
 from telebot import TeleBot
 from telebot.apihelper import ApiException
 from telebot.types import (
@@ -454,7 +453,6 @@ class ColorCodeBot:
         )
         self.bot.answer_callback_query(cb_query.id)
 
-    @snoop
     @retry
     def set_snippet_filetype(
         self,
