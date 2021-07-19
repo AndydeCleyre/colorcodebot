@@ -4,6 +4,8 @@ absl-py==0.13.0
     #   tensorflow
 apsw==3.9.2.post1
     # via -r requirements.in
+asttokens==2.0.5
+    # via snoop
 astunparse==1.6.3
     # via tensorflow
 cachetools==4.2.2
@@ -22,12 +24,16 @@ cffi==1.14.6
     #   weasyprint
 charset-normalizer==2.0.3
     # via requests
+cheap-repr==0.4.5
+    # via snoop
 cssselect2==0.4.1
     # via
     #   cairosvg
     #   weasyprint
 defusedxml==0.7.1
     # via cairosvg
+executing==0.7.0
+    # via snoop
 flatbuffers==1.12
     # via tensorflow
 gast==0.4.0
@@ -89,6 +95,8 @@ pyasn1-modules==0.2.8
     # via google-auth
 pycparser==2.20
     # via cffi
+pygments==2.9.0
+    # via snoop
 pyphen==0.11.0
     # via weasyprint
 pytelegrambotapi==3.8.1
@@ -107,6 +115,7 @@ rsa==4.7.2
 six==1.15.0
     # via
     #   absl-py
+    #   asttokens
     #   astunparse
     #   google-auth
     #   google-pasta
@@ -115,7 +124,10 @@ six==1.15.0
     #   keras-preprocessing
     #   protobuf
     #   python-dateutil
+    #   snoop
     #   tensorflow
+snoop==0.4.0
+    # via -r requirements.in
 strictyaml==1.4.4
     # via -r requirements.in
 structlog==21.1.0
