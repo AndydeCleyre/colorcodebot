@@ -20,7 +20,7 @@ cffi==1.14.6
     # via
     #   cairocffi
     #   weasyprint
-charset-normalizer==2.0.2
+charset-normalizer==2.0.3
     # via requests
 cssselect2==0.4.1
     # via
