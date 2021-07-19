@@ -5,7 +5,7 @@ import os
 from itertools import chain
 from textwrap import dedent
 from time import sleep
-from typing import Any, Callable, Iterable, List, Mapping, Optional, Union
+from typing import Any, Callable, Iterable, List, Mapping, Optional, TypedDict, Union
 from uuid import uuid4
 
 import strictyaml
@@ -26,12 +26,19 @@ from telebot.types import (
 from weasyprint import HTML
 from wrapt import decorator
 
-WraptFunc = Callable[[Callable, Any, Iterable, Mapping], Callable]
-
 try:
     convert = local['gm']['convert']
 except CommandNotFound:
     convert = local['convert']
+
+WraptFunc = Callable[[Callable, Any, Iterable, Mapping], Callable]
+
+
+class Config(TypedDict):
+    lang: Mapping[str, str]
+    theme_image_ids: tuple[str]
+    kb: Mapping[str, InlineKeyboardMarkup]
+    guesslang: Mapping[str, str]
 
 
 def yload(yamltxt: str) -> Union[str, List, Mapping]:
@@ -42,14 +49,7 @@ def ydump(data: Mapping) -> str:
     return strictyaml.as_document(data).as_yaml()
 
 
-def load_configs() -> {
-    # fmt: off
-    'lang':             Mapping[str, str],
-    'theme_image_ids':  tuple[str],
-    'kb':               Mapping[str, InlineKeyboardMarkup],
-    'guesslang':        Mapping[str, str]
-    # fmt: on
-}:
+def load_configs() -> Config:
     data = {}
     (data['lang'], theme_names_ids, syntax_names_exts, data['guesslang']) = (
         yload((local.path(__file__).up() / f'{yml}.yml').read())
