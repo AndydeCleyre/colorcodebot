@@ -32,7 +32,7 @@ db_file=$PWD/user_themes.sqlite
 ### Pull ###
 ############
 
-podman pull "$img"
+podman pull "$img" || buildah pull --policy=never "$img"
 
 ####################################
 ### Prepare DB File for mounting ###
