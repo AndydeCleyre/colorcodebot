@@ -49,7 +49,8 @@ Or anywhere that can run a container image.
 
 Depending on your hardware, you may see faster syntax guessing (from guesslang_)
 by installing ``cuda`` and ``cudnn`` packages.
-This is *not* done for the currently hosted container images.
+This is *not* done for the currently hosted container images,
+which is the result of ``./mk/ctnr.sh -d prod --push`` run by a GitHub Action.
 
 Outside of the core Python app,
 sops_ is used for secrets,
