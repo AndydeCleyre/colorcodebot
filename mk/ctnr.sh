@@ -74,7 +74,12 @@ alias ctnr_pkg="ctnr_run pacman --noconfirm"
 alias ctnr_pkg_upgrade="ctnr_pkg -Syu"
 alias ctnr_pkg_add="ctnr_pkg -S --needed"
 alias ctnr_pkg_del="ctnr_pkg -Rsn"
-alias ctnr_mkuser="ctnr_run useradd -m"
+
+ctnr_mkuser () {  # <username>
+  if ! ctnr_run id "$1" >/dev/null 2 >&1; then
+    ctnr_run useradd -m "$1"
+  fi
+}
 
 ctnr_trim () {
   # shellcheck disable=SC2046
@@ -103,11 +108,11 @@ ctnr_pkg_upgrade
 ctnr_pkg_add $pkgs $build_pkgs $build_groups
 
 # Add user
-ctnr_mkuser $user || true
+ctnr_mkuser $user
 
 # Install AUR packages
 printf '%s\n' '' '>>> Installing AUR packages . . .' '' >&2
-ctnr_mkuser builder || true
+ctnr_mkuser builder
 ctnr_run rm -f /etc/sudoers.d/builder
 printf '%s\n' 'builder ALL=(ALL) NOPASSWD: ALL' \
 | ctnr_append '/etc/sudoers.d/builder'
@@ -119,7 +124,7 @@ for key in $gpg_keys; do
   ctnr_run -b gpg --keyserver keyserver.ubuntu.com --recv-keys "$key"
 done
 # shellcheck disable=SC2086
-ctnr_run -b paru -S --noconfirm $aur_pkgs
+ctnr_run -b paru -S --noconfirm --needed $aur_pkgs
 ctnr_pkg_del paru-bin
 
 # Copy app and svcs into container
@@ -128,15 +133,16 @@ tmp=$(mktemp -d)
 git -C "$repo" archive HEAD:app >"$tmp/app.tar"
 "$repo/mk/file_ids.sh" -d "$deployment" "$tmp/theme_previews.yml"
 "$repo/mk/svcs.zsh" -d "$deployment" "$tmp/svcs"
-[ -d "/home/$user/venv" ] && ctnr_run mv "/home/$user/venv" "/tmp/jumpstart_venv"
+ctnr_run sh -c "[ -d /home/$user/venv ]" && ctnr_run mv "/home/$user/venv" "/tmp/jumpstart_venv"
 # Second, burn down home:
-ctnr_run sh -c "rm -rf /home/$user/* /home/$user/.*" || true
 ctnr_run rm -rf "$svcs_dir"
+ctnr_run rm -rf "/home/$user"
 # Third, deliver:
 ctnr_fetch -u "$tmp/app.tar" /home/$user
+ctnr_run -u chmod 0700 /home/$user
 ctnr_fetch -u "$tmp/theme_previews.yml" /home/$user/
 ctnr_fetch "$tmp/svcs" "$svcs_dir"
-[ -d /tmp/jumpstart_venv ] && ctnr_run mv "/tmp/jumpstart_venv" /home/$user/venv
+ctnr_run sh -c '[ -d /tmp/jumpstart_venv ]' && ctnr_run mv "/tmp/jumpstart_venv" /home/$user/venv
 # Tidy up:
 rm -rf "$tmp"
 
