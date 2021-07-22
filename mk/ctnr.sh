@@ -1,20 +1,26 @@
-#!/bin/sh -ex
-# [-d <deployment>=dev] [--push]
+#!/bin/sh -e
+# [-d <deployment>=dev] [--push] [-r <registry-user>=quay.io/andykluger]
+
+if [ "$1" = -h ] || [ "$1" = --help ]; then
+  printf '%s\n' \
+    'Build a container image' \
+    'Args: [-d <deployment>=dev] [--push] [-r <registry-user>=quay.io/andykluger]' \
+    1>&2
+  exit 1
+fi
 
 #######################
 ### Configure Build ###
 #######################
 
 deployment=dev
-if [ "$1" = -d ]; then
-  deployment=$2
-  shift 2
-fi
-
-if [ "$1" ] && [ "$1" != --push ]; then
-  printf '%s\n' 'Build a container image' 'Args: [-d <deployment>=dev] [--push]' 1>&2
-  exit 1
-fi
+registry_user=quay.io/andykluger
+unset do_push
+while [ "$1" = -d ] || [ "$1" = --push ] || [ "$1" = -r ]; do
+  if [ "$1" = -d ];     then deployment=$2;    shift 2; fi
+  if [ "$1" = -r ];     then registry_user=$2; shift 2; fi
+  if [ "$1" = --push ]; then do_push=1;        shift;   fi
+done
 
 repo=$(git -C "$(dirname "$0")" rev-parse --show-toplevel)
 set -x
@@ -23,7 +29,7 @@ branch=$(git -C "$repo" branch --show-current | sed 's/[^[:alnum:]\.\_\-]/_/g')
 set +x
 
 appname=colorcodebot
-img=quay.io/andykluger/${appname}-${deployment}-archlinux
+img=${registry_user}/${appname}-${deployment}-archlinux
 ctnr=${img}-building
 
 user=$appname
@@ -46,7 +52,7 @@ fat="/tmp/* /usr/lib/python3.*/__pycache__ /home/$user/.cache/* /root/.cache/* /
 ### Functions ###
 #################
 
-ctnr_run () {  # [-u] <cmd> [<cmd-arg>...]
+ctnr_run () {  # [-u|-b] <cmd> [<cmd-arg>...]
   _u=root
   if [ "$1" = -u ]; then
     _u=$user
@@ -204,7 +210,7 @@ printf '%s\n' '' \
   ">>> For the internal process supervision to work, you'll need to unmask /sys/fs/cgroup" \
   ">>> See start/podman.sh, which uses the host user's encryption keys and mounts a DB if present" ''
 
-if [ "$1" = --push ]; then
+if [ "$do_push" ]; then
   podman push "$img-jumpstart:$today"
   podman push "$img:latest"
   podman push "$img:$today"
