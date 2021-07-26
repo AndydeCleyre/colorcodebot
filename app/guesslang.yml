@@ -1,3 +1,4 @@
+Assembly: asm
 C: c
 C++: c
 'C#': csharp
@@ -5,15 +6,22 @@ CSS: css
 Go: go
 Haskell: hs
 HTML: html
+INI: ini
 Java: java
 JavaScript: js
+JSON: json
+Kotlin: kotlin
 Lua: lua
 Objective-C: objc
 PHP: php
 Python: py3
 Ruby: rb
+Rust: rust
 Scala: scala
 Shell: sh
 SQL: sql
 Swift: swift
+TOML: toml
 TypeScript: ts
+XML: xml
+YAML: yaml
