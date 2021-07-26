@@ -388,11 +388,11 @@ class ColorCodeBot:
             return ext
         for start, ext in {
             # fmt: off
-            '{': 'json',
+            '{':     'json',
             '---\n': 'yaml',
-            '[[': 'toml', '[': 'ini',
-            '<?php': 'php', '<': 'xml',
-            '-- ': 'lua'
+            '[[':    'toml', '[': 'ini',
+            '<?php': 'php',  '<': 'xml',
+            '-- ':   'lua'
             # fmt: on
         }.items():
             if code.startswith(start):
