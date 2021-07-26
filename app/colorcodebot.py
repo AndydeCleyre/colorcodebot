@@ -396,6 +396,7 @@ class ColorCodeBot:
             # fmt: on
         }.items():
             if code.startswith(start):
+                self.log.msg("simple-guessed syntax", ext=ext)
                 return ext
 
     @retry
