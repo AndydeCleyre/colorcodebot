@@ -15,6 +15,7 @@ Lua: lua
 Objective-C: objc
 PHP: php
 Python: py3
+R: r
 Ruby: rb
 Rust: rust
 Scala: scala
