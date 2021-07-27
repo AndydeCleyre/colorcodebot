@@ -39,7 +39,7 @@ podman pull "$img" || buildah pull --policy=never "$img"
 ####################################
 
 if [ -f "$db_file" ]; then
-  printf '%s\n' "Found DB on host:" "$(ls -l "$db_file")" 'Ensuring the in-container user can read and write to it . . .' 1>&2
+  printf '%s\n' '' "Found DB on host:" "$(ls -l "$db_file")" 'Ensuring the in-container user can read and write to it . . .' 1>&2
 
   # Get host UID for ctnr_user
   ownme=$(mktemp)
@@ -50,6 +50,7 @@ if [ -f "$db_file" ]; then
   chown "$uid" "$db_file"
 
   ls -l "$db_file" 1>&2
+  printf '%s\n' ''
 
   do_mount_db=1
 fi
