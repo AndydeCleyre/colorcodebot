@@ -2,6 +2,8 @@ welcome: |
   Hello! Send me a snippet of code as your message text, and I'll send you a colorized HTML file and image.
 
   Don't like the theme? Pick another, with /theme !
+
+  You can type `@colorcodebot` (without sending) in any other chat to get here quickly.
 query ext: Fantastic! What type of code is this?
 guessed syntax: It looks like `{}` to me, so I'll send that right away.
 syntax picker: Pick syntax

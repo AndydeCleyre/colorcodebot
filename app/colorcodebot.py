@@ -283,6 +283,7 @@ class ColorCodeBot:
         self.bot.reply_to(
             message,
             self.lang['welcome'],
+            parse_mode='Markdown',
             reply_markup=ForceReply(
                 input_field_placeholder=self.lang['input field placeholder']
             ),
