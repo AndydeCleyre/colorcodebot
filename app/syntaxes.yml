@@ -11,6 +11,7 @@ Java: java
 JavaScript: js
 JSON: json
 Kotlin: kotlin
+Lisp: lisp
 Lua: lua
 NGINX: nginx
 Nim: nim
@@ -26,5 +27,6 @@ SQL: sql
 Swift: swift
 TOML: toml
 TypeScript: ts
+vimscript: vim
 XML: xml
 YAML: yaml
