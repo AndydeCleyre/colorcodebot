@@ -322,12 +322,17 @@ class ColorCodeBot:
             html = mk_html(f"# {theme}{sample_code}", 'py', theme)
             with local.tempdir() as folder:
                 png_path = mk_png(html, folder=folder)
-                send_image(
+                photo_msg = send_image(
                     bot=self.bot,
                     chat_id=message.chat.id,
                     png_path=png_path,
                     reply_msg_id=message.message_id,
                 )
+            self.log.msg(
+                "generated theme preview",
+                theme=theme,
+                file_id=photo_msg.photo[-1].file_id,
+            )
 
     @retry
     def browse_themes(self, message: Message):
