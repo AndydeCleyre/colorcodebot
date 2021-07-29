@@ -3,6 +3,7 @@ Bash: sh
 C: c
 'C#': csharp
 CSS: css
+Diff: diff
 Go: go
 Haskell: hs
 HTML: html
