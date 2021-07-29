@@ -45,8 +45,8 @@ svcs:
 # - svcs.*.sops_templates.dest is implicitly prefixed with <the svcdir>
 
 theme_previews:
-  base16/tomorrow-night:
-  base16/tomorrow:
+  base16/tomorrow-night: preview, please
+  base16/tomorrow: preview, please
   # base16/bright: AgACAgEAAxkBAAIEM2DQ4C0xDHIH8mcCzkEfAqDckKdhAAIBqTEbA8WARmUBJ5vBBlZniGBBTBcAAwEAAwIAA3MAA7A0AQABHwQ
   # candy: AgACAgEAAxkBAAIELGDQ4C2530BpsyXLiLUqaYB7QlXVAALyqDEbA8WARg7CoG7QnFzcbtqETRcAAwEAAwIAA3MAA48hAAIfBA
   # bipolar: AgACAgEAAxkBAAIEKmDQ4C0eVeEQ_-Q6AlSQCnAiPZi1AALvqDEbA8WARsEyAv93HZO7vWkSTRcAAwEAAwIAA3MAA2v3AAIfBA
