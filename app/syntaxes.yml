@@ -16,6 +16,7 @@ Lua: lua
 NGINX: nginx
 Nim: nim
 Objective C: objc
+Perl: perl
 PHP: php
 Python: py3
 R: r
