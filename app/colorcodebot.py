@@ -317,8 +317,11 @@ class ColorCodeBot:
                     return []
         """
         )
-        for button in chain.from_iterable(self.kb['theme'].keyboard):
-            theme = button.text
+        themes = message.text.split()[1:] or [
+            btn.text for btn in chain.from_iterable(self.kb['theme'].keyboard)
+        ]
+        self.log.msg("mk_theme_previews", themes=themes)
+        for theme in themes:
             html = mk_html(f"# {theme}{sample_code}", 'py', theme)
             with local.tempdir() as folder:
                 png_path = mk_png(html, folder=folder)
