@@ -35,7 +35,7 @@ ctnr=${img}-building
 user=$appname
 svcs_dir=/home/$user/svcs
 
-iosevka_pkg='https://github.com/AndydeCleyre/archbuilder_iosevka/releases/download/8.0.0-test/ttf-iosevka-term-custom-git-1627208144-1-any.pkg.tar.zst'
+iosevka_pkg='https://github.com/AndydeCleyre/archbuilder_iosevka/releases/download/ccb-straight-quote/ttf-iosevka-term-custom-git-1627380286-1-any.pkg.tar.zst'
 today=$(date +%Y.%j)
 tz="America/New_York"
 
