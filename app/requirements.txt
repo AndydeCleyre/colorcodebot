@@ -6,30 +6,22 @@ apsw==3.9.2.post1
     # via -r requirements.in
 astunparse==1.6.3
     # via tensorflow
+brotli==1.0.9
+    # via fonttools
 cachetools==4.2.2
     # via google-auth
-cairocffi==1.2.0
-    # via
-    #   cairosvg
-    #   weasyprint
-cairosvg==2.5.2
-    # via weasyprint
 certifi==2021.5.30
     # via requests
 cffi==1.14.6
-    # via
-    #   cairocffi
-    #   weasyprint
+    # via weasyprint
 charset-normalizer==2.0.4
     # via requests
 cssselect2==0.4.1
-    # via
-    #   cairosvg
-    #   weasyprint
-defusedxml==0.7.1
-    # via cairosvg
+    # via weasyprint
 flatbuffers==1.12
     # via tensorflow
+fonttools[woff]==4.25.2
+    # via weasyprint
 gast==0.4.0
     # via tensorflow
 google-auth==1.34.0
@@ -72,9 +64,7 @@ opt-einsum==3.3.0
 peewee==3.14.4
     # via -r requirements.in
 pillow==8.3.1
-    # via
-    #   cairosvg
-    #   weasyprint
+    # via weasyprint
 plumbum==1.7.0
     # via -r requirements.in
 protobuf==3.17.3
@@ -89,6 +79,8 @@ pyasn1-modules==0.2.8
     # via google-auth
 pycparser==2.20
     # via cffi
+pydyf==0.0.3
+    # via weasyprint
 pyphen==0.11.0
     # via weasyprint
 pytelegrambotapi==3.8.2
@@ -134,14 +126,13 @@ termcolor==1.1.0
     # via tensorflow
 tinycss2==1.1.0
     # via
-    #   cairosvg
     #   cssselect2
     #   weasyprint
 typing-extensions==3.7.4.3
     # via tensorflow
 urllib3==1.26.6
     # via requests
-weasyprint==52.5
+weasyprint==53.0
     # via -r requirements.in
 webencodings==0.5.1
     # via
@@ -159,6 +150,8 @@ wrapt==1.12.1
     # via
     #   -r requirements.in
     #   tensorflow
+zopfli==0.1.8
+    # via fonttools
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
