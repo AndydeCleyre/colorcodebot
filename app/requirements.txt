@@ -20,7 +20,7 @@ cssselect2==0.4.1
     # via weasyprint
 flatbuffers==1.12
     # via tensorflow
-fonttools[woff]==4.26.1
+fonttools[woff]==4.26.2
     # via weasyprint
 gast==0.4.0
     # via tensorflow
@@ -141,7 +141,7 @@ webencodings==0.5.1
     #   tinycss2
 werkzeug==2.0.1
     # via tensorboard
-wheel==0.36.2
+wheel==0.37.0
     # via
     #   astunparse
     #   tensorboard
