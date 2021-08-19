@@ -83,7 +83,7 @@ pydyf==0.0.3
     # via weasyprint
 pyphen==0.11.0
     # via weasyprint
-pytelegrambotapi==3.8.2
+pytelegrambotapi==3.8.3
     # via -r requirements.in
 python-dateutil==2.8.2
     # via strictyaml
