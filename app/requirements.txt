@@ -79,7 +79,7 @@ pyasn1-modules==0.2.8
     # via google-auth
 pycparser==2.20
     # via cffi
-pydyf==0.0.3
+pydyf==0.1.0
     # via weasyprint
 pyphen==0.11.0
     # via weasyprint
