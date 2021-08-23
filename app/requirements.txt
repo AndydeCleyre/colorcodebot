@@ -79,7 +79,7 @@ pyasn1-modules==0.2.8
     # via google-auth
 pycparser==2.20
     # via cffi
-pydyf==0.1.0
+pydyf==0.1.1
     # via weasyprint
 pyphen==0.11.0
     # via weasyprint
@@ -132,7 +132,7 @@ typing-extensions==3.7.4.3
     # via tensorflow
 urllib3==1.26.6
     # via requests
-weasyprint==53.0
+weasyprint==53.1
     # via -r requirements.in
 webencodings==0.5.1
     # via
