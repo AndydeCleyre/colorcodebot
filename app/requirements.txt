@@ -28,7 +28,7 @@ google-auth==1.35.0
     # via
     #   google-auth-oauthlib
     #   tensorboard
-google-auth-oauthlib==0.4.5
+google-auth-oauthlib==0.4.6
     # via tensorboard
 google-pasta==0.2.0
     # via tensorflow
