@@ -2,7 +2,7 @@ absl-py==0.13.0
     # via
     #   tensorboard
     #   tensorflow
-apsw==3.9.2.post1
+apsw==3.36.0.post1
     # via -r requirements.in
 astunparse==1.6.3
     # via tensorflow
