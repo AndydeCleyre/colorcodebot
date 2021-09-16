@@ -67,7 +67,7 @@ pillow==8.3.2
     # via weasyprint
 plumbum==1.7.0
     # via -r requirements.in
-protobuf==3.17.3
+protobuf==3.18.0
     # via
     #   tensorboard
     #   tensorflow
@@ -105,7 +105,6 @@ six==1.15.0
     #   grpcio
     #   html5lib
     #   keras-preprocessing
-    #   protobuf
     #   python-dateutil
     #   tensorflow
 strictyaml==1.4.4
