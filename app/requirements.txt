@@ -129,7 +129,7 @@ tinycss2==1.1.0
     #   weasyprint
 typing-extensions==3.7.4.3
     # via tensorflow
-urllib3==1.26.6
+urllib3==1.26.7
     # via requests
 weasyprint==53.3
     # via -r requirements.in
