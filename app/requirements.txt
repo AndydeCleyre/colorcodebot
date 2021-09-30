@@ -8,7 +8,7 @@ astunparse==1.6.3
     # via tensorflow
 brotli==1.0.9
     # via fonttools
-cachetools==4.2.2
+cachetools==4.2.3
     # via google-auth
 certifi==2021.5.30
     # via requests
