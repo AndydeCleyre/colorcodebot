@@ -1,4 +1,4 @@
-absl-py==0.14.0
+absl-py==0.14.1
     # via
     #   tensorboard
     #   tensorflow
