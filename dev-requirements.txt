@@ -1,6 +1,6 @@
 black==21.9b0
     # via -r dev-requirements.in
-click==8.0.2
+click==8.0.3
     # via black
 isort==5.9.3
     # via -r dev-requirements.in
