@@ -42,7 +42,7 @@ h5py==3.1.0
     # via tensorflow
 html5lib==1.1
     # via weasyprint
-idna==3.2
+idna==3.3
     # via requests
 keras-nightly==2.5.0.dev2021032900
     # via tensorflow
@@ -109,7 +109,7 @@ six==1.15.0
     #   tensorflow
 strictyaml==1.4.4
     # via -r requirements.in
-structlog==21.1.0
+structlog==21.2.0
     # via -r requirements.in
 tensorboard==2.6.0
     # via tensorflow
