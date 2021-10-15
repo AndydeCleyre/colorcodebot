@@ -63,7 +63,7 @@ opt-einsum==3.3.0
     # via tensorflow
 peewee==3.14.4
     # via -r requirements.in
-pillow==8.3.2
+pillow==8.4.0
     # via weasyprint
 plumbum==1.7.0
     # via -r requirements.in
@@ -106,7 +106,7 @@ six==1.15.0
     #   keras-preprocessing
     #   python-dateutil
     #   tensorflow
-strictyaml==1.4.4
+strictyaml==1.5.0
     # via -r requirements.in
 structlog==21.2.0
     # via -r requirements.in
