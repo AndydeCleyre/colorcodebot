@@ -1,4 +1,4 @@
-absl-py==0.14.1
+absl-py==0.15.0
     # via
     #   tensorboard
     #   tensorflow
@@ -148,7 +148,7 @@ wrapt==1.12.1
     # via
     #   -r requirements.in
     #   tensorflow
-zopfli==0.1.8
+zopfli==0.1.9
     # via fonttools
 
 # The following packages are considered to be unsafe in a requirements file:
