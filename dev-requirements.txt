@@ -16,7 +16,7 @@ ruamel.yaml==0.17.10
     # via yamlpath
 ruamel.yaml.clib==0.2.6
     # via ruamel.yaml
-tomli==1.2.1
+tomli==1.2.2
     # via black
 typing-extensions==3.10.0.2
     # via black
