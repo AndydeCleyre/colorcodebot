@@ -24,7 +24,7 @@ fonttools[woff]==4.27.1
     # via weasyprint
 gast==0.4.0
     # via tensorflow
-google-auth==2.3.1
+google-auth==2.3.2
     # via
     #   google-auth-oauthlib
     #   tensorboard
@@ -61,7 +61,7 @@ oauthlib==3.1.1
     # via requests-oauthlib
 opt-einsum==3.3.0
     # via tensorflow
-peewee==3.14.4
+peewee==3.14.6
     # via -r requirements.in
 pillow==8.4.0
     # via weasyprint
