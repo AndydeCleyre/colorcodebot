@@ -61,7 +61,7 @@ oauthlib==3.1.1
     # via requests-oauthlib
 opt-einsum==3.3.0
     # via tensorflow
-peewee==3.14.6
+peewee==3.14.7
     # via -r requirements.in
 pillow==8.4.0
     # via weasyprint
