@@ -61,13 +61,13 @@ oauthlib==3.1.1
     # via requests-oauthlib
 opt-einsum==3.3.0
     # via tensorflow
-peewee==3.14.7
+peewee==3.14.8
     # via -r requirements.in
 pillow==8.4.0
     # via weasyprint
 plumbum==1.7.0
     # via -r requirements.in
-protobuf==3.19.0
+protobuf==3.19.1
     # via
     #   tensorboard
     #   tensorflow
