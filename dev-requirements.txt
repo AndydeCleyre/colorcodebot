@@ -1,4 +1,4 @@
-black==21.9b0
+black==21.10b0
     # via -r dev-requirements.in
 click==8.0.3
     # via black
