@@ -2,7 +2,7 @@ black==21.10b0
     # via -r dev-requirements.in
 click==8.0.3
     # via black
-isort==5.10.0
+isort==5.10.1
     # via -r dev-requirements.in
 mypy-extensions==0.4.3
     # via black
