@@ -44,11 +44,13 @@ html5lib==1.1
     # via weasyprint
 idna==3.3
     # via requests
+importlib-metadata==4.8.2
+    # via markdown
 keras-nightly==2.5.0.dev2021032900
     # via tensorflow
 keras-preprocessing==1.1.2
     # via tensorflow
-markdown==3.3.4
+markdown==3.3.5
     # via tensorboard
 numpy==1.19.5
     # via
@@ -149,6 +151,8 @@ wrapt==1.12.1
     # via
     #   -r requirements.in
     #   tensorflow
+zipp==3.6.0
+    # via importlib-metadata
 zopfli==0.1.9
     # via fonttools
 
