@@ -50,7 +50,7 @@ keras-nightly==2.5.0.dev2021032900
     # via tensorflow
 keras-preprocessing==1.1.2
     # via tensorflow
-markdown==3.3.5
+markdown==3.3.6
     # via tensorboard
 numpy==1.19.5
     # via
