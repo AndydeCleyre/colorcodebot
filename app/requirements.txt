@@ -109,9 +109,9 @@ six==1.15.0
     #   keras-preprocessing
     #   python-dateutil
     #   tensorflow
-strictyaml==1.5.0
+strictyaml==1.6.0
     # via -r requirements.in
-structlog==21.2.0
+structlog==21.3.0
     # via -r requirements.in
 tensorboard==2.7.0
     # via tensorflow
