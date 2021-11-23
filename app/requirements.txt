@@ -125,7 +125,7 @@ tensorflow-estimator==2.5.0
     # via tensorflow
 termcolor==1.1.0
     # via tensorflow
-tinycss2==1.1.0
+tinycss2==1.1.1
     # via
     #   cssselect2
     #   weasyprint
