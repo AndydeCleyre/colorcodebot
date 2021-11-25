@@ -14,7 +14,7 @@ certifi==2021.10.8
     # via requests
 cffi==1.15.0
     # via weasyprint
-charset-normalizer==2.0.7
+charset-normalizer==2.0.8
     # via requests
 cssselect2==0.4.1
     # via weasyprint
@@ -96,7 +96,7 @@ requests==2.26.0
     #   tensorboard
 requests-oauthlib==1.3.0
     # via google-auth-oauthlib
-rsa==4.7.2
+rsa==4.8
     # via google-auth
 six==1.15.0
     # via
