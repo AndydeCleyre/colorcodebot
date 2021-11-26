@@ -111,7 +111,7 @@ six==1.15.0
     #   tensorflow
 strictyaml==1.6.0
     # via -r requirements.in
-structlog==21.3.0
+structlog==21.4.0
     # via -r requirements.in
 tensorboard==2.7.0
     # via tensorflow
