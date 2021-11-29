@@ -109,7 +109,7 @@ six==1.15.0
     #   keras-preprocessing
     #   python-dateutil
     #   tensorflow
-strictyaml==1.6.0
+strictyaml==1.6.1
     # via -r requirements.in
 structlog==21.4.0
     # via -r requirements.in
