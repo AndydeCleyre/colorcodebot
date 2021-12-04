@@ -14,13 +14,13 @@ certifi==2021.10.8
     # via requests
 cffi==1.15.0
     # via weasyprint
-charset-normalizer==2.0.8
+charset-normalizer==2.0.9
     # via requests
 cssselect2==0.4.1
     # via weasyprint
 flatbuffers==1.12
     # via tensorflow
-fonttools[woff]==4.28.2
+fonttools[woff]==4.28.3
     # via weasyprint
 gast==0.4.0
     # via tensorflow
