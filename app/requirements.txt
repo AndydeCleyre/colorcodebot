@@ -20,7 +20,7 @@ cssselect2==0.4.1
     # via weasyprint
 flatbuffers==1.12
     # via tensorflow
-fonttools[woff]==4.28.4
+fonttools[woff]==4.28.5
     # via weasyprint
 gast==0.4.0
     # via tensorflow
@@ -44,7 +44,7 @@ html5lib==1.1
     # via weasyprint
 idna==3.3
     # via requests
-importlib-metadata==4.9.0
+importlib-metadata==4.10.0
     # via markdown
 keras-nightly==2.5.0.dev2021032900
     # via tensorflow
