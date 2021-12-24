@@ -67,7 +67,7 @@ peewee==3.14.8
     # via -r requirements.in
 pillow==8.4.0
     # via weasyprint
-plumbum==1.7.1
+plumbum==1.7.2
     # via -r requirements.in
 protobuf==3.19.1
     # via
