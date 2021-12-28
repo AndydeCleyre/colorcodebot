@@ -83,7 +83,7 @@ pycparser==2.21
     # via cffi
 pydyf==0.1.2
     # via weasyprint
-pyphen==0.11.0
+pyphen==0.12.0
     # via weasyprint
 pytelegrambotapi==4.2.2
     # via -r requirements.in
