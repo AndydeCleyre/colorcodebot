@@ -151,7 +151,7 @@ wrapt==1.12.1
     # via
     #   -r requirements.in
     #   tensorflow
-zipp==3.6.0
+zipp==3.7.0
     # via importlib-metadata
 zopfli==0.1.9
     # via fonttools
