@@ -89,7 +89,7 @@ pytelegrambotapi==4.2.2
     # via -r requirements.in
 python-dateutil==2.8.2
     # via strictyaml
-requests==2.26.0
+requests==2.27.0
     # via
     #   pytelegrambotapi
     #   requests-oauthlib
