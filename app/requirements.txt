@@ -89,7 +89,7 @@ pytelegrambotapi==4.2.2
     # via -r requirements.in
 python-dateutil==2.8.2
     # via strictyaml
-requests==2.27.0
+requests==2.27.1
     # via
     #   pytelegrambotapi
     #   requests-oauthlib
@@ -117,7 +117,7 @@ tensorboard==2.7.0
     # via tensorflow
 tensorboard-data-server==0.6.1
     # via tensorboard
-tensorboard-plugin-wit==1.8.0
+tensorboard-plugin-wit==1.8.1
     # via tensorboard
 tensorflow==2.5.0
     # via guesslang
