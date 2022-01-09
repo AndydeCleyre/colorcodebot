@@ -85,7 +85,7 @@ pydyf==0.1.2
     # via weasyprint
 pyphen==0.12.0
     # via weasyprint
-pytelegrambotapi==4.2.2
+pytelegrambotapi==4.3.0
     # via -r requirements.in
 python-dateutil==2.8.2
     # via strictyaml
@@ -133,7 +133,7 @@ typing-extensions==3.7.4.3
     # via tensorflow
 urllib3==1.26.8
     # via requests
-weasyprint==53.4
+weasyprint==54.0
     # via -r requirements.in
 webencodings==0.5.1
     # via
