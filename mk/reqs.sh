@@ -20,7 +20,7 @@ for folder in "$root" "$root/app"; do
   pip install -U pip-tools
 
   for reqsin in *requirements.in; do
-    pip-compile -U --no-header "$reqsin"
+    pip-compile -U --no-header --annotation-style line "$reqsin"
   done
 
 done
