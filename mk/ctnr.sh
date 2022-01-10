@@ -125,13 +125,15 @@ printf '%s\n' 'builder ALL=(ALL) NOPASSWD: ALL' \
 ctnr_run -b git clone 'https://aur.archlinux.org/paru-bin' /tmp/paru-bin
 buildah config --workingdir /tmp/paru-bin "$ctnr"
 ctnr_run -b makepkg --noconfirm -si
-buildah config --workingdir "/home/$user" "$ctnr"
 for key in $gpg_keys; do
   ctnr_run -b gpg --keyserver keyserver.ubuntu.com --recv-keys "$key"
 done
+buildah config --workingdir "/home/builder" "$ctnr"
 # shellcheck disable=SC2086
 ctnr_run -b paru -S --noconfirm --needed $aur_pkgs
 ctnr_pkg_del paru-bin
+buildah config --workingdir "/home/$user" "$ctnr"
+
 
 # Copy app and svcs into container
 tmp=$(mktemp -d)
