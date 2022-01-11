@@ -28,7 +28,7 @@ opt-einsum==3.3.0         # via tensorflow
 peewee==3.14.8            # via -r requirements.in
 pillow==9.0.0             # via weasyprint
 plumbum==1.7.2            # via -r requirements.in
-protobuf==3.19.1          # via tensorboard, tensorflow
+protobuf==3.19.3          # via tensorboard, tensorflow
 pyasn1==0.4.8             # via pyasn1-modules, rsa
 pyasn1-modules==0.2.8     # via google-auth
 pycparser==2.21           # via cffi
