@@ -22,6 +22,15 @@ render_svcs () {  # [-d <deployment>=dev] [<svcs-dir>=app/svcs]
 
   cd "$(git -C $0:P:h rev-parse --show-toplevel)"
 
+  if [ ! -d venv ]; then
+    python3 -m venv venv
+  fi
+  # shellcheck disable=SC1091
+  . ./venv/bin/activate
+
+  pip install -U pip-tools
+  pip install -r dev-requirements.txt
+
   # Parse args
   local deployment=dev yml svcs_dir
   if [[ $1 == -d ]] { deployment=$2; shift 2 }
