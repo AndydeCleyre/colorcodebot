@@ -93,6 +93,10 @@ ctnr_trim () {
   ctnr_run sh -c "rm -rf $fat"
 }
 
+ctnr_cd () {  # <path>
+  buildah config --workingdir "$1" "$ctnr"
+}
+
 #############
 ### Build ###
 #############
@@ -123,16 +127,16 @@ ctnr_run rm -f /etc/sudoers.d/builder
 printf '%s\n' 'builder ALL=(ALL) NOPASSWD: ALL' \
 | ctnr_append '/etc/sudoers.d/builder'
 ctnr_run -b git clone 'https://aur.archlinux.org/paru-bin' /tmp/paru-bin
-buildah config --workingdir /tmp/paru-bin "$ctnr"
+ctnr_cd /tmp/paru-bin
 ctnr_run -b makepkg --noconfirm -si
 for key in $gpg_keys; do
   ctnr_run -b gpg --keyserver keyserver.ubuntu.com --recv-keys "$key"
 done
-buildah config --workingdir "/home/builder" "$ctnr"
+ctnr_cd "/home/builder"
 # shellcheck disable=SC2086
 ctnr_run -b paru -S --noconfirm --needed $aur_pkgs
 ctnr_pkg_del paru-bin
-buildah config --workingdir "/home/$user" "$ctnr"
+ctnr_cd "/home/$user"
 
 
 # Copy app and svcs into container
