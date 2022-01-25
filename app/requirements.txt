@@ -2,15 +2,15 @@ absl-py==0.15.0           # via tensorboard, tensorflow
 apsw==3.36.0.post1        # via -r requirements.in
 astunparse==1.6.3         # via tensorflow
 brotli==1.0.9             # via fonttools
-cachetools==4.2.4         # via google-auth
+cachetools==5.0.0         # via google-auth
 certifi==2021.10.8        # via requests
 cffi==1.15.0              # via weasyprint
 charset-normalizer==2.0.10  # via requests
 cssselect2==0.4.1         # via weasyprint
 flatbuffers==1.12         # via tensorflow
-fonttools[woff]==4.28.5   # via weasyprint
+fonttools[woff]==4.29.0   # via weasyprint
 gast==0.4.0               # via tensorflow
-google-auth==2.3.3        # via google-auth-oauthlib, tensorboard
+google-auth==2.4.1        # via google-auth-oauthlib, tensorboard
 google-auth-oauthlib==0.4.6  # via tensorboard
 google-pasta==0.2.0       # via tensorflow
 grpcio==1.34.1            # via tensorboard, tensorflow
