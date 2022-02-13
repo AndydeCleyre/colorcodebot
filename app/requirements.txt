@@ -5,7 +5,7 @@ brotli==1.0.9             # via fonttools
 cachetools==5.0.0         # via google-auth
 certifi==2021.10.8        # via requests
 cffi==1.15.0              # via weasyprint
-charset-normalizer==2.0.11  # via requests
+charset-normalizer==2.0.12  # via requests
 cssselect2==0.4.1         # via weasyprint
 flatbuffers==1.12         # via tensorflow
 fonttools[woff]==4.29.1   # via weasyprint
