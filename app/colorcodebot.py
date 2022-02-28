@@ -127,6 +127,8 @@ def mk_png(html: str, folder=None) -> str:
         '-dNOPAUSE',
         '-dBATCH',
         '-sDEVICE=png16m',
+        '-dTextAlphaBits=4',
+        '-dGraphicsAlphaBits=4',
         '-r384',
         f"-sOutputFile={untrimmed_png}",
         pdf,
