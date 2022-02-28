@@ -43,7 +43,7 @@ Behold: `a demo video`_
 Development & Deployment
 ------------------------
 
-The bot should run anywhere with Python, fontconfig, highlight_,
+The bot should run anywhere with Python, fontconfig, highlight_, ghostscript,
 either GraphicsMagick or ImageMagick, and the ability to install TensorFlow.
 Or anywhere that can run a container image.
 
