@@ -14,7 +14,7 @@ from guesslang import Guess
 from peewee import CharField, IntegerField, SqliteDatabase
 from playhouse.kv import KeyValue
 from plumbum import CommandNotFound, local
-from plumbum.cmd import highlight
+from plumbum.cmd import gs, highlight
 from requests.exceptions import ConnectionError
 from telebot import TeleBot
 from telebot.apihelper import ApiException
@@ -117,11 +117,24 @@ def mk_png(html: str, folder=None) -> str:
     """Return generated PNG file path"""
     folder = (local.path(folder) if folder else local.path('/tmp/ccb_png')) / uuid4()
     folder.mkdir()
+
+    pdf = folder / 'code.pdf'
+    HTML(string=html, media_type='screen').write_pdf(pdf)
+
+    untrimmed_png = folder / 'code_untrimmed.png'
+    gs(
+        '-q',
+        '-dNOPAUSE',
+        '-dBATCH',
+        '-sDEVICE=png16m',
+        '-r384',
+        f"-sOutputFile={untrimmed_png}",
+        pdf,
+    )
+
     png = folder / 'code.png'
-    (
-        convert['-trim', '-trim', '-', png]
-        << HTML(string=html, media_type='screen').write_png(resolution=384)
-    )()
+    convert('-trim', '-trim', untrimmed_png, png)
+
     return png
 
 

@@ -3,9 +3,8 @@ plumbum
 pyTelegramBotAPI
 strictyaml
 structlog
+weasyprint
 wrapt
-
-weasyprint<53  # later versions drop PNG output support
 
 # guesslang has a problematic and strict version lock on tensorflow
 guesslang @ git+https://github.com/andydecleyre/guesslang@tensorflow-looser
