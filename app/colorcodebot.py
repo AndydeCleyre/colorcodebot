@@ -11,8 +11,7 @@ from uuid import uuid4
 import strictyaml
 import structlog
 from guesslang import Guess
-from peewee import CharField, IntegerField
-from playhouse.apsw_ext import APSWDatabase
+from peewee import CharField, IntegerField, SqliteDatabase
 from playhouse.kv import KeyValue
 from plumbum import CommandNotFound, local
 from plumbum.cmd import highlight
@@ -236,7 +235,7 @@ class ColorCodeBot:
         self.user_themes = KeyValue(
             key_field=IntegerField(primary_key=True),
             value_field=CharField(),
-            database=APSWDatabase(db_path),
+            database=SqliteDatabase(db_path),
         )
         self.log = mk_logger()
         self.bot = TeleBot(api_key, *args, **kwargs)
