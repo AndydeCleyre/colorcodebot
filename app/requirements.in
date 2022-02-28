@@ -5,4 +5,5 @@ strictyaml
 structlog
 weasyprint
 wrapt
-guesslang
+# guesslang has a problematic and strict version lock on tensorflow
+guesslang @ git+https://github.com/andydecleyre/guesslang@tensorflow-looser
