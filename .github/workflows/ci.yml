@@ -27,9 +27,11 @@ jobs:
       - name: configure sops secrets
         run: >-
           mkdir -p "$HOME/.config/sops/age" &&
-          echo "$SOPS_SECRET" >"$HOME/.config/sops/age/keys.txt"
+          echo "$SOPS_SECRET" >"$HOME/.config/sops/age/keys.txt" &&
+          echo "$SOPS_SECRET_DEV" >>"$HOME/.config/sops/age/keys.txt"
         env:
           SOPS_SECRET: ${{ secrets.SOPS_SECRET }}
+          SOPS_SECRET_DEV: ${{ secrets.SOPS_SECRET_DEV }}
 
       - name: login to container registry
         run: podman login -u "$QUAY_USER" -p "$QUAY_TOKEN" quay.io
@@ -38,4 +40,6 @@ jobs:
           QUAY_TOKEN: ${{ secrets.QUAY_TOKEN }}
 
       - name: do the thing
-        run: ./mk/ctnr.sh -d prod --push
+        run: >-
+          ./mk/ctnr.sh -d dev --push &&
+          ./mk/ctnr.sh -d prod --push
