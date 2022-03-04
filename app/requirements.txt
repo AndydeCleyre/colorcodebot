@@ -58,7 +58,7 @@ werkzeug==2.0.3           # via tensorboard
 wheel==0.37.1             # via astunparse, tensorboard
 wrapt==1.13.3             # via -r requirements.in, tensorflow
 zipp==3.7.0               # via importlib-metadata
-zopfli==0.2.0             # via fonttools
+zopfli==0.2.1             # via fonttools
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
