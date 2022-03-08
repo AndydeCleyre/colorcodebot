@@ -22,10 +22,10 @@ keras==2.8.0              # via tensorflow
 keras-preprocessing==1.1.2  # via tensorflow
 libclang==13.0.0          # via tensorflow
 markdown==3.3.6           # via tensorboard
-numpy==1.22.2             # via h5py, keras-preprocessing, opt-einsum, tensorboard, tensorflow
+numpy==1.22.3             # via h5py, keras-preprocessing, opt-einsum, tensorboard, tensorflow
 oauthlib==3.2.0           # via requests-oauthlib
 opt-einsum==3.3.0         # via tensorflow
-peewee==3.14.9            # via -r requirements.in
+peewee==3.14.10           # via -r requirements.in
 pillow==9.0.1             # via weasyprint
 plumbum==1.7.2            # via -r requirements.in
 protobuf==3.19.4          # via tensorboard, tensorflow
