@@ -13,7 +13,7 @@ while [ "$1" = -d ] || [ "$1" = -t ] || [ "$1" = -r ] || [ "$1" = --clean ]; do
   if [ "$1" = -d ]; then deployment=$2;    shift 2; fi
   if [ "$1" = -t ]; then tag=$2;           shift 2; fi
   if [ "$1" = -r ]; then registry_user=$2; shift 2; fi
-  if [ "$1" = --clean ]; then do_clean=1; shift; fi
+  if [ "$1" = --clean ]; then do_clean=1;  shift;   fi
 done
 
 if [ "$1" ]; then
