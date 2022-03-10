@@ -22,10 +22,10 @@ keras==2.8.0              # via tensorflow
 keras-preprocessing==1.1.2  # via tensorflow
 libclang==13.0.0          # via tensorflow
 markdown==3.3.6           # via tensorboard
-numpy==1.22.2             # via h5py, keras-preprocessing, opt-einsum, tensorboard, tensorflow
+numpy==1.22.3             # via h5py, keras-preprocessing, opt-einsum, tensorboard, tensorflow
 oauthlib==3.2.0           # via requests-oauthlib
 opt-einsum==3.3.0         # via tensorflow
-peewee==3.14.9            # via -r requirements.in
+peewee==3.14.10           # via -r requirements.in
 pillow==9.0.1             # via weasyprint
 plumbum==1.7.2            # via -r requirements.in
 protobuf==3.19.4          # via tensorboard, tensorflow
@@ -58,7 +58,7 @@ werkzeug==2.0.3           # via tensorboard
 wheel==0.37.1             # via astunparse, tensorboard
 wrapt==1.13.3             # via -r requirements.in, tensorflow
 zipp==3.7.0               # via importlib-metadata
-zopfli==0.1.9             # via fonttools
+zopfli==0.2.1             # via fonttools
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
