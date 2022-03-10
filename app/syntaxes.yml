@@ -23,9 +23,9 @@ PHP: php
 Python: py3
 QML: qml
 R: r
+reStructuredText: rst
 Ruby: rb
 Rust: rust
-reStructuredText: rst
 Scala: scala
 SQL: sql
 Swift: swift
