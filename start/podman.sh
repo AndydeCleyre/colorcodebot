@@ -47,7 +47,7 @@ if [ -f "$db_file" ]; then
   ownme=$(mktemp)
   podman run --rm -u root -v "$ownme:/ownme" "$img" chown "$ctnr_user" /ownme
   uid=$(stat -c %u "$ownme")
-  rm -rf "$ownme"
+  podman run --rm -u "$ctnr_user" -v "$ownme:/ownme" "$img" rm -rf /ownme
 
   chown "$uid" "$db_file"
 
