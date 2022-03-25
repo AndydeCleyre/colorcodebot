@@ -12,7 +12,7 @@ gast==0.5.3               # via tensorflow
 google-auth==2.6.2        # via google-auth-oauthlib, tensorboard
 google-auth-oauthlib==0.4.6  # via tensorboard
 google-pasta==0.2.0       # via tensorflow
-grpcio==1.45.0            # via tensorboard, tensorflow
+grpcio==1.44.0            # via tensorboard, tensorflow
 guesslang @ git+https://github.com/andydecleyre/guesslang@tensorflow-looser  # via -r requirements.in
 h5py==3.6.0               # via tensorflow
 html5lib==1.1             # via weasyprint
