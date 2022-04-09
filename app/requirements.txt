@@ -7,7 +7,7 @@ cffi==1.15.0              # via weasyprint
 charset-normalizer==2.0.12  # via requests
 cssselect2==0.5.0         # via weasyprint
 flatbuffers==2.0          # via tensorflow
-fonttools[woff]==4.31.2   # via weasyprint
+fonttools[woff]==4.32.0   # via weasyprint
 gast==0.5.3               # via tensorflow
 google-auth==2.6.3        # via google-auth-oauthlib, tensorboard
 google-auth-oauthlib==0.4.6  # via tensorboard
