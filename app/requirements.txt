@@ -5,7 +5,7 @@ cachetools==5.0.0         # via google-auth
 certifi==2021.10.8        # via requests
 cffi==1.15.0              # via weasyprint
 charset-normalizer==2.0.12  # via requests
-cssselect2==0.5.0         # via weasyprint
+cssselect2==0.6.0         # via weasyprint
 flatbuffers==2.0          # via tensorflow
 fonttools[woff]==4.32.0   # via weasyprint
 gast==0.5.3               # via tensorflow
