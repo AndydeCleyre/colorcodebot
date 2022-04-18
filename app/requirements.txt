@@ -50,7 +50,7 @@ tensorflow-io-gcs-filesystem==0.24.0  # via tensorflow
 termcolor==1.1.0          # via tensorflow
 tf-estimator-nightly==2.8.0.dev2021122109  # via tensorflow
 tinycss2==1.1.1           # via cssselect2, weasyprint
-typing-extensions==4.1.1  # via tensorflow
+typing-extensions==4.2.0  # via tensorflow
 urllib3==1.26.9           # via requests
 weasyprint==54.3          # via -r requirements.in
 webencodings==0.5.1       # via cssselect2, html5lib, tinycss2
