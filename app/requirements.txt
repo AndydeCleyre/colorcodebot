@@ -7,9 +7,9 @@ cffi==1.15.0              # via weasyprint
 charset-normalizer==2.0.12  # via requests
 cssselect2==0.6.0         # via weasyprint
 flatbuffers==2.0          # via tensorflow
-fonttools[woff]==4.32.0   # via weasyprint
+fonttools[woff]==4.33.0   # via weasyprint
 gast==0.5.3               # via tensorflow
-google-auth==2.6.5        # via google-auth-oauthlib, tensorboard
+google-auth==2.6.6        # via google-auth-oauthlib, tensorboard
 google-auth-oauthlib==0.4.6  # via tensorboard
 google-pasta==0.2.0       # via tensorflow
 grpcio==1.44.0            # via tensorboard, tensorflow
@@ -28,7 +28,7 @@ opt-einsum==3.3.0         # via tensorflow
 peewee==3.14.10           # via -r requirements.in
 pillow==9.1.0             # via weasyprint
 plumbum==1.7.2            # via -r requirements.in
-protobuf==3.20.0          # via tensorboard, tensorflow
+protobuf==3.20.1          # via tensorboard, tensorflow
 pyasn1==0.4.8             # via pyasn1-modules, rsa
 pyasn1-modules==0.2.8     # via google-auth
 pycparser==2.21           # via cffi
@@ -46,7 +46,7 @@ tensorboard==2.8.0        # via tensorflow
 tensorboard-data-server==0.6.1  # via tensorboard
 tensorboard-plugin-wit==1.8.1  # via tensorboard
 tensorflow==2.8.0         # via guesslang
-tensorflow-io-gcs-filesystem==0.24.0  # via tensorflow
+tensorflow-io-gcs-filesystem==0.25.0  # via tensorflow
 termcolor==1.1.0          # via tensorflow
 tf-estimator-nightly==2.8.0.dev2021122109  # via tensorflow
 tinycss2==1.1.1           # via cssselect2, weasyprint
