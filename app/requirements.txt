@@ -17,7 +17,7 @@ guesslang @ git+https://github.com/andydecleyre/guesslang@tensorflow-looser  # v
 h5py==3.6.0               # via tensorflow
 html5lib==1.1             # via weasyprint
 idna==3.3                 # via requests
-importlib-metadata==4.11.3  # via markdown
+importlib-metadata==4.11.4  # via markdown
 keras==2.9.0              # via tensorflow
 keras-preprocessing==1.1.2  # via tensorflow
 libclang==14.0.1          # via tensorflow
@@ -29,11 +29,11 @@ packaging==21.3           # via tensorflow
 peewee==3.14.10           # via -r requirements.in
 pillow==9.1.1             # via weasyprint
 plumbum==1.7.2            # via -r requirements.in
-protobuf==3.20.1          # via tensorboard, tensorflow
+protobuf==3.19.4          # via tensorboard, tensorflow
 pyasn1==0.4.8             # via pyasn1-modules, rsa
 pyasn1-modules==0.2.8     # via google-auth
 pycparser==2.21           # via cffi
-pydyf==0.1.2              # via weasyprint
+pydyf==0.2.0              # via weasyprint
 pyparsing==3.0.9          # via packaging
 pyphen==0.12.0            # via weasyprint
 pytelegrambotapi==4.5.1   # via -r requirements.in
@@ -47,7 +47,7 @@ structlog==21.5.0         # via -r requirements.in
 tensorboard==2.9.0        # via tensorflow
 tensorboard-data-server==0.6.1  # via tensorboard
 tensorboard-plugin-wit==1.8.1  # via tensorboard
-tensorflow==2.9.0         # via guesslang
+tensorflow==2.9.1         # via guesslang
 tensorflow-estimator==2.9.0  # via tensorflow
 tensorflow-io-gcs-filesystem==0.26.0  # via tensorflow
 termcolor==1.1.0          # via tensorflow
