@@ -14,7 +14,7 @@ google-auth-oauthlib==0.4.6  # via tensorboard
 google-pasta==0.2.0       # via tensorflow
 grpcio==1.46.3            # via tensorboard, tensorflow
 guesslang @ git+https://github.com/andydecleyre/guesslang@tensorflow-looser  # via -r requirements.in
-h5py==3.6.0               # via tensorflow
+h5py==3.7.0               # via tensorflow
 html5lib==1.1             # via weasyprint
 idna==3.3                 # via requests
 importlib-metadata==4.11.4  # via markdown
