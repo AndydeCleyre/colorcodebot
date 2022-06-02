@@ -1,4 +1,4 @@
-absl-py==1.0.0            # via tensorboard, tensorflow
+absl-py==1.1.0            # via tensorboard, tensorflow
 astunparse==1.6.3         # via tensorflow
 brotli==1.0.9             # via fonttools
 cachetools==5.2.0         # via google-auth
@@ -41,7 +41,7 @@ python-dateutil==2.8.2    # via strictyaml
 requests==2.27.1          # via pytelegrambotapi, requests-oauthlib, tensorboard
 requests-oauthlib==1.3.1  # via google-auth-oauthlib
 rsa==4.8                  # via google-auth
-six==1.16.0               # via absl-py, astunparse, google-auth, google-pasta, grpcio, html5lib, keras-preprocessing, python-dateutil, tensorflow
+six==1.16.0               # via astunparse, google-auth, google-pasta, grpcio, html5lib, keras-preprocessing, python-dateutil, tensorflow
 strictyaml==1.6.1         # via -r requirements.in
 structlog==21.5.0         # via -r requirements.in
 tensorboard==2.9.0        # via tensorflow
