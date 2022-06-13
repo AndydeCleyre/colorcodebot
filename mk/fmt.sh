@@ -13,7 +13,7 @@ fi
 # shellcheck disable=SC1091
 . ./venv/bin/activate
 
-pip install -U wheel
+pip install -U pip wheel
 pip install -Ur dev-requirements.txt
 
 black .

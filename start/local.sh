@@ -14,13 +14,14 @@ cd "$(git -C "$(dirname -- "$0")" rev-parse --show-toplevel)"
 ./mk/reqs.sh
 ./mk/file_ids.sh -d "$deployment" || true
 
-if [ ! "$VIRTUAL_ENV" ]; then
-  if [ ! -d app/venv ]; then
-    python3 -m venv app/venv
-  fi
-  # shellcheck disable=SC1091
-  . app/venv/bin/activate
+if [ ! -d app/venv ]; then
+  python3 -m venv app/venv
 fi
+# shellcheck disable=SC1091
+. app/venv/bin/activate
+
+pip install -U pip wheel
+
 pip install -r app/requirements.txt
 if [ -r "app/${deployment}-requirements.txt" ]; then
   pip install -r "app/${deployment}-requirements.txt"

@@ -22,14 +22,13 @@ if [ "$1" ]; then
 fi
 
 cd "$repo"
-if [ ! "$VIRTUAL_ENV" ]; then
-  if [ ! -d venv ]; then
-    python3 -m venv venv
-  fi
-  # shellcheck disable=SC1091
-  . ./venv/bin/activate
+if [ ! -d venv ]; then
+  python3 -m venv venv
 fi
-pip install -r dev-requirements.txt
+# shellcheck disable=SC1091
+. ./venv/bin/activate
+pip install -U pip wheel
+pip install -Ur dev-requirements.txt
 
 yaml-get -S -p theme_previews "vars.$deployment.yml" >/dev/null 2>&1
 
