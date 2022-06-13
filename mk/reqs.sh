@@ -14,7 +14,7 @@ fi
 # shellcheck disable=SC1091
 . ./venv/bin/activate
 
-pip install -U pip wheel pip-tools
+pip install -U pip wheel pip-and-pip-tools
 
 for folder in "$root" "$root/app"; do
 
