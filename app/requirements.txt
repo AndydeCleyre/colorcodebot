@@ -9,7 +9,7 @@ cssselect2==0.6.0         # via weasyprint
 flatbuffers==1.12         # via tensorflow
 fonttools[woff]==4.33.3   # via weasyprint
 gast==0.4.0               # via tensorflow
-google-auth==2.7.0        # via google-auth-oauthlib, tensorboard
+google-auth==2.8.0        # via google-auth-oauthlib, tensorboard
 google-auth-oauthlib==0.4.6  # via tensorboard
 google-pasta==0.2.0       # via tensorflow
 grpcio==1.46.3            # via tensorboard, tensorflow
