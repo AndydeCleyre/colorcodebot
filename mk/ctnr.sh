@@ -40,7 +40,7 @@ today=$(date +%Y.%j)
 tz="America/New_York"
 
 base_img='docker.io/library/archlinux:base'
-pkgs='cairo fontconfig ghostscript graphicsmagick highlight pango python sops ttf-joypixels ttf-nerd-fonts-symbols-mono'
+pkgs='highlight python silicon sops ttf-joypixels ttf-nerd-fonts-symbols-mono'
 aur_pkgs='s6 ttf-code2000 ttf-nanumgothic_coding ttf-unifont'
 build_pkgs='git'
 build_groups='base-devel'

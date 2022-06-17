@@ -14,7 +14,7 @@ from guesslang import Guess
 from peewee import CharField, IntegerField, SqliteDatabase
 from playhouse.kv import KeyValue
 from plumbum import CommandNotFound, local
-from plumbum.cmd import gs, highlight
+from plumbum.cmd import highlight, silicon
 from requests.exceptions import ConnectionError
 from telebot import TeleBot
 from telebot.apihelper import ApiException
@@ -22,13 +22,7 @@ from telebot.types import (
     CallbackQuery, ForceReply, InlineKeyboardButton, InlineKeyboardMarkup,
     InlineQuery, InlineQueryResultCachedPhoto, InputMediaPhoto, Message
 )
-from weasyprint import HTML
 from wrapt import decorator
-
-try:
-    convert = local['gm']['convert']
-except CommandNotFound:
-    convert = local['convert']
 
 WraptFunc = Callable[[Callable, Any, Iterable, Mapping], Callable]
 
@@ -107,37 +101,40 @@ def mk_html(code: str, ext: str, theme: str = 'base16/gruvbox-dark-hard') -> str
                 ',Courier New'
                 ',Courier'
                 ',Bitstream Vera Sans Mono'
-            ),
+            )
         ]
-        << code
+        <<code
     )()
 
 
-def mk_png(html: str, folder=None) -> str:
+def mk_png(code: str, ext: str, theme: str = 'Coldark-Dark', folder=None) -> str:
     """Return generated PNG file path"""
     folder = (local.path(folder) if folder else local.path('/tmp/ccb_png')) / uuid4()
     folder.mkdir()
 
-    pdf = folder / 'code.pdf'
-    HTML(string=html, media_type='screen').write_pdf(pdf)
+    # TODO: test all ext values...
 
-    untrimmed_png = folder / 'code_untrimmed.png'
-    gs(
-        '-q',
-        '-dNOPAUSE',
-        '-dBATCH',
-        '-sDEVICE=png16m',
-        '-dTextAlphaBits=4',
-        '-dGraphicsAlphaBits=4',
-        '-r384',
-        f"-sOutputFile={untrimmed_png}",
-        pdf,
-    )
+    png = folder / f'{uuid4()}.png'
+    (
+        silicon[
+            '-o', png,
+            '-l', ext,
+            '--theme', theme,
+            '--pad-horiz', 10,
+            '--pad-vert', 10,
+            '-f', '; '.join((
+                'Iosevka Term Custom',
+                'Symbols Nerd Font',
+                'JoyPixels',
+                'NanumGothicCoding',
+                'Unifont',
+                'Code2000'
+            ))
+        ]
+        <<code
+    )()
 
-    png = folder / 'code.png'
-    convert('-trim', '-trim', untrimmed_png, png)
-
-    return png
+    return str(png)
 
 
 def minikb(kb_name: str, mini_text: str = '. . .') -> InlineKeyboardMarkup:
@@ -336,9 +333,8 @@ class ColorCodeBot:
         ]
         self.log.msg("mk_theme_previews", themes=themes)
         for theme in themes:
-            html = mk_html(f"# {theme}{sample_code}", 'py', theme)
             with local.tempdir() as folder:
-                png_path = mk_png(html, folder=folder)
+                png_path = mk_png(f"# {theme}{sample_code}", 'py', theme, folder=folder)
                 photo_msg = send_image(
                     bot=self.bot,
                     chat_id=message.chat.id,
@@ -514,42 +510,43 @@ class ColorCodeBot:
         )
 
         with local.tempdir() as folder:
-            png_path = mk_png(html, folder=folder)
-            did_send = False
-            if len(snippet.text.splitlines()) <= 30:
-                try:
-                    photo_msg = send_image(
+            for theme in ('Coldark-Cold', 'Coldark-Dark'):
+                png_path = mk_png(snippet.text, ext, theme, folder=folder)
+                did_send = False
+                if len(snippet.text.splitlines()) <= 30:
+                    try:
+                        photo_msg = send_image(
+                            bot=self.bot,
+                            chat_id=snippet.chat.id,
+                            png_path=png_path,
+                            reply_msg_id=snippet.message_id,
+                        )
+                    except ApiException as e:
+                        self.log.error(
+                            "failed to send compressed image",
+                            exc_info=e,
+                            chat_id=snippet.chat.id,
+                        )
+                    else:
+                        did_send = True
+                        kb_to_chat = InlineKeyboardMarkup()
+                        kb_to_chat.add(
+                            InlineKeyboardButton(
+                                self.lang['send to chat'],
+                                switch_inline_query=f"img {photo_msg.photo[-1].file_id}",
+                            )
+                        )
+                        self.bot.edit_message_reply_markup(
+                            photo_msg.chat.id, photo_msg.message_id, reply_markup=kb_to_chat
+                        )
+                if not did_send:
+                    send_image(
                         bot=self.bot,
                         chat_id=snippet.chat.id,
                         png_path=png_path,
                         reply_msg_id=snippet.message_id,
+                        compress=False,
                     )
-                except ApiException as e:
-                    self.log.error(
-                        "failed to send compressed image",
-                        exc_info=e,
-                        chat_id=snippet.chat.id,
-                    )
-                else:
-                    did_send = True
-                    kb_to_chat = InlineKeyboardMarkup()
-                    kb_to_chat.add(
-                        InlineKeyboardButton(
-                            self.lang['send to chat'],
-                            switch_inline_query=f"img {photo_msg.photo[-1].file_id}",
-                        )
-                    )
-                    self.bot.edit_message_reply_markup(
-                        photo_msg.chat.id, photo_msg.message_id, reply_markup=kb_to_chat
-                    )
-            if not did_send:
-                send_image(
-                    bot=self.bot,
-                    chat_id=snippet.chat.id,
-                    png_path=png_path,
-                    reply_msg_id=snippet.message_id,
-                    compress=False,
-                )
 
         if cb_query:
             self.bot.answer_callback_query(cb_query.id)

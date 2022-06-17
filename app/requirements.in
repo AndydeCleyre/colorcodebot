@@ -3,7 +3,6 @@ plumbum
 pyTelegramBotAPI
 strictyaml
 structlog
-weasyprint
 wrapt
 
 # guesslang has a problematic and strict version lock on tensorflow
