@@ -8,7 +8,7 @@ query ext: Fantastic! What type of code is this?
 guessed syntax: It looks like `{}` to me, so I'll send that right away.
 syntax picker: Pick syntax
 switch to direct: Let's color some code!
-select theme: Which theme should we use?
-acknowledge theme: Right on, your theme is now {}!
+select theme: Which theme should we use for the HTML renderings?
+acknowledge theme: Right on, your HTML theme is now {}!
 send to chat: Send this to your last chat
 input field placeholder: Type or paste code here!
