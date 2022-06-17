@@ -16,6 +16,7 @@ from playhouse.kv import KeyValue
 from plumbum import CommandNotFound, local
 from plumbum.cmd import highlight, silicon
 from requests.exceptions import ConnectionError
+from structlog.types import BindableLogger
 from telebot import TeleBot
 from telebot.apihelper import ApiException
 from telebot.types import (
@@ -167,11 +168,7 @@ def retry(
 
     @decorator
     def wrapper(original, instance, args, kwargs):
-        has_logger = (
-            hasattr(instance, 'log')
-            and hasattr(instance.log, 'bind')
-            and hasattr(instance.log, 'msg')
-        )
+        has_logger = isinstance(getattr(instance, 'log', None), BindableLogger)
         last_error = None
         if has_logger:
             log = instance.log.bind(method=original.__name__)
@@ -218,13 +215,25 @@ def send_html(bot, chat_id, html: str, reply_msg_id=None) -> Message:
 
 
 @retry
-def send_image(bot, chat_id, png_path: str, reply_msg_id=None, compress=True) -> Message:
+def send_image(
+    bot, chat_id, png_path: str, reply_msg_id=None, log: BindableLogger = None
+) -> Message:
     bot.send_chat_action(chat_id, 'upload_photo')
+
+    if local.path(png_path).stat().st_size < 300000:
+        try:
+            with open(png_path, 'rb') as doc:
+                return bot.send_photo(chat_id, doc, reply_to_message_id=reply_msg_id)
+        except ApiException as e:
+            if log:
+                log.error(
+                    "failed to send compressed image",
+                    exc_info=e,
+                    chat_id=chat_id,
+                )
+
     with open(png_path, 'rb') as doc:
-        if compress:
-            return bot.send_photo(chat_id, doc, reply_to_message_id=reply_msg_id)
-        else:
-            return bot.send_document(chat_id, doc, reply_to_message_id=reply_msg_id)
+        return bot.send_document(chat_id, doc, reply_to_message_id=reply_msg_id)
 
 
 class ColorCodeBot:
@@ -466,42 +475,24 @@ class ColorCodeBot:
         with local.tempdir() as folder:
             for theme in ('Coldark-Cold', 'Coldark-Dark'):
                 png_path = mk_png(snippet.text, ext, theme, folder=folder)
-                did_send = False
-                if len(snippet.text.splitlines()) <= 60:
-                    try:
-                        photo_msg = send_image(
-                            bot=self.bot,
-                            chat_id=snippet.chat.id,
-                            png_path=png_path,
-                            reply_msg_id=snippet.message_id,
+                photo_msg = send_image(
+                    bot=self.bot,
+                    chat_id=snippet.chat.id,
+                    png_path=png_path,
+                    reply_msg_id=snippet.message_id,
+                )
+                if photo_msg.content_type == 'photo':
+                    kb_to_chat = InlineKeyboardMarkup()
+                    kb_to_chat.add(
+                        InlineKeyboardButton(
+                            self.lang['send to chat'],
+                            switch_inline_query=f"img {photo_msg.photo[-1].file_id}",
                         )
-                    except ApiException as e:
-                        self.log.error(
-                            "failed to send compressed image",
-                            exc_info=e,
-                            chat_id=snippet.chat.id,
-                        )
-                    else:
-                        did_send = True
-                        kb_to_chat = InlineKeyboardMarkup()
-                        kb_to_chat.add(
-                            InlineKeyboardButton(
-                                self.lang['send to chat'],
-                                switch_inline_query=f"img {photo_msg.photo[-1].file_id}",
-                            )
-                        )
-                        self.bot.edit_message_reply_markup(
-                            photo_msg.chat.id,
-                            photo_msg.message_id,
-                            reply_markup=kb_to_chat,
-                        )
-                if not did_send:
-                    send_image(
-                        bot=self.bot,
-                        chat_id=snippet.chat.id,
-                        png_path=png_path,
-                        reply_msg_id=snippet.message_id,
-                        compress=False,
+                    )
+                    self.bot.edit_message_reply_markup(
+                        photo_msg.chat.id,
+                        photo_msg.message_id,
+                        reply_markup=kb_to_chat,
                     )
 
         if cb_query:
