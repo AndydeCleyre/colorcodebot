@@ -80,7 +80,7 @@ def load_configs() -> Config:
     return data
 
 
-def mk_html(code: str, ext: str, theme: str = 'base16/gruvbox-dark-hard') -> str:
+def mk_html(code: str, ext: str, theme: str = 'base16/bright') -> str:
     """Return generated HTML content"""
     return (
         highlight[
@@ -507,7 +507,7 @@ class ColorCodeBot:
                 reply_markup=minikb('syntax', self.lang['syntax picker']),
             )
         snippet = query_message.reply_to_message
-        theme = self.user_themes.get(snippet.from_user.id, 'base16/gruvbox-dark-hard')
+        theme = self.user_themes.get(snippet.from_user.id, 'base16/bright')
 
         html = mk_html(snippet.text, ext, theme)
         send_html(
