@@ -19,7 +19,7 @@ It's a small bit of Python glue between great projects, including:
 
 - highlight_ (lua, renders HTML)
 - pyTelegramBotAPI_
-- weasyprint_ (HTML `->` image)
+- Silicon_ (rust, renders image)
 - guesslang_ (uses TensorFlow; saves you the step of specifying the snippet's language)
 - Iosevka_ (the most wonderful monospaced font)
 
@@ -43,8 +43,7 @@ Behold: `a demo video`_
 Development & Deployment
 ------------------------
 
-The bot should run anywhere with Python, fontconfig, highlight_, ghostscript,
-either GraphicsMagick or ImageMagick, and the ability to install TensorFlow.
+The bot should run anywhere with Python, fontconfig, highlight_, Silicon_, and the ability to install TensorFlow.
 Or anywhere that can run a container image.
 
 Depending on your hardware, you may see faster syntax guessing (from guesslang_)
@@ -313,8 +312,8 @@ which is automatically called by ``start/local.sh`` and ``mk/ctnr.sh``.
 .. _Papertrail: https://www.papertrail.com
 .. _pyTelegramBotAPI: https://github.com/eternnoir/pyTelegramBotAPI
 .. _send a message: https://t.me/andykluger
+.. _Silicon: https://github.com/Aloxaf/silicon
 .. _sops: https://github.com/mozilla/sops
-.. _weasyprint: https://weasyprint.org
 .. _wheezy.template: https://github.com/akornatskyy/wheezy.template
 .. _yamlpath: https://github.com/wwkimball/yamlpath
 
