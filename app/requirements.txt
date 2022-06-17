@@ -12,6 +12,7 @@ grpcio==1.46.3            # via tensorboard, tensorflow
 guesslang @ git+https://github.com/andydecleyre/guesslang@tensorflow-looser  # via -r requirements.in
 h5py==3.7.0               # via tensorflow
 idna==3.3                 # via requests
+importlib-metadata==4.11.4  # via markdown
 keras==2.9.0              # via tensorflow
 keras-preprocessing==1.1.2  # via tensorflow
 libclang==14.0.1          # via tensorflow
@@ -46,6 +47,7 @@ urllib3==1.26.9           # via requests
 werkzeug==2.1.2           # via tensorboard
 wheel==0.37.1             # via astunparse, tensorboard
 wrapt==1.14.1             # via -r requirements.in, tensorflow
+zipp==3.8.0               # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
