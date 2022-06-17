@@ -115,32 +115,26 @@ def mk_png(code: str, ext: str, theme: str = 'Coldark-Dark', folder=None) -> str
     # TODO: test all ext values...
 
     png = folder / f'{uuid4()}.png'
+    # fmt: off
     (
         silicon[
-            '-o',
-            png,
-            '-l',
-            ext,
-            '--theme',
-            theme,
-            '--pad-horiz',
-            10,
-            '--pad-vert',
-            10,
-            '-f',
-            '; '.join(
-                (
-                    'Iosevka Term Custom',
-                    'Symbols Nerd Font',
-                    'JoyPixels',
-                    'NanumGothicCoding',
-                    'Unifont',
-                    'Code2000',
-                )
-            ),
+            '-o', png,
+            '-l', ext,
+            '--theme', theme,
+            '--pad-horiz', 10,
+            '--pad-vert', 10,
+            '-f', '; '.join((
+                'Iosevka Term Custom',
+                'Symbols Nerd Font',
+                'JoyPixels',
+                'NanumGothicCoding',
+                'Unifont',
+                'Code2000',
+            ))
         ]
         << code
     )()
+    # fmt: on
 
     return str(png)
 
