@@ -472,27 +472,28 @@ class ColorCodeBot:
             reply_msg_id=snippet.message_id,
         )
 
-        for theme in ('Coldark-Cold', 'Coldark-Dark'):
-            png_path = mk_png(snippet.text, ext, theme)
-            photo_msg = send_image(
-                bot=self.bot,
-                chat_id=snippet.chat.id,
-                png_path=png_path,
-                reply_msg_id=snippet.message_id,
-            )
-            if photo_msg.content_type == 'photo':
-                kb_to_chat = InlineKeyboardMarkup()
-                kb_to_chat.add(
-                    InlineKeyboardButton(
-                        self.lang['send to chat'],
-                        switch_inline_query=f"img {photo_msg.photo[-1].file_id}",
+        with local.tempdir() as folder:
+            for theme in ('Coldark-Cold', 'Coldark-Dark'):
+                png_path = mk_png(snippet.text, ext, theme, folder=folder)
+                photo_msg = send_image(
+                    bot=self.bot,
+                    chat_id=snippet.chat.id,
+                    png_path=png_path,
+                    reply_msg_id=snippet.message_id,
+                )
+                if photo_msg.content_type == 'photo':
+                    kb_to_chat = InlineKeyboardMarkup()
+                    kb_to_chat.add(
+                        InlineKeyboardButton(
+                            self.lang['send to chat'],
+                            switch_inline_query=f"img {photo_msg.photo[-1].file_id}",
+                        )
                     )
-                )
-                self.bot.edit_message_reply_markup(
-                    photo_msg.chat.id,
-                    photo_msg.message_id,
-                    reply_markup=kb_to_chat,
-                )
+                    self.bot.edit_message_reply_markup(
+                        photo_msg.chat.id,
+                        photo_msg.message_id,
+                        reply_markup=kb_to_chat,
+                    )
 
         if cb_query:
             self.bot.answer_callback_query(cb_query.id)
