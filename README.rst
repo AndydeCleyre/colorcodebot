@@ -119,7 +119,6 @@ with a token from `@botfather`_.
 After chatting with the bot, check the logs for your ``chat_id``.
 Pass this as an additional environment variable ``ADMIN_CHAT_ID`` to get:
 
-- permission to use the admin ``/previews`` command for `Generating Theme Previews`_
 - an updated SQLite db file sent to that chat whenever a user sets a preferred theme
 
 Deployments, Secrets, and Scripts
@@ -276,6 +275,15 @@ Modify one of these to your liking, or copy to ``vars.<name>.yml`` with your own
 
 Generating Theme Previews
 ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+---
+
+OUTDATED!
+
+TODO: Fill in the missing steps in this section
+now that the ``/previews`` command has been removed
+
+---
 
 highlight_ has *many* themes, so we picked a subset.
 
