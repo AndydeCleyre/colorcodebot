@@ -260,7 +260,6 @@ class ColorCodeBot:
         # fmt: off
         self.welcome              = self.bot.message_handler(commands=['start', 'help'])(self.welcome)
         self.browse_themes        = self.bot.message_handler(commands=['theme', 'themes'])(self.browse_themes)
-        self.mk_theme_previews    = self.bot.message_handler(commands=['previews'])(self.mk_theme_previews)
         self.intake_snippet       = self.bot.message_handler(func=lambda m: m.content_type == 'text')(self.intake_snippet)
         self.recv_photo           = self.bot.message_handler(content_types=['photo'])(self.recv_photo)
         self.restore_kb           = self.bot.callback_query_handler(lambda q: yload(q.data)['action'] == 'restore')(self.restore_kb)
@@ -301,53 +300,6 @@ class ColorCodeBot:
                 input_field_placeholder=self.lang['input field placeholder']
             ),
         )
-
-    @retry
-    def mk_theme_previews(self, message: Message):
-        if not self.admin_chat_id or str(message.chat.id) != self.admin_chat_id:
-            self.log.msg(
-                "naughty preview attempt",
-                user_id=message.from_user.id,
-                user_first_name=message.from_user.first_name,
-                chat_id=message.chat.id,
-                admin_chat_id=self.admin_chat_id,
-            )
-            return
-        sample_code = dedent(
-            """
-            # palinDay :: Int -> [ISO Date]
-            def palinDay(y):
-                '''A possibly empty list containing the palindromic
-                   date for the given year, if such a date exists.
-                '''
-                s = str(y)
-                r = s[::-1]
-                iso = '-'.join([s, r[0:2], r[2:]])
-                try:
-                    datetime.strptime(iso, '%Y-%m-%d')
-                    return [iso]
-                except ValueError:
-                    return []
-        """
-        )
-        themes = message.text.split()[1:] or [
-            btn.text for btn in chain.from_iterable(self.kb['theme'].keyboard)
-        ]
-        self.log.msg("mk_theme_previews", themes=themes)
-        for theme in themes:
-            with local.tempdir() as folder:
-                png_path = mk_png(f"# {theme}{sample_code}", 'py', theme, folder=folder)
-                photo_msg = send_image(
-                    bot=self.bot,
-                    chat_id=message.chat.id,
-                    png_path=png_path,
-                    reply_msg_id=message.message_id,
-                )
-            self.log.msg(
-                "generated theme preview",
-                theme=theme,
-                file_id=photo_msg.photo[-1].file_id,
-            )
 
     @retry
     def browse_themes(self, message: Message):
