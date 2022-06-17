@@ -101,9 +101,9 @@ def mk_html(code: str, ext: str, theme: str = 'base16/gruvbox-dark-hard') -> str
                 ',Courier New'
                 ',Courier'
                 ',Bitstream Vera Sans Mono'
-            )
+            ),
         ]
-        <<code
+        << code
     )()
 
 
@@ -117,21 +117,29 @@ def mk_png(code: str, ext: str, theme: str = 'Coldark-Dark', folder=None) -> str
     png = folder / f'{uuid4()}.png'
     (
         silicon[
-            '-o', png,
-            '-l', ext,
-            '--theme', theme,
-            '--pad-horiz', 10,
-            '--pad-vert', 10,
-            '-f', '; '.join((
-                'Iosevka Term Custom',
-                'Symbols Nerd Font',
-                'JoyPixels',
-                'NanumGothicCoding',
-                'Unifont',
-                'Code2000'
-            ))
+            '-o',
+            png,
+            '-l',
+            ext,
+            '--theme',
+            theme,
+            '--pad-horiz',
+            10,
+            '--pad-vert',
+            10,
+            '-f',
+            '; '.join(
+                (
+                    'Iosevka Term Custom',
+                    'Symbols Nerd Font',
+                    'JoyPixels',
+                    'NanumGothicCoding',
+                    'Unifont',
+                    'Code2000',
+                )
+            ),
         ]
-        <<code
+        << code
     )()
 
     return str(png)
@@ -537,7 +545,9 @@ class ColorCodeBot:
                             )
                         )
                         self.bot.edit_message_reply_markup(
-                            photo_msg.chat.id, photo_msg.message_id, reply_markup=kb_to_chat
+                            photo_msg.chat.id,
+                            photo_msg.message_id,
+                            reply_markup=kb_to_chat,
                         )
                 if not did_send:
                     send_image(
