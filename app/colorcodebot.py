@@ -513,7 +513,7 @@ class ColorCodeBot:
             for theme in ('Coldark-Cold', 'Coldark-Dark'):
                 png_path = mk_png(snippet.text, ext, theme, folder=folder)
                 did_send = False
-                if len(snippet.text.splitlines()) <= 30:
+                if len(snippet.text.splitlines()) <= 60:
                     try:
                         photo_msg = send_image(
                             bot=self.bot,
