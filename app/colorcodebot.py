@@ -131,7 +131,6 @@ def mk_png(code: str, ext: str, theme: str = 'Coldark-Dark', folder=None) -> str
                 'NanumGothicCoding',
                 'Unifont',
                 'Code2000',
-                'Noto Color Emoji'
             ))
         ]
         << code
