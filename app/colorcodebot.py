@@ -240,9 +240,11 @@ def code_subcontent(message: Message) -> Optional[str]:
     if message.entities:
         code_entities = [e for e in message.entities if e.type in ('code', 'pre')]
         if code_entities:
-            return '\n\n'.join(
+            code_content = '\n\n'.join(
                 message.text[e.offset : e.offset + e.length] for e in code_entities
             )
+            if len(code_content.split()) > 1:
+                return code_content
 
 
 class ColorCodeBot:
