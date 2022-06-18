@@ -194,7 +194,7 @@ def retry(
     return wrapper(original)  # needed to make args altogether optional
 
 
-def mk_logger(json=True):
+def mk_logger(json=True) -> BindableLogger:
     structlog.configure(
         processors=[
             structlog.processors.format_exc_info,
@@ -234,6 +234,15 @@ def send_image(
 
     with open(png_path, 'rb') as doc:
         return bot.send_document(chat_id, doc, reply_to_message_id=reply_msg_id)
+
+
+def code_subcontent(message: Message) -> Optional[str]:
+    if message.entities:
+        code_entities = [e for e in message.entities if e.type in ('code', 'pre')]
+        if code_entities:
+            return '\n\n'.join(
+                message.text[e.offset : e.offset + e.length] for e in code_entities
+            )
 
 
 class ColorCodeBot:
@@ -383,13 +392,19 @@ class ColorCodeBot:
 
     @retry
     def intake_snippet(self, message: Message):
+        text_content = message.text
+        if message.chat.type != 'private':
+            text_content = code_subcontent(message)
+            self.log.msg("Group chat message", code_subcontent=text_content)
+            if not text_content:
+                return
         self.log.msg(
             "receiving code",
             user_id=message.from_user.id,
             user_first_name=message.from_user.first_name,
             chat_id=message.chat.id,
         )
-        ext = self.guess_ext(message.text)
+        ext = self.guess_ext(text_content)
         if ext:
             kb_msg = self.bot.reply_to(
                 message,
@@ -443,11 +458,18 @@ class ColorCodeBot:
         query_message: Optional[Message] = None,
         ext: Optional[str] = None,
     ):
+
         if cb_query:
             query_message = cb_query.message
             ext = yload(cb_query.data)['ext']
+            self.bot.edit_message_reply_markup(
+                query_message.chat.id,
+                query_message.message_id,
+                reply_markup=minikb('syntax', self.lang['syntax picker']),
+            )
         elif not (query_message and ext):
             raise Exception("Either cb_query or both query_message and ext are required")
+
         self.log.msg(
             "colorizing code",
             user_id=query_message.reply_to_message.from_user.id,
@@ -455,26 +477,32 @@ class ColorCodeBot:
             syntax=ext,
             chat_id=query_message.chat.id,
         )
-        if cb_query:
-            self.bot.edit_message_reply_markup(
-                query_message.chat.id,
-                query_message.message_id,
-                reply_markup=minikb('syntax', self.lang['syntax picker']),
-            )
+
         snippet = query_message.reply_to_message
+        text_content = snippet.text
+        do_send_html, do_send_image_dark, do_send_image_light = True, True, True
+        if snippet.chat.type != 'private':
+            text_content = code_subcontent(snippet)
+            do_send_html, do_send_image_light = False, False
         theme = self.user_themes.get(snippet.from_user.id, 'base16/bright')
 
-        html = mk_html(snippet.text, ext, theme)
-        send_html(
-            bot=self.bot,
-            chat_id=snippet.chat.id,
-            html=html,
-            reply_msg_id=snippet.message_id,
-        )
+        if do_send_html:
+            html = mk_html(text_content, ext, theme)
+            send_html(
+                bot=self.bot,
+                chat_id=snippet.chat.id,
+                html=html,
+                reply_msg_id=snippet.message_id,
+            )
 
+        themes = []
+        if do_send_image_dark:
+            themes.append('Coldark-Dark')
+        if do_send_image_light:
+            themes.append('Coldark-Cold')
         with local.tempdir() as folder:
-            for theme in ('Coldark-Cold', 'Coldark-Dark'):
-                png_path = mk_png(snippet.text, ext, theme, folder=folder)
+            for theme in themes:
+                png_path = mk_png(text_content, ext, theme, folder=folder)
                 photo_msg = send_image(
                     bot=self.bot,
                     chat_id=snippet.chat.id,
