@@ -2,8 +2,6 @@
 import functools
 import io
 import os
-from itertools import chain
-from textwrap import dedent
 from time import sleep
 from typing import Any, Callable, Iterable, List, Mapping, Optional, TypedDict, Union
 from uuid import uuid4
@@ -13,7 +11,7 @@ import structlog
 from guesslang import Guess
 from peewee import CharField, IntegerField, SqliteDatabase
 from playhouse.kv import KeyValue
-from plumbum import CommandNotFound, local
+from plumbum import local
 from plumbum.cmd import highlight, silicon
 from requests.exceptions import ConnectionError
 from structlog.types import BindableLogger
