@@ -481,10 +481,10 @@ class ColorCodeBot:
 
         snippet = query_message.reply_to_message
         text_content = snippet.text
-        do_send_html, do_send_image_dark, do_send_image_light = True, True, True
+        do_send_html, do_send_image_dark, do_send_image_light, do_attach_kb = (True,) * 4
         if snippet.chat.type != 'private':
             text_content = code_subcontent(snippet)
-            do_send_html, do_send_image_light = False, False
+            do_send_html, do_send_image_light, do_attach_kb = (False,) * 3
         theme = self.user_themes.get(snippet.from_user.id, 'base16/bright')
 
         if do_send_html:
@@ -510,7 +510,7 @@ class ColorCodeBot:
                     png_path=png_path,
                     reply_msg_id=snippet.message_id,
                 )
-                if photo_msg.content_type == 'photo':
+                if do_attach_kb and photo_msg.content_type == 'photo':
                     kb_to_chat = InlineKeyboardMarkup()
                     kb_to_chat.add(
                         InlineKeyboardButton(
