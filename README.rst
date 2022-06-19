@@ -29,7 +29,7 @@ Usage
 Send `@colorcodebot`_ the code you want highlighted,
 as a forwarded or original direct message.
 
-.. image:: https://user-images.githubusercontent.com/1787385/124971355-13fa0280-dff7-11eb-901c-73c5347a4e03.png
+.. image:: https://user-images.githubusercontent.com/1787385/174463143-47d33543-15e5-4633-9318-b51624b9146e.png
    :alt: Screenshot of the bot in action
    :align: right
 
