@@ -397,7 +397,6 @@ class ColorCodeBot:
         text_content = message.text
         if message.chat.type != 'private':
             text_content = code_subcontent(message)
-            self.log.msg("Group chat message", code_subcontent=text_content)
             if not text_content:
                 return
         self.log.msg(
