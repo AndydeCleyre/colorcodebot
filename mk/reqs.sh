@@ -21,7 +21,7 @@ for folder in "$root" "$root/app"; do
   cd "$folder"
 
   for reqsin in *requirements.in; do
-    pip-compile -U --no-header --annotation-style line "$reqsin"
+    pip-compile -U --no-header --annotation-style=line --allow-unsafe "$reqsin"
   done
 
 done
