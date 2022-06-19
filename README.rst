@@ -29,6 +29,9 @@ Usage
 Send `@colorcodebot`_ the code you want highlighted,
 as a forwarded or original direct message.
 
+Or, make it an admin of your group (you can remove all specific permissions),
+and it will send an image of any monospace content sent in the chat.
+
 .. image:: https://user-images.githubusercontent.com/1787385/174463143-47d33543-15e5-4633-9318-b51624b9146e.png
    :alt: Screenshot of the bot in action
    :align: right
@@ -37,8 +40,6 @@ As a convenience, you can get to a direct chat with it from any other chat,
 by typing ``@colorcodebot`` and tapping the button that pops up.
 A button returning you (with a shiny new image)
 to your original chat will be presented after you send the code.
-
-Behold: `a demo video`_
 
 Development & Deployment
 ------------------------
