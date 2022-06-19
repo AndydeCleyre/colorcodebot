@@ -2,6 +2,7 @@
 import functools
 import io
 import os
+from threading import Thread
 from time import sleep
 from typing import Any, Callable, Iterable, List, Mapping, Optional, TypedDict, Union
 from uuid import uuid4
@@ -213,6 +214,12 @@ def send_html(bot, chat_id, html: str, reply_msg_id=None) -> Message:
 
 
 @retry
+def delete_after_delay(bot, message, delay=60):
+    sleep(delay)
+    bot.delete_message(message.chat.id, message.message_id)
+
+
+@retry
 def send_image(
     bot, chat_id, png_path: str, reply_msg_id=None, log: BindableLogger = None
 ) -> Message:
@@ -414,13 +421,14 @@ class ColorCodeBot:
             )
             self.set_snippet_filetype(cb_query=None, query_message=kb_msg, ext=ext)
         else:
-            self.bot.reply_to(
+            kb_msg = self.bot.reply_to(
                 message,
                 self.lang['query ext'],
                 reply_markup=self.kb['syntax'],
                 parse_mode='Markdown',
                 disable_web_page_preview=True,
             )
+        Thread(target=delete_after_delay, args=(self.bot, kb_msg, 30)).start()
 
     @retry
     def send_photo_elsewhere(self, inline_query: InlineQuery):
