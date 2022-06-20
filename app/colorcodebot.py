@@ -388,9 +388,10 @@ class ColorCodeBot:
             # fmt: off
             '{':     'json',
             '---\n': 'yaml',
+            '--- ': 'diff',
+            '-- ':   'lua',
             '[[':    'toml', '[': 'ini',
-            '<?php': 'php',  '<': 'xml',
-            '-- ':   'lua'
+            '<?php': 'php',  '<': 'xml'
             # fmt: on
         }.items():
             if code.startswith(start):
