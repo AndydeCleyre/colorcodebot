@@ -23,6 +23,7 @@ It's a small bit of Python glue between great projects, including:
 - guesslang_ (uses TensorFlow; saves you the step of specifying the snippet's language)
 - Iosevka_ (the most wonderful monospaced font)
 - Fallback fonts:
+
   - Symbols Nerd Font
   - JoyPixels
   - NanumGothicCoding
