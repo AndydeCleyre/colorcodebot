@@ -39,7 +39,7 @@ as a forwarded or original direct message.
 Or, add it to your group
 and it will send an image of any ``monospace content`` sent in the chat.
 
-.. image:: https://user-images.githubusercontent.com/1787385/174463143-47d33543-15e5-4633-9318-b51624b9146e.png
+.. image:: https://user-images.githubusercontent.com/1787385/174667742-32e414b4-e4f4-41f8-ae38-d6d64c1075f2.png
    :alt: Screenshot of the bot in action
    :align: right
 
