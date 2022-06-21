@@ -42,6 +42,9 @@ def ydump(data: Mapping) -> str:
     return strictyaml.as_document(data).as_yaml()
 
 
+BEGONE_BUTTON = InlineKeyboardButton('🗑️', callback_data=ydump({'action': 'begone'}))
+
+
 def load_configs() -> Config:
     data = {}
     (data['lang'], theme_names_ids, syntax_names_exts, data['guesslang']) = (
@@ -54,7 +57,6 @@ def load_configs() -> Config:
     data['theme_image_ids'] = tuple(theme_names_ids.values())
 
     kb_theme = InlineKeyboardMarkup()
-
     kb_theme.add(
         *[
             InlineKeyboardButton(
@@ -65,7 +67,6 @@ def load_configs() -> Config:
     )
 
     kb_syntax = InlineKeyboardMarkup()
-
     kb_syntax.add(
         *[
             InlineKeyboardButton(
@@ -74,6 +75,7 @@ def load_configs() -> Config:
             for name, ext in syntax_names_exts.items()
         ]
     )
+    kb_syntax.add(BEGONE_BUTTON)
 
     data['kb'] = {'theme': kb_theme, 'syntax': kb_syntax}
 
@@ -148,7 +150,8 @@ def minikb(kb_name: str, mini_text: str = '. . .') -> InlineKeyboardMarkup:
     kb.add(
         InlineKeyboardButton(
             mini_text, callback_data=ydump({'action': 'restore', 'kb_name': kb_name})
-        )
+        ),
+        BEGONE_BUTTON,
     )
     return kb
 
@@ -214,14 +217,22 @@ def send_html(bot, chat_id, html: str, reply_msg_id=None) -> Message:
 
 
 @retry
-def delete_after_delay(bot, message, delay=60):
+def delete_after_delay(bot, message, delay=60, log: Optional[BindableLogger] = None):
     sleep(delay)
-    bot.delete_message(message.chat.id, message.message_id)
+    try:
+        bot.delete_message(message.chat.id, message.message_id)
+    except ApiException as e:
+        if log:
+            log.error(
+                "failed to delete message (it's probably gone already)",
+                exc_info=e,
+                chat_id=message.chat.id,
+            )
 
 
 @retry
 def send_image(
-    bot, chat_id, png_path: str, reply_msg_id=None, log: BindableLogger = None
+    bot, chat_id, png_path: str, reply_msg_id=None, log: Optional[BindableLogger] = None
 ) -> Message:
     bot.send_chat_action(chat_id, 'upload_photo')
 
@@ -290,6 +301,7 @@ class ColorCodeBot:
         self.restore_kb           = self.bot.callback_query_handler(lambda q: yload(q.data)['action'] == 'restore')(self.restore_kb)
         self.set_snippet_filetype = self.bot.callback_query_handler(lambda q: yload(q.data)['action'] == 'set ext')(self.set_snippet_filetype)
         self.set_theme            = self.bot.callback_query_handler(lambda q: yload(q.data)['action'] == 'set theme')(self.set_theme)
+        self.begone               = self.bot.callback_query_handler(lambda q: yload(q.data)['action'] == 'begone')(self.begone)
         self.send_photo_elsewhere = self.bot.inline_handler(lambda q: q.query.startswith("img "))(self.send_photo_elsewhere)
         self.switch_from_inline   = self.bot.inline_handler(lambda q: True)(self.switch_from_inline)
         # fmt: on
@@ -372,6 +384,18 @@ class ColorCodeBot:
             with open(self.db_path, 'rb') as doc:
                 self.bot.send_document(self.admin_chat_id, doc)
 
+    @retry
+    def begone(self, cb_query: CallbackQuery):
+        self.log.msg(
+            "Got deletion request",
+            reply_to_msg_user_id=cb_query.message.reply_to_message.from_user.id,
+            user_id=cb_query.from_user.id,
+        )
+        if cb_query.message.reply_to_message.from_user.id == cb_query.from_user.id:
+            self.bot.delete_message(
+                cb_query.message.chat.id, cb_query.message.message_id
+            )
+
     def guess_ext(self, code: str, probability_min: float = 0.12) -> Optional[str]:
         syntax, probability = self.guesser.probabilities(code)[0]
         ext = self.guesslang_syntaxes.get(syntax)
@@ -429,7 +453,7 @@ class ColorCodeBot:
                 parse_mode='Markdown',
                 disable_web_page_preview=True,
             )
-        Thread(target=delete_after_delay, args=(self.bot, kb_msg, 30)).start()
+        Thread(target=delete_after_delay, args=(self.bot, kb_msg, 30, self.log)).start()
 
     @retry
     def send_photo_elsewhere(self, inline_query: InlineQuery):
@@ -488,10 +512,12 @@ class ColorCodeBot:
 
         snippet = query_message.reply_to_message
         text_content = snippet.text
-        do_send_html, do_send_image_dark, do_send_image_light, do_attach_kb = (True,) * 4
+        do_send_html, do_send_image_dark, do_send_image_light, do_attach_send_kb = (
+            True,
+        ) * 4
         if snippet.chat.type != 'private':
             text_content = code_subcontent(snippet)
-            do_send_html, do_send_image_light, do_attach_kb = (False,) * 3
+            do_send_html, do_send_image_light, do_attach_send_kb = (False,) * 3
         theme = self.user_themes.get(snippet.from_user.id, 'base16/bright')
 
         if do_send_html:
@@ -517,19 +543,20 @@ class ColorCodeBot:
                     png_path=png_path,
                     reply_msg_id=snippet.message_id,
                 )
-                if do_attach_kb and photo_msg.content_type == 'photo':
-                    kb_to_chat = InlineKeyboardMarkup()
-                    kb_to_chat.add(
+                image_kb = InlineKeyboardMarkup()
+                if do_attach_send_kb and photo_msg.content_type == 'photo':
+                    image_kb.add(
                         InlineKeyboardButton(
                             self.lang['send to chat'],
                             switch_inline_query=f"img {photo_msg.photo[-1].file_id}",
                         )
                     )
-                    self.bot.edit_message_reply_markup(
-                        photo_msg.chat.id,
-                        photo_msg.message_id,
-                        reply_markup=kb_to_chat,
-                    )
+                image_kb.add(BEGONE_BUTTON)
+                self.bot.edit_message_reply_markup(
+                    photo_msg.chat.id,
+                    photo_msg.message_id,
+                    reply_markup=image_kb,
+                )
 
         if cb_query:
             self.bot.answer_callback_query(cb_query.id)
