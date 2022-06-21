@@ -412,8 +412,9 @@ class ColorCodeBot:
             # fmt: off
             '{':     'json',
             '---\n': 'yaml',
-            '--- ': 'diff',
+            '--- ':  'diff',
             '-- ':   'lua',
+            '\\':    'tex',
             '[[':    'toml', '[': 'ini',
             '<?php': 'php',  '<': 'xml'
             # fmt: on
