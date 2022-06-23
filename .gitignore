@@ -4,7 +4,8 @@ venv
 logs
 svcs
 
-user_themes.sqlite
+ccb.sqlite
+ccb.sqlite-*
 
 /vars.*.yml
 # vars.<arbitrary-deployment-name>.yml

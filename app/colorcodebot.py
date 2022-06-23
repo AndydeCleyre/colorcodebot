@@ -2,6 +2,7 @@
 import functools
 import io
 import os
+from contextlib import suppress
 from threading import Thread
 from time import sleep
 from typing import Any, Callable, Iterable, List, Mapping, Optional, TypedDict, Union
@@ -10,8 +11,10 @@ from uuid import uuid4
 import strictyaml
 import structlog
 from guesslang import Guess
-from peewee import CharField, IntegerField, SqliteDatabase
+from peewee import CharField, IntegerField, OperationalError
 from playhouse.kv import KeyValue
+from playhouse.migrate import SqliteMigrator, migrate
+from playhouse.sqliteq import SqliteQueueDatabase as SqliteDatabase
 from plumbum import local
 from plumbum.cmd import highlight, silicon
 from requests.exceptions import ConnectionError
@@ -44,6 +47,22 @@ def ydump(data: Mapping) -> str:
 
 BEGONE_BUTTON = InlineKeyboardButton('🗑️', callback_data=ydump({'action': 'begone'}))
 
+BEGONE_KB = InlineKeyboardMarkup()
+BEGONE_KB.add(BEGONE_BUTTON)
+
+
+def is_from_group_admin_or_creator(bot, message_or_query: Union[Message, CallbackQuery]):
+    if isinstance(message_or_query, Message):
+        message = message_or_query
+        return message.chat.type == 'private' or bot.get_chat_member(
+            message.chat.id, message.from_user.id
+        ).status in ('administrator', 'creator')
+    elif isinstance(message_or_query, CallbackQuery):
+        query = message_or_query
+        return query.message.chat.type == 'private' or bot.get_chat_member(
+            query.message.chat.id, query.from_user.id
+        ).status in ('administrator', 'creator')
+
 
 def load_configs() -> Config:
     data = {}
@@ -63,7 +82,8 @@ def load_configs() -> Config:
                 name, callback_data=ydump({'action': 'set theme', 'theme': name})
             )
             for name in theme_names_ids.keys()
-        ]
+        ],
+        BEGONE_BUTTON,
     )
 
     kb_syntax = InlineKeyboardMarkup()
@@ -73,11 +93,39 @@ def load_configs() -> Config:
                 name, callback_data=ydump({'action': 'set ext', 'ext': ext})
             )
             for name, ext in syntax_names_exts.items()
-        ]
+        ],
+        BEGONE_BUTTON,
     )
-    kb_syntax.add(BEGONE_BUTTON)
 
-    data['kb'] = {'theme': kb_theme, 'syntax': kb_syntax}
+    kb_group_syntax = InlineKeyboardMarkup()
+    kb_group_syntax.add(
+        *[
+            InlineKeyboardButton(
+                name, callback_data=ydump({'action': 'set default ext', 'ext': ext})
+            )
+            for name, ext in syntax_names_exts.items()
+        ],
+        InlineKeyboardButton(
+            "None", callback_data=ydump({'action': 'set default ext', 'ext': ''})
+        ),
+        BEGONE_BUTTON,
+    )
+
+    kb_group_options = InlineKeyboardMarkup()
+    kb_group_options.add(
+        InlineKeyboardButton(
+            data['lang']['select default syntax'],
+            callback_data=ydump({'action': 'browse group syntax'}),
+        ),
+        BEGONE_BUTTON,
+    )
+
+    data['kb'] = {
+        'theme': kb_theme,
+        'syntax': kb_syntax,
+        'group options': kb_group_options,
+        'group syntax': kb_group_syntax,
+    }
 
     return data
 
@@ -161,7 +209,7 @@ def retry(
     exceptions: Union[Exception, Iterable[Exception]] = ConnectionError,
     attempts: int = 6,
     seconds: float = 3,
-) -> WraptFunc:
+) -> Union[WraptFunc, functools.partial[WraptFunc]]:
 
     if not original:  # needed to make args altogether optional
         return functools.partial(
@@ -186,8 +234,8 @@ def retry(
             else:
                 last_error = None
                 break
-        if has_logger and attempt > 0:
-            log.msg("called retry-able", retries=attempt, success=not last_error)
+            if has_logger and attempt > 0:
+                log.msg("called retry-able", retries=attempt, success=not last_error)
         if last_error:
             raise last_error
         return resp
@@ -273,7 +321,7 @@ class ColorCodeBot:
         guesslang_syntaxes: Mapping[str, str],
         *args: Any,
         admin_chat_id: Optional[str] = None,
-        db_path: str = str(local.path(__file__).up() / 'user_themes.sqlite'),
+        db_path: str = str(local.path(__file__).up() / 'ccb.sqlite'),
         **kwargs: Any,
     ):
         self.lang = lang
@@ -281,13 +329,34 @@ class ColorCodeBot:
         self.kb = keyboards
         self.guesslang_syntaxes = guesslang_syntaxes
         self.admin_chat_id = admin_chat_id
+        self.log = mk_logger()
         self.db_path = db_path
+        self.db = SqliteDatabase(self.db_path)
+        # Temporary migration step {{{
+        migrator = SqliteMigrator(self.db)
+        try:
+            migrate(migrator.rename_table('keyvalue', 'user_theme'))
+        except OperationalError as e:
+            self.log.error("Failed to migrate DB (already done?)", exc_info=e)
+        # }}}
         self.user_themes = KeyValue(
             key_field=IntegerField(primary_key=True),
             value_field=CharField(),
-            database=SqliteDatabase(db_path),
+            database=self.db,
+            table_name='user_theme',
         )
-        self.log = mk_logger()
+        self.group_syntaxes = KeyValue(
+            key_field=IntegerField(primary_key=True),
+            value_field=CharField(),
+            database=self.db,
+            table_name='group_syntax',
+        )
+        self.group_user_current_watchme_requests = KeyValue(
+            key_field=CharField(primary_key=True),
+            value_field=CharField(),
+            database=self.db,
+            table_name='group_user_current_watchme_request',
+        )
         self.bot = TeleBot(api_key, *args, **kwargs)
         self.register_handlers()
         self.guesser = Guess()
@@ -296,10 +365,13 @@ class ColorCodeBot:
         # fmt: off
         self.welcome              = self.bot.message_handler(commands=['start', 'help'])(self.welcome)
         self.browse_themes        = self.bot.message_handler(commands=['theme', 'themes'])(self.browse_themes)
+        self.manage_group_options = self.bot.message_handler(commands=['settings'])(self.manage_group_options)
         self.intake_snippet       = self.bot.message_handler(func=lambda m: m.content_type == 'text')(self.intake_snippet)
         self.recv_photo           = self.bot.message_handler(content_types=['photo'])(self.recv_photo)
         self.restore_kb           = self.bot.callback_query_handler(lambda q: yload(q.data)['action'] == 'restore')(self.restore_kb)
         self.set_snippet_filetype = self.bot.callback_query_handler(lambda q: yload(q.data)['action'] == 'set ext')(self.set_snippet_filetype)
+        self.set_group_syntax     = self.bot.callback_query_handler(lambda q: yload(q.data)['action'] == 'set default ext')(self.set_group_syntax)
+        self.browse_group_syntax  = self.bot.callback_query_handler(lambda q: yload(q.data)['action'] == 'browse group syntax')(self.browse_group_syntax)
         self.set_theme            = self.bot.callback_query_handler(lambda q: yload(q.data)['action'] == 'set theme')(self.set_theme)
         self.begone               = self.bot.callback_query_handler(lambda q: yload(q.data)['action'] == 'begone')(self.begone)
         self.send_photo_elsewhere = self.bot.inline_handler(lambda q: q.query.startswith("img "))(self.send_photo_elsewhere)
@@ -332,7 +404,7 @@ class ColorCodeBot:
         self.bot.reply_to(
             message,
             self.lang['welcome'],
-            parse_mode='Markdown',
+            parse_mode='MarkdownV2',
             reply_markup=ForceReply(
                 input_field_placeholder=self.lang['input field placeholder']
             ),
@@ -351,13 +423,49 @@ class ColorCodeBot:
             for i in range(0, len(self.theme_image_ids), 10)
         ]
         for album in albums:
-            self.bot.send_media_group(
+            msgs = self.bot.send_media_group(
                 message.chat.id,
                 map(InputMediaPhoto, album),
                 reply_to_message_id=message.message_id,
             )
+            for msg in msgs:
+                Thread(
+                    target=delete_after_delay, args=(self.bot, msg, 30, self.log)
+                ).start()
         self.bot.reply_to(
             message, self.lang['select theme'], reply_markup=self.kb['theme']
+        )
+
+    @retry
+    def get_group_config_md(self, chat_id):
+        return self.lang['current config'].format(
+            default_syntax=str(self.group_syntaxes.get(chat_id))
+        )
+
+    @retry
+    def manage_group_options(self, message: Message):
+        is_admin_or_creator = is_from_group_admin_or_creator(self.bot, message)
+        self.log.msg(
+            "user requesting group options for viewing or changing",
+            user_id=message.from_user.id,
+            user_first_name=message.from_user.first_name,
+            chat_id=message.chat.id,
+            user_is_admin=is_admin_or_creator,
+        )
+        if is_admin_or_creator:
+            self.bot.send_message(
+                message.chat.id,
+                self.get_group_config_md(message.chat.id),
+                parse_mode='MarkdownV2',
+                reply_markup=self.kb['group options'],
+            )
+
+    @retry
+    def browse_group_syntax(self, cb_query: CallbackQuery):
+        self.bot.edit_message_reply_markup(
+            cb_query.message.chat.id,
+            cb_query.message.message_id,
+            reply_markup=self.kb['group syntax'],
         )
 
     @retry
@@ -386,12 +494,18 @@ class ColorCodeBot:
 
     @retry
     def begone(self, cb_query: CallbackQuery):
-        self.log.msg(
-            "Got deletion request",
-            reply_to_msg_user_id=cb_query.message.reply_to_message.from_user.id,
-            user_id=cb_query.from_user.id,
-        )
-        if cb_query.message.reply_to_message.from_user.id == cb_query.from_user.id:
+        has_permission = False
+        try:
+            if cb_query.message.reply_to_message.from_user.id == cb_query.from_user.id:
+                has_permission = True
+            log = self.log.bind(
+                reply_to_msg_user_id=cb_query.message.reply_to_message.from_user.id
+            )
+        except AttributeError as e:
+            has_permission = is_from_group_admin_or_creator(self.bot, cb_query)
+            log = self.log.bind(query_is_from_admin=has_permission, exc_info=e)
+        log.msg("Got deletion request", user_id=cb_query.from_user.id)
+        if has_permission:
             self.bot.delete_message(
                 cb_query.message.chat.id, cb_query.message.message_id
             )
@@ -437,12 +551,15 @@ class ColorCodeBot:
             chat_id=message.chat.id,
         )
         ext = self.guess_ext(text_content)
+        if not ext:
+            with suppress(KeyError):
+                ext = self.group_syntaxes[message.chat.id]
         if ext:
             kb_msg = self.bot.reply_to(
                 message,
                 f"{self.lang['query ext']}\n\n{self.lang['guessed syntax'].format(ext)}",
                 reply_markup=minikb('syntax', self.lang['syntax picker']),
-                parse_mode='Markdown',
+                parse_mode='MarkdownV2',
                 disable_web_page_preview=True,
             )
             self.set_snippet_filetype(cb_query=None, query_message=kb_msg, ext=ext)
@@ -451,7 +568,7 @@ class ColorCodeBot:
                 message,
                 self.lang['query ext'],
                 reply_markup=self.kb['syntax'],
-                parse_mode='Markdown',
+                parse_mode='MarkdownV2',
                 disable_web_page_preview=True,
             )
         Thread(target=delete_after_delay, args=(self.bot, kb_msg, 30, self.log)).start()
@@ -483,6 +600,30 @@ class ColorCodeBot:
             reply_markup=self.kb[data['kb_name']],
         )
         self.bot.answer_callback_query(cb_query.id)
+
+    @retry
+    def set_group_syntax(self, cb_query: CallbackQuery):
+        ext = yload(cb_query.data)['ext']
+        is_admin_or_creator = is_from_group_admin_or_creator(self.bot, cb_query)
+        self.log.msg(
+            "user trying to set group default syntax",
+            ext=ext,
+            user_id=cb_query.from_user.id,
+            chat_id=cb_query.message.chat.id,
+            user_is_admin=is_admin_or_creator,
+        )
+        if is_admin_or_creator:
+            if ext:
+                self.group_syntaxes[cb_query.message.chat.id] = ext
+            else:
+                del self.group_syntaxes[cb_query.message.chat.id]
+            self.bot.edit_message_text(
+                self.get_group_config_md(cb_query.message.chat.id),
+                cb_query.message.chat.id,
+                cb_query.message.message_id,
+                parse_mode='MarkdownV2',
+                reply_markup=self.kb['group options'],
+            )
 
     @retry
     def set_snippet_filetype(

@@ -28,7 +28,7 @@ fi
 img="${registry_user}/colorcodebot-${deployment}-archlinux:${tag}"
 ctnr=ccb
 ctnr_user=colorcodebot
-db_file=$PWD/user_themes.sqlite
+db_file=$PWD/ccb.sqlite
 
 ############
 ### Pull ###
@@ -72,7 +72,7 @@ if [ $do_mount_db ]; then
   podman run \
     -d \
     -v ~/.config/sops/age/keys.txt:/root/.config/sops/age/keys.txt:ro \
-    -v "${db_file}:/home/${ctnr_user}/user_themes.sqlite:rw" \
+    -v "${db_file}:/home/${ctnr_user}/ccb.sqlite:rw" \
     --security-opt unmask=/sys/fs/cgroup \
     --name $ctnr \
     "$img"

@@ -1,14 +1,20 @@
 welcome: |
-  Hello! Send me a snippet of code as your message text, and I'll send you a colorized HTML file and image.
+  Hello\! Send me a snippet of code as your message text, and I'll send you a colorized HTML file and image\.
 
-  Don't like the theme? Pick another, with /theme !
+  Don't like the theme? Pick another, with /theme \!
 
-  You can type `@colorcodebot` (without sending) in any other chat to get here quickly.
-query ext: Fantastic! What type of code is this?
-guessed syntax: It looks like `{}` to me, so I'll send that right away.
+  You can type `@colorcodebot` \(without sending\) in any other chat to get here quickly\.
+query ext: Fantastic\! What type of code is this?
+guessed syntax: It looks like `{}` to me, so I'll send that right away\.
 syntax picker: Pick syntax
 switch to direct: Let's color some code!
 select theme: Which theme should we use for the HTML renderings?
-acknowledge theme: Right on, your HTML theme is now {}!
+acknowledge theme: Right on, your HTML theme is now {}\!
 send to chat: Send this to your last chat
-input field placeholder: Type or paste code here!
+input field placeholder: Type or paste code here\!
+select default syntax: Pick this group's default syntax
+current config: |
+  *ColorCodeBot*
+  _Group Settings_
+
+  \- This group's default syntax is **`{default_syntax}`**
