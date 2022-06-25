@@ -21,6 +21,7 @@ Nim: nim
 Objective C: objc
 Perl: perl
 PHP: php
+PowerShell: ps1
 Python: py3
 QML: qml
 R: r
@@ -28,6 +29,7 @@ reStructuredText: rst
 Ruby: rb
 Rust: rust
 Scala: scala
+Solidity: sol
 SQL: sql
 Swift: swift
 TOML: toml

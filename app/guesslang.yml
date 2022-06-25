@@ -17,6 +17,7 @@ Lua: lua
 Objective-C: objc
 Perl: perl
 PHP: php
+PowerShell: ps1
 Python: py3
 R: r
 Ruby: rb
