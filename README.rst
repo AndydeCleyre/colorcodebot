@@ -30,6 +30,8 @@ It's a small bit of Python glue between great projects, including:
   - Unifont
   - Code2000
 
+The background image is from [Sharon McCutcheon](https://unsplash.com/@sharonmccutcheon).
+
 Usage
 -----
 

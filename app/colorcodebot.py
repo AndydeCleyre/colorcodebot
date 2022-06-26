@@ -11,9 +11,8 @@ from uuid import uuid4
 import strictyaml
 import structlog
 from guesslang import Guess
-from peewee import CharField, IntegerField, OperationalError
+from peewee import CharField, IntegerField
 from playhouse.kv import KeyValue
-from playhouse.migrate import SqliteMigrator, migrate
 from playhouse.sqliteq import SqliteQueueDatabase as SqliteDatabase
 from plumbum import local
 from plumbum.cmd import highlight, silicon
@@ -49,6 +48,8 @@ BEGONE_BUTTON = InlineKeyboardButton('🗑️', callback_data=ydump({'action': '
 
 BEGONE_KB = InlineKeyboardMarkup()
 BEGONE_KB.add(BEGONE_BUTTON)
+
+BG_IMAGE = str(local.path(__file__).up() / 'sharon-mccutcheon-33xSu0EWgP4-unsplash.jpg')
 
 
 def is_from_group_admin_or_creator(bot, message_or_query: Union[Message, CallbackQuery]):
@@ -180,7 +181,8 @@ def mk_png(code: str, ext: str, theme: str = 'Coldark-Dark', folder=None) -> str
                 'NanumGothicCoding',
                 'Unifont',
                 'Code2000',
-            ))
+            )),
+            '--background-image', BG_IMAGE
         ]
         << code
     )()
@@ -261,7 +263,9 @@ def send_html(bot, chat_id, html: str, reply_msg_id=None) -> Message:
     bot.send_chat_action(chat_id, 'upload_document')
     with io.StringIO(html) as doc:
         doc.name = 'code.html'
-        return bot.send_document(chat_id, doc, reply_to_message_id=reply_msg_id)
+        return bot.send_document(
+            chat_id, doc, reply_to_message_id=reply_msg_id, reply_markup=BEGONE_KB
+        )
 
 
 @retry
@@ -332,13 +336,6 @@ class ColorCodeBot:
         self.log = mk_logger()
         self.db_path = db_path
         self.db = SqliteDatabase(self.db_path)
-        # Temporary migration step {{{
-        migrator = SqliteMigrator(self.db)
-        try:
-            migrate(migrator.rename_table('keyvalue', 'user_theme'))
-        except OperationalError as e:
-            self.log.error("Failed to migrate DB (already done?)", exc_info=e)
-        # }}}
         self.user_themes = KeyValue(
             key_field=IntegerField(primary_key=True),
             value_field=CharField(),
