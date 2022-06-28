@@ -25,10 +25,8 @@ It's a small bit of Python glue between great projects, including:
 - Fallback fonts:
 
   - Symbols Nerd Font
-  - JoyPixels
   - NanumGothicCoding
-  - Unifont
-  - Code2000
+  - JoyPixels
 
 The background image is from [Sharon McCutcheon](https://unsplash.com/@sharonmccutcheon).
 
