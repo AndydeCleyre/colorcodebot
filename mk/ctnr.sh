@@ -138,14 +138,15 @@ ctnr_run -b paru -S --noconfirm --needed $aur_pkgs
 ctnr_pkg_del paru-bin
 ctnr_cd "/home/$user"
 
-
 # Copy app and svcs into container
 tmp=$(mktemp -d)
 # First, ready payloads:
 git -C "$repo" archive HEAD:app >"$tmp/app.tar"
 "$repo/mk/file_ids.sh" -d "$deployment" "$tmp/theme_previews.yml"
 "$repo/mk/svcs.zsh" -d "$deployment" "$tmp/svcs"
-ctnr_run sh -c "[ -d /home/$user/venv ]" && ctnr_run mv "/home/$user/venv" "/tmp/jumpstart_venv"
+if ctnr_run sh -c "[ -d /home/$user/venv ]"; then
+  ctnr_run mv "/home/$user/venv" "/tmp/jumpstart_venv"
+fi
 # Second, burn down home:
 ctnr_run rm -rf "$svcs_dir"
 ctnr_run rm -rf "/home/$user"
@@ -154,7 +155,9 @@ ctnr_fetch -u "$tmp/app.tar" /home/$user
 ctnr_run -u chmod 0700 /home/$user
 ctnr_fetch -u "$tmp/theme_previews.yml" /home/$user/
 ctnr_fetch "$tmp/svcs" "$svcs_dir"
-ctnr_run sh -c '[ -d /tmp/jumpstart_venv ]' && ctnr_run mv "/tmp/jumpstart_venv" /home/$user/venv
+if ctnr_run sh -c '[ -d /tmp/jumpstart_venv ]'; then
+  ctnr_run mv "/tmp/jumpstart_venv" /home/$user/venv
+fi
 # Tidy up:
 rm -rf "$tmp"
 
