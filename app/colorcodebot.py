@@ -180,7 +180,7 @@ def mk_png(code: str, ext: str, theme: str = 'Coldark-Dark', folder=None) -> str
                 'Iosevka Term Custom',
                 'Symbols Nerd Font',
                 'NanumGothicCoding',
-                'JoyPixels',
+                'OpenMoji',
             ))
         ]
         << code

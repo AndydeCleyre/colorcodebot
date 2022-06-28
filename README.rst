@@ -26,7 +26,7 @@ It's a small bit of Python glue between great projects, including:
 
   - Symbols Nerd Font
   - NanumGothicCoding
-  - JoyPixels
+  - OpenMoji
 
 The background image is from [Sharon McCutcheon](https://unsplash.com/@sharonmccutcheon).
 
