@@ -182,6 +182,9 @@ fi
 ctnr_fetch "$iosevka_pkg" /tmp
 ctnr_run sh -c "tar xf /tmp/ttf-iosevka-*.pkg.tar.zst -C / --wildcards --wildcards-match-slash '*-regular.ttf' '*-italic.ttf' '*-bold.ttf' '*-bolditalic.ttf'"
 
+# Rebuild font cache
+ctnr_run -u fc-cache -r
+
 # Install papertrail agent, if enabled
 if [ "$(yaml-get -S -p 'svcs[name == papertrail].enabled' "$repo/vars.$deployment.yml")" = True ]; then
   ctnr_fetch \
