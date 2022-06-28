@@ -172,8 +172,10 @@ def mk_png(code: str, ext: str, theme: str = 'Coldark-Dark', folder=None) -> str
             '-o', png,
             '-l', ext,
             '--theme', theme,
-            '--pad-horiz', 10,
-            '--pad-vert', 10,
+            '--pad-horiz', 20,
+            '--pad-vert', 25,
+            '--shadow-blur-radius', 5,
+            '--background-image', BG_IMAGE,
             '-f', '; '.join((
                 'Iosevka Term Custom',
                 'Symbols Nerd Font',
@@ -181,8 +183,7 @@ def mk_png(code: str, ext: str, theme: str = 'Coldark-Dark', folder=None) -> str
                 'NanumGothicCoding',
                 'Unifont',
                 'Code2000',
-            )),
-            '--background-image', BG_IMAGE
+            ))
         ]
         << code
     )()
