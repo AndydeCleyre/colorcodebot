@@ -620,6 +620,9 @@ class ColorCodeBot:
                 parse_mode='MarkdownV2',
                 reply_markup=self.kb['group options'],
             )
+            if self.admin_chat_id:
+                with open(self.db_path, 'rb') as doc:
+                    self.bot.send_document(self.admin_chat_id, doc)
 
     @retry
     def set_snippet_filetype(
