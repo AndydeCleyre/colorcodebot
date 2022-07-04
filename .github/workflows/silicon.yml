@@ -2,6 +2,7 @@ name: Build and upload Arch Linux package for Silicon with Solidity (and ligatur
 on:
   schedule:
     - cron: '38 4 * * *'
+  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
