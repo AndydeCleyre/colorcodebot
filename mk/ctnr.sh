@@ -40,7 +40,7 @@ today=$(date +%Y.%j)
 tz="America/New_York"
 
 base_img='docker.io/library/archlinux:base'
-pkgs='highlight python silicon sops ttf-nerd-fonts-symbols-mono'
+pkgs='highlight python sops ttf-nerd-fonts-symbols-mono'
 aur_pkgs='otf-openmoji s6 ttf-nanumgothic_coding'
 build_pkgs='git'
 build_groups='base-devel'
@@ -66,7 +66,13 @@ ctnr_run () {  # [-u|-b] <cmd> [<cmd-arg>...]
 
 ctnr_fetch () {  # [-u] <src-url-or-path> <dest-path>
   _u=root
-  if [ "$1" = -u ]; then _u=$user; shift; fi
+  if [ "$1" = -u ]; then
+    _u=$user
+    shift
+  elif [ "$1" = -b ]; then
+    _u=builder
+    shift
+  fi
   buildah add --chown $_u "$ctnr" "$@"
 }
 
@@ -89,7 +95,7 @@ ctnr_mkuser () {  # <username>
 
 ctnr_trim () {
   # shellcheck disable=SC2046
-  ctnr_pkg_del $build_pkgs $(ctnr_run pacman -Qqgtt $build_groups)
+  ctnr_pkg_del $build_pkgs $(ctnr_run pacman -Qqgtt $build_groups) $(ctnr_run pacman -Qqdtt)
   ctnr_run sh -c "rm -rf $fat"
 }
 
@@ -125,17 +131,24 @@ printf '%s\n' '' '>>> Installing AUR packages . . .' '' >&2
 ctnr_mkuser builder
 ctnr_run rm -f /etc/sudoers.d/builder
 printf '%s\n' 'builder ALL=(ALL) NOPASSWD: ALL' \
-| ctnr_append '/etc/sudoers.d/builder'
+| ctnr_append /etc/sudoers.d/builder
 ctnr_run -b git clone 'https://aur.archlinux.org/paru-bin' /tmp/paru-bin
 ctnr_cd /tmp/paru-bin
 ctnr_run -b makepkg --noconfirm -si
 for key in $gpg_keys; do
   ctnr_run -b gpg --keyserver keyserver.ubuntu.com --recv-keys "$key"
 done
-ctnr_cd "/home/builder"
+ctnr_cd /home/builder
 # shellcheck disable=SC2086
 ctnr_run -b paru -S --noconfirm --needed $aur_pkgs
 ctnr_pkg_del paru-bin
+ctnr_cd "/home/$user"
+
+# Install custom Silicon package
+printf '%s\n' '' '>>> Installing our custom Silicon build . . .' '' >&2
+ctnr_fetch -b "${repo}/mk/silicon" /tmp/silicon-solidity-git
+ctnr_cd /tmp/silicon-solidity-git
+ctnr_run -b makepkg --noconfirm -si
 ctnr_cd "/home/$user"
 
 # Copy app and svcs into container
@@ -146,6 +159,8 @@ git -C "$repo" archive HEAD:app >"$tmp/app.tar"
 "$repo/mk/svcs.zsh" -d "$deployment" "$tmp/svcs"
 if ctnr_run sh -c "[ -d /home/$user/venv ]"; then
   ctnr_run mv "/home/$user/venv" "/tmp/jumpstart_venv"
+else
+  printf '%s\n' '' '>>> You may safely ignore the error above' '' >&2
 fi
 # Second, burn down home:
 ctnr_run rm -rf "$svcs_dir"
@@ -157,6 +172,8 @@ ctnr_fetch -u "$tmp/theme_previews.yml" /home/$user/
 ctnr_fetch "$tmp/svcs" "$svcs_dir"
 if ctnr_run sh -c '[ -d /tmp/jumpstart_venv ]'; then
   ctnr_run mv "/tmp/jumpstart_venv" /home/$user/venv
+else
+  printf '%s\n' '' '>>> You may safely ignore the error above' '' >&2
 fi
 # Tidy up:
 rm -rf "$tmp"
