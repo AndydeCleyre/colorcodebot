@@ -19,4 +19,4 @@ pip install -Ur dev-requirements.txt
 black .
 isort .
 
-shellcheck mk/*.sh start/*.sh
+shellcheck mk/*.sh mk/*/*.sh start/*.sh
