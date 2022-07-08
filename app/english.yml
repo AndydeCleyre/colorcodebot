@@ -12,9 +12,13 @@ select theme: Which theme should we use for the HTML renderings?
 acknowledge theme: Right on, your HTML theme is now {}\!
 send to chat: Send this to your last chat
 input field placeholder: Type or paste code here\!
-select default syntax: Pick this group's default syntax
+select default syntax: Pick default syntax
+toggle watch mode: Toggle watch mode
 current config: |
   *ColorCodeBot*
   _Group Settings_
 
-  \- This group's default syntax is **`{default_syntax}`**
+  \- This group's default syntax is *`{default_syntax}`*
+  \- I am operating in *{ignore_mode}* mode:
+    \- In watch mode, I'll respond to everyone who doesn't send /ignoreme
+    \- In ignore mode, I'll respond to everyone who sends /watchme

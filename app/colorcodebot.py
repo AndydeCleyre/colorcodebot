@@ -11,7 +11,7 @@ from uuid import uuid4
 import strictyaml
 import structlog
 from guesslang import Guess
-from peewee import CharField, IntegerField
+from peewee import BooleanField, CharField, IntegerField
 from playhouse.kv import KeyValue
 from playhouse.sqliteq import SqliteQueueDatabase as SqliteDatabase
 from plumbum import local
@@ -117,6 +117,10 @@ def load_configs() -> Config:
         InlineKeyboardButton(
             data['lang']['select default syntax'],
             callback_data=ydump({'action': 'browse group syntax'}),
+        ),
+        InlineKeyboardButton(
+            data['lang']['toggle watch mode'],
+            callback_data=ydump({'action': 'toggle watch mode'}),
         ),
         BEGONE_BUTTON,
     )
@@ -347,6 +351,12 @@ class ColorCodeBot:
             database=self.db,
             table_name='group_syntax',
         )
+        self.ignore_mode_groups = KeyValue(
+            key_field=IntegerField(primary_key=True),
+            value_field=BooleanField(),
+            database=self.db,
+            table_name='group_in_ignore_mode',
+        )
         self.group_user_current_watchme_requests = KeyValue(
             key_field=CharField(primary_key=True),
             value_field=CharField(),
@@ -362,12 +372,15 @@ class ColorCodeBot:
         self.welcome              = self.bot.message_handler(commands=['start', 'help'])(self.welcome)
         self.browse_themes        = self.bot.message_handler(commands=['theme', 'themes'])(self.browse_themes)
         self.manage_group_options = self.bot.message_handler(commands=['settings'])(self.manage_group_options)
+        self.ignore_group_user    = self.bot.message_handler(commands=['ignoreme'])(self.ignore_group_user)
+        self.watch_group_user     = self.bot.message_handler(commands=['watchme'])(self.watch_group_user)
         self.intake_snippet       = self.bot.message_handler(func=lambda m: m.content_type == 'text')(self.intake_snippet)
         self.recv_photo           = self.bot.message_handler(content_types=['photo'])(self.recv_photo)
         self.restore_kb           = self.bot.callback_query_handler(lambda q: yload(q.data)['action'] == 'restore')(self.restore_kb)
         self.set_snippet_filetype = self.bot.callback_query_handler(lambda q: yload(q.data)['action'] == 'set ext')(self.set_snippet_filetype)
         self.set_group_syntax     = self.bot.callback_query_handler(lambda q: yload(q.data)['action'] == 'set default ext')(self.set_group_syntax)
         self.browse_group_syntax  = self.bot.callback_query_handler(lambda q: yload(q.data)['action'] == 'browse group syntax')(self.browse_group_syntax)
+        self.toggle_group_watch   = self.bot.callback_query_handler(lambda q: yload(q.data)['action'] == 'toggle watch mode')(self.toggle_group_watch)
         self.set_theme            = self.bot.callback_query_handler(lambda q: yload(q.data)['action'] == 'set theme')(self.set_theme)
         self.begone               = self.bot.callback_query_handler(lambda q: yload(q.data)['action'] == 'begone')(self.begone)
         self.send_photo_elsewhere = self.bot.inline_handler(lambda q: q.query.startswith("img "))(self.send_photo_elsewhere)
@@ -435,7 +448,10 @@ class ColorCodeBot:
     @retry
     def get_group_config_md(self, chat_id):
         return self.lang['current config'].format(
-            default_syntax=str(self.group_syntaxes.get(chat_id))
+            default_syntax=str(self.group_syntaxes.get(chat_id)),
+            ignore_mode="ignore"
+            if self.ignore_mode_groups.get(chat_id, False)
+            else "watch",
         )
 
     @retry
@@ -464,6 +480,59 @@ class ColorCodeBot:
             reply_markup=self.kb['group syntax'],
         )
 
+    def toggle_group_watch(self, cb_query: CallbackQuery):
+        is_admin_or_creator = is_from_group_admin_or_creator(self.bot, cb_query)
+        self.log.msg(
+            "user trying to toggle group watch mode",
+            user_id=cb_query.from_user.id,
+            chat_id=cb_query.message.chat.id,
+            user_is_admin=is_admin_or_creator,
+        )
+        if is_admin_or_creator:
+            self.ignore_mode_groups[
+                cb_query.message.chat.id
+            ] = not self.ignore_mode_groups.get(cb_query.message.chat.id, False)
+            self.bot.edit_message_text(
+                self.get_group_config_md(cb_query.message.chat.id),
+                cb_query.message.chat.id,
+                cb_query.message.message_id,
+                parse_mode='MarkdownV2',
+                reply_markup=self.kb['group options'],
+            )
+            self.backup_db()
+
+    @retry
+    def backup_db(self):
+        if self.admin_chat_id:
+            with open(self.db_path, 'rb') as doc:
+                self.bot.send_document(self.admin_chat_id, doc)
+
+    @retry
+    def ignore_group_user(self, message: Message):
+        self.log.msg(
+            "ignoring group user",
+            user_id=message.from_user.id,
+            user_first_name=message.from_user.first_name,
+            chat_id=message.chat.id,
+        )
+        self.group_user_current_watchme_requests[
+            f"{message.chat.id}:{message.from_user.id}"
+        ] = 'ignore'
+        self.backup_db()
+
+    @retry
+    def watch_group_user(self, message: Message):
+        self.log.msg(
+            "watching group user",
+            user_id=message.from_user.id,
+            user_first_name=message.from_user.first_name,
+            chat_id=message.chat.id,
+        )
+        self.group_user_current_watchme_requests[
+            f"{message.chat.id}:{message.from_user.id}"
+        ] = 'watch'
+        self.backup_db()
+
     @retry
     def set_theme(self, cb_query: CallbackQuery):
         data = yload(cb_query.data)
@@ -484,9 +553,7 @@ class ColorCodeBot:
         self.bot.answer_callback_query(
             cb_query.id, text=self.lang['acknowledge theme'].format(data['theme'])
         )
-        if self.admin_chat_id:
-            with open(self.db_path, 'rb') as doc:
-                self.bot.send_document(self.admin_chat_id, doc)
+        self.backup_db()
 
     @retry
     def begone(self, cb_query: CallbackQuery):
@@ -535,6 +602,21 @@ class ColorCodeBot:
 
     @retry
     def intake_snippet(self, message: Message):
+        if self.ignore_mode_groups.get(message.chat.id, False):
+            if (
+                self.group_user_current_watchme_requests.get(
+                    f"{message.chat.id}:{message.from_user.id}", 'ignore'
+                )
+                != 'watch'
+            ):
+                return
+        elif (
+            self.group_user_current_watchme_requests.get(
+                f"{message.chat.id}:{message.from_user.id}", 'watch'
+            )
+            == 'ignore'
+        ):
+            return
         text_content = message.text
         if message.chat.type != 'private':
             text_content = code_subcontent(message)
@@ -620,9 +702,7 @@ class ColorCodeBot:
                 parse_mode='MarkdownV2',
                 reply_markup=self.kb['group options'],
             )
-            if self.admin_chat_id:
-                with open(self.db_path, 'rb') as doc:
-                    self.bot.send_document(self.admin_chat_id, doc)
+            self.backup_db()
 
     @retry
     def set_snippet_filetype(
