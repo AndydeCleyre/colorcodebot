@@ -145,11 +145,13 @@ ctnr_pkg_del paru-bin
 ctnr_cd "/home/$user"
 
 # Install custom Silicon package
-printf '%s\n' '' '>>> Installing our custom Silicon build . . .' '' >&2
-ctnr_fetch -b "${repo}/mk/silicon" /tmp/silicon-solidity-git
-ctnr_cd /tmp/silicon-solidity-git
-ctnr_run -b makepkg --noconfirm -si
-ctnr_cd "/home/$user"
+if ! ctnr_run pacman -Qq silicon-solidity-git; then
+  printf '%s\n' '' '>>> Installing our custom Silicon build . . .' '' >&2
+  ctnr_fetch -b "${repo}/mk/silicon" /tmp/silicon-solidity-git
+  ctnr_cd /tmp/silicon-solidity-git
+  ctnr_run -b makepkg --noconfirm -si
+  ctnr_cd "/home/$user"
+fi
 
 # Copy app and svcs into container
 tmp=$(mktemp -d)
