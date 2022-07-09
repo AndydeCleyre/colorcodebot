@@ -8,7 +8,7 @@ fast=''
 if [ "$1" = --fast ]; then fast=1; shift; fi
 
 if [ "$1" ]; then
-  printf '%s\n' 'Start the bot locally, without process supervision or other svcs' 'Args: [-d <deployment>=dev]'
+  printf '%s\n' 'Start the bot locally, without process supervision or other svcs' 'Args: [-d <deployment>=dev] [--fast]'
   exit 1
 fi
 
