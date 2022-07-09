@@ -17,7 +17,7 @@ keras==2.9.0              # via tensorflow
 keras-preprocessing==1.1.2  # via tensorflow
 libclang==14.0.1          # via tensorflow
 markdown==3.3.7           # via tensorboard
-numpy==1.23.0             # via h5py, keras-preprocessing, opt-einsum, tensorboard, tensorflow
+numpy==1.23.1             # via h5py, keras-preprocessing, opt-einsum, tensorboard, tensorflow
 oauthlib==3.2.0           # via requests-oauthlib
 opt-einsum==3.3.0         # via tensorflow
 packaging==21.3           # via tensorflow
