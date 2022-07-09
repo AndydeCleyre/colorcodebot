@@ -499,13 +499,6 @@ class ColorCodeBot:
                 parse_mode='MarkdownV2',
                 reply_markup=self.kb['group options'],
             )
-            self.backup_db()
-
-    @retry
-    def backup_db(self):
-        if self.admin_chat_id:
-            with open(self.db_path, 'rb') as doc:
-                self.bot.send_document(self.admin_chat_id, doc)
 
     @retry
     def ignore_group_user(self, message: Message):
@@ -518,7 +511,6 @@ class ColorCodeBot:
         self.group_user_current_watchme_requests[
             f"{message.chat.id}:{message.from_user.id}"
         ] = 'ignore'
-        self.backup_db()
 
     @retry
     def watch_group_user(self, message: Message):
@@ -531,7 +523,6 @@ class ColorCodeBot:
         self.group_user_current_watchme_requests[
             f"{message.chat.id}:{message.from_user.id}"
         ] = 'watch'
-        self.backup_db()
 
     @retry
     def set_theme(self, cb_query: CallbackQuery):
@@ -553,7 +544,6 @@ class ColorCodeBot:
         self.bot.answer_callback_query(
             cb_query.id, text=self.lang['acknowledge theme'].format(data['theme'])
         )
-        self.backup_db()
 
     @retry
     def begone(self, cb_query: CallbackQuery):
@@ -702,7 +692,6 @@ class ColorCodeBot:
                 parse_mode='MarkdownV2',
                 reply_markup=self.kb['group options'],
             )
-            self.backup_db()
 
     @retry
     def set_snippet_filetype(
