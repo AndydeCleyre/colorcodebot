@@ -28,7 +28,7 @@ fi
 img="${registry_user}/colorcodebot-${deployment}-archlinux:${tag}"
 ctnr=ccb
 ctnr_user=colorcodebot
-db_file=$PWD/ccb.sqlite
+db_dir=$PWD/db-files
 
 ############
 ### Pull ###
@@ -40,21 +40,19 @@ podman pull "$img" || buildah pull --policy=never "$img"
 ### Prepare DB File for mounting ###
 ####################################
 
-if [ -f "$db_file" ]; then
-  printf '%s\n' '' "Found DB on host:" "$(ls -l "$db_file")" 'Ensuring the in-container user can read and write to it . . .' 1>&2
+mkdir -p "$db_dir"
+printf '%s\n' '' "Ensuring the in-container user can read and write to $db_dir . . ." 1>&2
 
-  # Get host UID for ctnr_user
-  ownme=$(mktemp)
-  podman run --rm -u root -v "$ownme:/ownme" "$img" chown "$ctnr_user" /ownme
-  uid=$(stat -c %u "$ownme")
+# Get host UID for ctnr_user
+ownme=$(mktemp)
+podman run --rm -u root -v "$ownme:/ownme" "$img" chown "$ctnr_user" /ownme
+uid=$(stat -c %u "$ownme")
 
-  chown "$uid" "$db_file" || sudo chown "$uid" "$db_file"
+chown -R "$uid" "$db_dir" || sudo chown -R "$uid" "$db_dir"
 
-  ls -l "$db_file" 1>&2
-  printf '%s\n' ''
-
-  do_mount_db=1
-fi
+ls -ld "$db_dir" 1>&2
+ls -l "$db_dir" 1>&2
+printf '%s\n' ''
 
 ########################
 ### The King is Dead ###
@@ -67,22 +65,13 @@ podman rm -i $ctnr
 ### Long Live the King ###
 ##########################
 
-if [ $do_mount_db ]; then
-  podman run \
-    -d \
-    -v ~/.config/sops/age/keys.txt:/root/.config/sops/age/keys.txt:ro \
-    -v "${db_file}:/home/${ctnr_user}/ccb.sqlite:rw" \
-    --security-opt unmask=/sys/fs/cgroup \
-    --name $ctnr \
-    "$img"
-else
-  podman run \
-    -d \
-    -v ~/.config/sops/age/keys.txt:/root/.config/sops/age/keys.txt:ro \
-    --security-opt unmask=/sys/fs/cgroup \
-    --name $ctnr \
-    "$img"
-fi
+podman run \
+  -d \
+  -v ~/.config/sops/age/keys.txt:/root/.config/sops/age/keys.txt:ro \
+  -v "${db_dir}:/home/${ctnr_user}/db-files" \
+  --security-opt unmask=/sys/fs/cgroup \
+  --name $ctnr \
+  "$img"
 
 ##############
 ### Report ###

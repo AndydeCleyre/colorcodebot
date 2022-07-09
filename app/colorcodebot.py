@@ -328,7 +328,7 @@ class ColorCodeBot:
         guesslang_syntaxes: Mapping[str, str],
         *args: Any,
         admin_chat_id: Optional[str] = None,
-        db_path: str = str(local.path(__file__).up() / 'ccb.sqlite'),
+        db_path: str = str(local.path(__file__).up() / 'db-files' / 'ccb.sqlite'),
         **kwargs: Any,
     ):
         self.lang = lang
