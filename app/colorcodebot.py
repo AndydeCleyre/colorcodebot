@@ -582,6 +582,7 @@ class ColorCodeBot:
             '--- ':  'diff',
             '-- ':   'lua',
             '\\':    'tex',
+            '%%':    'tex',
             '[[':    'toml', '[': 'ini',
             '<?php': 'php',  '<': 'xml'
             # fmt: on
