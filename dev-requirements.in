@@ -1,5 +1,3 @@
--r app/requirements.txt
--r app/dev-requirements.txt
 yamlpath
 wheezy.template
 black
