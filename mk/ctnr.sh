@@ -186,7 +186,7 @@ ctnr_run -u python3 -m venv /home/$user/venv
 ctnr_run /home/$user/venv/bin/pip install -qU pip wheel
 ctnr_run /home/$user/venv/bin/pip install -Ur /home/$user/requirements.txt
 if ctnr_run test -f "/home/${user}/${deployment}-requirements.txt"; then
-  ctnr_run /home/$user/venv/bin/pip install -r "/home/${user}/app/${deployment}-requirements.txt"
+  ctnr_run /home/$user/venv/bin/pip install -Ur "/home/${user}/${deployment}-requirements.txt"
 fi
 ctnr_run /home/$user/venv/bin/pip uninstall -qy pip wheel
 
