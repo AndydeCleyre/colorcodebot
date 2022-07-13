@@ -28,7 +28,7 @@ fi
 # shellcheck disable=SC1091
 . ./venv/bin/activate
 pip install -U pip wheel
-pip install -Ur dev-requirements.txt
+pip install -Ur ops-requirements.txt
 
 yaml-get -S -p theme_previews "vars.$deployment.yml" >/dev/null 2>&1
 

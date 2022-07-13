@@ -14,7 +14,7 @@ fi
 . ./venv/bin/activate
 
 pip install -U pip wheel
-pip install -Ur dev-requirements.txt
+pip install -Ur ops-requirements.txt
 
 black .
 isort .

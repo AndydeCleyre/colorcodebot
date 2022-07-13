@@ -13,5 +13,6 @@ use_parentheses = true
 dependencies = ["guesslang @ git+https://github.com/andydecleyre/guesslang@tensorflow-looser", "peewee", "plumbum", "pyTelegramBotAPI", "strictyaml", "structlog", "wrapt"]
 
 [project.optional-dependencies]
-dev = ["black", "isort", "wheezy.template", "yamlpath"]
+dev = ["rich"]
 all = ["black", "guesslang @ git+https://github.com/andydecleyre/guesslang@tensorflow-looser", "isort", "peewee", "plumbum", "pyTelegramBotAPI", "rich", "strictyaml", "structlog", "wheezy.template", "wrapt", "yamlpath"]
+ops = ["black", "isort", "wheezy.template", "yamlpath"]

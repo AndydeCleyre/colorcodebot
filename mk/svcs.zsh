@@ -28,8 +28,8 @@ render_svcs () {  # [-d <deployment>=dev] [<svcs-dir>=app/svcs]
   # shellcheck disable=SC1091
   . ./venv/bin/activate
 
-  pip install -U pip wheel pip-and-pip-tools
-  pip install -r dev-requirements.txt
+  pip install -U wheel pip pip-tools pip-and-pip-tools
+  pip install -Ur ops-requirements.txt
 
   # Parse args
   local deployment=dev yml svcs_dir
