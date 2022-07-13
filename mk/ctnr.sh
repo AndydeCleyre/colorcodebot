@@ -46,7 +46,11 @@ build_pkgs='git'
 build_groups='base-devel'
 gpg_keys='1A09227B1F435A33'
 
-fat="/tmp/* /usr/lib/python3.*/__pycache__ /home/builder/* /home/$user/.cache/* /root/.cache/* /home/$user/.local/bin /root/.local/bin /var/cache/pacman/pkg/*"
+fat="/tmp/* /usr/lib/python3.*/__pycache__"
+fat="$fat /home/builder/* /home/builder/.*"
+fat="$fat /home/$user/.cache/* /root/.cache/*"
+fat="$fat /home/$user/.local/bin /root/.local/bin"
+fat="$fat /var/cache/pacman/pkg/* /var/lib/pacman/sync/* /var/lib/pacman/local/*"
 
 #################
 ### Functions ###
