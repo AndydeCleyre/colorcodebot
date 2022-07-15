@@ -64,4 +64,4 @@ yamlpath==3.6.4           # via -r ops-requirements.txt
 zipp==3.8.1               # via -r app/requirements.txt, importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
-setuptools==63.1.0        # via -r app/requirements.txt, tensorboard, tensorflow
+setuptools==63.2.0        # via -r app/requirements.txt, tensorboard, tensorflow
