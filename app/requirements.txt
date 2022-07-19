@@ -1,4 +1,4 @@
-absl-py==1.1.0            # via tensorboard, tensorflow
+absl-py==1.2.0            # via tensorboard, tensorflow
 astunparse==1.6.3         # via tensorflow
 cachetools==5.2.0         # via google-auth
 certifi==2022.6.15        # via requests
