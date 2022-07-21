@@ -31,10 +31,10 @@ pytelegrambotapi==4.6.0   # via -r requirements.in
 python-dateutil==2.8.2    # via strictyaml
 requests==2.28.1          # via pytelegrambotapi, requests-oauthlib, tensorboard
 requests-oauthlib==1.3.1  # via google-auth-oauthlib
-rsa==4.8                  # via google-auth
+rsa==4.9                  # via google-auth
 six==1.16.0               # via astunparse, google-auth, google-pasta, grpcio, keras-preprocessing, python-dateutil, tensorflow
 strictyaml==1.6.1         # via -r requirements.in
-structlog==21.5.0         # via -r requirements.in
+structlog==22.1.0         # via -r requirements.in
 tensorboard==2.9.1        # via tensorflow
 tensorboard-data-server==0.6.1  # via tensorboard
 tensorboard-plugin-wit==1.8.1  # via tensorboard
