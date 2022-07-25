@@ -21,6 +21,7 @@ keras==2.9.0              # via -r app/requirements.txt, tensorflow
 keras-preprocessing==1.1.2  # via -r app/requirements.txt, tensorflow
 libclang==14.0.1          # via -r app/requirements.txt, tensorflow
 markdown==3.4.1           # via -r app/requirements.txt, tensorboard
+markupsafe==2.1.1         # via -r app/requirements.txt, werkzeug
 mypy-extensions==0.4.3    # via -r ops-requirements.txt, black
 numpy==1.23.1             # via -r app/requirements.txt, h5py, keras-preprocessing, opt-einsum, tensorboard, tensorflow
 oauthlib==3.2.0           # via -r app/requirements.txt, requests-oauthlib
@@ -56,7 +57,7 @@ termcolor==1.1.0          # via -r app/requirements.txt, tensorflow
 tomli==2.0.1              # via -r ops-requirements.txt, black
 typing-extensions==4.3.0  # via -r app/dev-requirements.txt, -r app/requirements.txt, -r ops-requirements.txt, black, rich, tensorflow
 urllib3==1.26.10          # via -r app/requirements.txt, requests
-werkzeug==2.1.2           # via -r app/requirements.txt, tensorboard
+werkzeug==2.2.0           # via -r app/requirements.txt, tensorboard
 wheel==0.37.1             # via -r app/requirements.txt, astunparse, tensorboard
 wheezy-template==3.1.0    # via -r ops-requirements.txt
 wrapt==1.14.1             # via -r app/requirements.txt, tensorflow
