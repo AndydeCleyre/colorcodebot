@@ -11,7 +11,7 @@ gast==0.4.0               # via -r app/requirements.txt, tensorflow
 google-auth==2.9.1        # via -r app/requirements.txt, google-auth-oauthlib, tensorboard
 google-auth-oauthlib==0.4.6  # via -r app/requirements.txt, tensorboard
 google-pasta==0.2.0       # via -r app/requirements.txt, tensorflow
-grpcio==1.48.0            # via -r app/requirements.txt, tensorboard, tensorflow
+grpcio==1.47.0            # via -r app/requirements.txt, tensorboard, tensorflow
 guesslang @ git+https://github.com/andydecleyre/guesslang@tensorflow-looser  # via -r app/requirements.txt
 h5py==3.7.0               # via -r app/requirements.txt, tensorflow
 idna==3.3                 # via -r app/requirements.txt, requests
@@ -19,7 +19,7 @@ importlib-metadata==4.12.0  # via -r app/requirements.txt, markdown
 isort==5.10.1             # via -r ops-requirements.txt
 keras==2.9.0              # via -r app/requirements.txt, tensorflow
 keras-preprocessing==1.1.2  # via -r app/requirements.txt, tensorflow
-libclang==14.0.1          # via -r app/requirements.txt, tensorflow
+libclang==14.0.6          # via -r app/requirements.txt, tensorflow
 markdown==3.4.1           # via -r app/requirements.txt, tensorboard
 markupsafe==2.1.1         # via -r app/requirements.txt, werkzeug
 mypy-extensions==0.4.3    # via -r ops-requirements.txt, black
