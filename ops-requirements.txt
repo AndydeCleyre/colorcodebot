@@ -2,7 +2,7 @@ black==22.8.0             # via -r ops-requirements.in
 click==8.1.3              # via black
 isort==5.10.1             # via -r ops-requirements.in
 mypy-extensions==0.4.3    # via black
-pathspec==0.10.0          # via black
+pathspec==0.10.1          # via black
 platformdirs==2.5.2       # via black
 ruamel-yaml==0.17.17      # via yamlpath
 ruamel-yaml-clib==0.2.6   # via ruamel-yaml
