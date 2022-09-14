@@ -1,7 +1,7 @@
 absl-py==1.2.0            # via tensorboard, tensorflow
 astunparse==1.6.3         # via tensorflow
 cachetools==5.2.0         # via google-auth
-certifi==2022.6.15.1      # via requests
+certifi==2022.6.15.2      # via requests
 charset-normalizer==2.1.1  # via requests
 flatbuffers==2.0.7        # via tensorflow
 gast==0.4.0               # via tensorflow
@@ -11,7 +11,7 @@ google-pasta==0.2.0       # via tensorflow
 grpcio==1.48.1            # via tensorboard, tensorflow
 guesslang @ git+https://github.com/andydecleyre/guesslang@tensorflow-looser  # via -r requirements.in
 h5py==3.7.0               # via tensorflow
-idna==3.3                 # via requests
+idna==3.4                 # via requests
 importlib-metadata==4.12.0  # via markdown
 keras==2.10.0             # via tensorflow
 keras-preprocessing==1.1.2  # via tensorflow
@@ -24,7 +24,7 @@ opt-einsum==3.3.0         # via tensorflow
 packaging==21.3           # via tensorflow
 peewee==3.15.2            # via -r requirements.in
 plumbum==1.7.2            # via -r requirements.in
-protobuf==3.19.4          # via tensorboard, tensorflow
+protobuf==3.19.5          # via tensorboard, tensorflow
 pyasn1==0.4.8             # via pyasn1-modules, rsa
 pyasn1-modules==0.2.8     # via google-auth
 pyparsing==3.0.9          # via packaging
