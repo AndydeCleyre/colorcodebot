@@ -5,10 +5,10 @@ certifi==2022.9.14        # via requests
 charset-normalizer==2.1.1  # via requests
 flatbuffers==2.0.7        # via tensorflow
 gast==0.4.0               # via tensorflow
-google-auth==2.11.0       # via google-auth-oauthlib, tensorboard
+google-auth==2.11.1       # via google-auth-oauthlib, tensorboard
 google-auth-oauthlib==0.4.6  # via tensorboard
 google-pasta==0.2.0       # via tensorflow
-grpcio==1.49.0            # via tensorboard, tensorflow
+grpcio==1.48.1            # via tensorboard, tensorflow
 guesslang @ git+https://github.com/andydecleyre/guesslang@tensorflow-looser  # via -r requirements.in
 h5py==3.7.0               # via tensorflow
 idna==3.4                 # via requests
