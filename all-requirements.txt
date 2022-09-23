@@ -11,7 +11,7 @@ gast==0.4.0               # via -r app/requirements.txt, tensorflow
 google-auth==2.11.1       # via -r app/requirements.txt, google-auth-oauthlib, tensorboard
 google-auth-oauthlib==0.4.6  # via -r app/requirements.txt, tensorboard
 google-pasta==0.2.0       # via -r app/requirements.txt, tensorflow
-grpcio==1.48.1            # via -r app/requirements.txt, tensorboard, tensorflow
+grpcio==1.49.1            # via -r app/requirements.txt, tensorboard, tensorflow
 guesslang @ git+https://github.com/andydecleyre/guesslang@tensorflow-looser  # via -r app/requirements.txt
 h5py==3.7.0               # via -r app/requirements.txt, tensorflow
 idna==3.4                 # via -r app/requirements.txt, requests
@@ -28,7 +28,7 @@ oauthlib==3.2.1           # via -r app/requirements.txt, requests-oauthlib
 opt-einsum==3.3.0         # via -r app/requirements.txt, tensorflow
 packaging==21.3           # via -r app/requirements.txt, tensorflow
 pathspec==0.10.1          # via -r ops-requirements.txt, black
-peewee==3.15.2            # via -r app/requirements.txt
+peewee==3.15.3            # via -r app/requirements.txt
 platformdirs==2.5.2       # via -r ops-requirements.txt, black
 plumbum==1.7.2            # via -r app/requirements.txt
 protobuf==3.19.5          # via -r app/requirements.txt, tensorboard, tensorflow
