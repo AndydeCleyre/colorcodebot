@@ -11,4 +11,4 @@ six==1.16.0               # via python-dateutil
 tomli==2.0.1              # via black
 typing-extensions==4.3.0  # via black
 wheezy-template==3.1.0    # via -r ops-requirements.in
-yamlpath==3.6.6           # via -r ops-requirements.in
+yamlpath==3.6.7           # via -r ops-requirements.in
