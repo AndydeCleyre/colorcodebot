@@ -45,7 +45,7 @@ rsa==4.9                  # via -r app/requirements.txt, google-auth
 ruamel-yaml==0.17.21      # via -r ops-requirements.txt, yamlpath
 ruamel-yaml-clib==0.2.6   # via -r ops-requirements.txt, ruamel-yaml
 six==1.16.0               # via -r app/requirements.txt, -r ops-requirements.txt, astunparse, google-auth, google-pasta, grpcio, keras-preprocessing, python-dateutil, tensorflow
-strictyaml==1.6.1         # via -r app/requirements.txt
+strictyaml==1.6.2         # via -r app/requirements.txt
 structlog==22.1.0         # via -r app/requirements.txt
 tensorboard==2.10.1       # via -r app/requirements.txt, tensorflow
 tensorboard-data-server==0.6.1  # via -r app/requirements.txt, tensorboard
@@ -62,7 +62,7 @@ wheel==0.37.1             # via -r app/requirements.txt, astunparse, tensorboard
 wheezy-template==3.1.0    # via -r ops-requirements.txt
 wrapt==1.14.1             # via -r app/requirements.txt, tensorflow
 yamlpath==3.6.7           # via -r ops-requirements.txt
-zipp==3.8.1               # via -r app/requirements.txt, importlib-metadata
+zipp==3.9.0               # via -r app/requirements.txt, importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
 setuptools==65.4.1        # via -r app/requirements.txt, tensorboard, tensorflow
