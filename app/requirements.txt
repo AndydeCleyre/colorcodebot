@@ -5,7 +5,7 @@ certifi==2022.9.24        # via requests
 charset-normalizer==2.1.1  # via requests
 flatbuffers==22.9.24      # via tensorflow
 gast==0.4.0               # via tensorflow
-google-auth==2.12.0       # via google-auth-oauthlib, tensorboard
+google-auth==2.13.0       # via google-auth-oauthlib, tensorboard
 google-auth-oauthlib==0.4.6  # via tensorboard
 google-pasta==0.2.0       # via tensorflow
 grpcio==1.49.1            # via tensorboard, tensorflow
@@ -19,7 +19,7 @@ libclang==14.0.6          # via tensorflow
 markdown==3.4.1           # via tensorboard
 markupsafe==2.1.1         # via werkzeug
 numpy==1.23.4             # via h5py, keras-preprocessing, opt-einsum, tensorboard, tensorflow
-oauthlib==3.2.1           # via requests-oauthlib
+oauthlib==3.2.2           # via requests-oauthlib
 opt-einsum==3.3.0         # via tensorflow
 packaging==21.3           # via tensorflow
 peewee==3.15.3            # via -r requirements.in
