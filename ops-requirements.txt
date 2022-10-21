@@ -6,7 +6,7 @@ pathspec==0.10.1          # via black
 platformdirs==2.5.2       # via black
 python-dateutil==2.8.2    # via yamlpath
 ruamel-yaml==0.17.21      # via yamlpath
-ruamel-yaml-clib==0.2.6   # via ruamel-yaml
+ruamel-yaml-clib==0.2.7   # via ruamel-yaml
 six==1.16.0               # via python-dateutil
 tomli==2.0.1              # via black
 typing-extensions==4.4.0  # via black
