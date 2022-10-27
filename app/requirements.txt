@@ -3,7 +3,7 @@ astunparse==1.6.3         # via tensorflow
 cachetools==5.2.0         # via google-auth
 certifi==2022.9.24        # via requests
 charset-normalizer==2.1.1  # via requests
-flatbuffers==22.9.24      # via tensorflow
+flatbuffers==22.10.26     # via tensorflow
 gast==0.4.0               # via tensorflow
 google-auth==2.13.0       # via google-auth-oauthlib, tensorboard
 google-auth-oauthlib==0.4.6  # via tensorboard
