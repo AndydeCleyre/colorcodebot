@@ -42,7 +42,7 @@ tensorboard-plugin-wit==1.8.1  # via tensorboard
 tensorflow==2.10.0        # via guesslang
 tensorflow-estimator==2.10.0  # via tensorflow
 tensorflow-io-gcs-filesystem==0.27.0  # via tensorflow
-termcolor==2.0.1          # via tensorflow
+termcolor==2.1.0          # via tensorflow
 typing-extensions==4.4.0  # via tensorflow
 urllib3==1.26.12          # via requests
 werkzeug==2.2.2           # via tensorboard
