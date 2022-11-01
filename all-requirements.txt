@@ -53,7 +53,7 @@ tensorboard-plugin-wit==1.8.1  # via -r app/requirements.txt, tensorboard
 tensorflow==2.10.0        # via -r app/requirements.txt, guesslang
 tensorflow-estimator==2.10.0  # via -r app/requirements.txt, tensorflow
 tensorflow-io-gcs-filesystem==0.27.0  # via -r app/requirements.txt, tensorflow
-termcolor==2.0.1          # via -r app/requirements.txt, tensorflow
+termcolor==2.1.0          # via -r app/requirements.txt, tensorflow
 tomli==2.0.1              # via -r ops-requirements.txt, black
 typing-extensions==4.4.0  # via -r app/dev-requirements.txt, -r app/requirements.txt, -r ops-requirements.txt, black, rich, tensorflow
 urllib3==1.26.12          # via -r app/requirements.txt, requests
