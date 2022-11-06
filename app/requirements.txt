@@ -46,7 +46,7 @@ termcolor==2.1.0          # via tensorflow
 typing-extensions==4.4.0  # via tensorflow
 urllib3==1.26.12          # via requests
 werkzeug==2.2.2           # via tensorboard
-wheel==0.38.1             # via astunparse, tensorboard
+wheel==0.38.2             # via astunparse, tensorboard
 wrapt==1.14.1             # via -r requirements.in, tensorflow
 zipp==3.10.0              # via importlib-metadata
 
