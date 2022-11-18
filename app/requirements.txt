@@ -5,7 +5,7 @@ certifi==2022.9.24        # via requests
 charset-normalizer==2.1.1  # via requests
 flatbuffers==22.10.26     # via tensorflow
 gast==0.4.0               # via tensorflow
-google-auth==2.13.0       # via google-auth-oauthlib, tensorboard
+google-auth==2.14.1       # via google-auth-oauthlib, tensorboard
 google-auth-oauthlib==0.4.6  # via tensorboard
 google-pasta==0.2.0       # via tensorflow
 grpcio==1.50.0            # via tensorboard, tensorflow
@@ -22,7 +22,7 @@ numpy==1.23.4             # via h5py, keras-preprocessing, opt-einsum, tensorboa
 oauthlib==3.2.2           # via requests-oauthlib
 opt-einsum==3.3.0         # via tensorflow
 packaging==21.3           # via tensorflow
-peewee==3.15.3            # via -r requirements.in
+peewee==3.15.4            # via -r requirements.in
 plumbum==1.8.0            # via -r requirements.in
 protobuf==3.19.6          # via tensorboard, tensorflow
 pyasn1==0.4.8             # via pyasn1-modules, rsa
@@ -39,16 +39,16 @@ structlog==22.1.0         # via -r requirements.in
 tensorboard==2.10.1       # via tensorflow
 tensorboard-data-server==0.6.1  # via tensorboard
 tensorboard-plugin-wit==1.8.1  # via tensorboard
-tensorflow==2.10.0        # via guesslang
+tensorflow==2.10.1        # via guesslang
 tensorflow-estimator==2.10.0  # via tensorflow
 tensorflow-io-gcs-filesystem==0.27.0  # via tensorflow
-termcolor==2.0.1          # via tensorflow
+termcolor==2.1.0          # via tensorflow
 typing-extensions==4.4.0  # via tensorflow
 urllib3==1.26.12          # via requests
 werkzeug==2.2.2           # via tensorboard
-wheel==0.37.1             # via astunparse, tensorboard
+wheel==0.38.4             # via astunparse, tensorboard
 wrapt==1.14.1             # via -r requirements.in, tensorflow
 zipp==3.10.0              # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
-setuptools==65.5.0        # via tensorboard, tensorflow
+setuptools==65.5.1        # via tensorboard, tensorflow
