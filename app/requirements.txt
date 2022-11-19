@@ -50,4 +50,4 @@ wrapt==1.14.1             # via -r requirements.in, tensorflow
 zipp==3.10.0              # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
-setuptools==65.5.1        # via tensorboard, tensorflow
+setuptools==65.6.0        # via tensorboard, tensorflow
