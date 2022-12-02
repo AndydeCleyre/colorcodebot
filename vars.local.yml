@@ -6,8 +6,7 @@ svcs:
       sops exec-env
       sops/colorcodebot.dev.yml
 
-      "./venv/bin/python
-      ./colorcodebot.py"
+      "./venv/bin/python ./colorcodebot.py"
     folder:
       run: ../../
       log: ../../../logs/colorcodebot
