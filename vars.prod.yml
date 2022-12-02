@@ -6,7 +6,8 @@ svcs:
       sops exec-env
       sops/colorcodebot.prod.yml
 
-      "s6-setuidgid colorcodebot ./venv/bin/python
+      "backtick HOME { homeof colorcodebot }
+      s6-setuidgid colorcodebot ./venv/bin/python
       ./colorcodebot.py"
     folder:
       run: ../../
