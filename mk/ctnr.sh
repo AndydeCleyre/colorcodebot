@@ -35,22 +35,22 @@ ctnr=${img}-building
 user=$appname
 svcs_dir=/home/$user/svcs
 
-iosevka_pkg='https://github.com/AndydeCleyre/archbuilder_iosevka/releases/download/ccb-v15.5.0/ttf-iosevka-term-custom-git-1654337169-1-any.pkg.tar.zst'
+iosevka_pkg='https://github.com/AndydeCleyre/archbuilder_iosevka/releases/download/v16.4.0-ccb/ttf-iosevka-term-custom-git-1668963274-1-any.pkg.tar.zst'
 today=$(date +%Y.%j)
 tz="America/New_York"
 
 base_img='docker.io/library/archlinux:base'
-pkgs='highlight python sops ttf-nerd-fonts-symbols-mono'
+pkgs='highlight python silicon sops ttf-nerd-fonts-symbols-1000-em-mono'
 aur_pkgs='otf-openmoji s6 ttf-nanumgothic_coding'
 build_pkgs='git'
 build_groups='base-devel'
-gpg_keys='1A09227B1F435A33'
 
 fat="/tmp/* /usr/lib/python3.*/__pycache__"
 fat="$fat /home/$user/.cache/* /home/builder/.cache/* /root/.cache/*"
 fat="$fat /home/builder/* /home/builder/.cargo"
 fat="$fat /home/$user/.local/bin /root/.local/bin"
-fat="$fat /var/cache/pacman/pkg/* /var/lib/pacman/sync/* /var/lib/pacman/local/*"
+# fat="$fat /var/cache/pacman/pkg/* /var/lib/pacman/sync/* /var/lib/pacman/local/*"
+fat="$fat /var/cache/pacman/pkg/* /var/lib/pacman/sync/*"
 
 #################
 ### Functions ###
@@ -93,6 +93,7 @@ alias ctnr_pkg_del="ctnr_pkg -Rsn"
 
 ctnr_mkuser () {  # <username>
   if ! ctnr_run id "$1" >/dev/null 2 >&1; then
+    printf '%s\n' '' '>>> You may safely ignore the error above' '' >&2
     ctnr_run useradd -m "$1"
   fi
 }
@@ -139,23 +140,11 @@ printf '%s\n' 'builder ALL=(ALL) NOPASSWD: ALL' \
 ctnr_run -b git clone 'https://aur.archlinux.org/paru-bin' /tmp/paru-bin
 ctnr_cd /tmp/paru-bin
 ctnr_run -b makepkg --noconfirm -si
-for key in $gpg_keys; do
-  ctnr_run -b gpg --keyserver keyserver.ubuntu.com --recv-keys "$key"
-done
 ctnr_cd /home/builder
 # shellcheck disable=SC2086
 ctnr_run -b paru -S --noconfirm --needed $aur_pkgs
 ctnr_pkg_del paru-bin
 ctnr_cd "/home/$user"
-
-# Install custom Silicon package
-if ! ctnr_run pacman -Qq silicon-solidity-git; then
-  printf '%s\n' '' '>>> Installing our custom Silicon build . . .' '' >&2
-  ctnr_fetch -b "${repo}/mk/silicon" /tmp/silicon-solidity-git
-  ctnr_cd /tmp/silicon-solidity-git
-  ctnr_run -b makepkg --noconfirm -si
-  ctnr_cd "/home/$user"
-fi
 
 # Copy app and svcs into container
 tmp=$(mktemp -d)
@@ -181,6 +170,7 @@ if ctnr_run sh -c '[ -d /tmp/jumpstart_venv ]'; then
 else
   printf '%s\n' '' '>>> You may safely ignore the error above' '' >&2
 fi
+ctnr_run chown -R "${user}:${user}" /home/$user
 # Tidy up:
 rm -rf "$tmp"
 
@@ -212,6 +202,7 @@ ctnr_run sh -c "tar xf /tmp/ttf-iosevka-*.pkg.tar.zst -C / --wildcards --wildcar
 ctnr_run -u fc-cache -r
 
 # Install papertrail agent, if enabled
+command -v yaml-get || exit 1
 if [ "$(yaml-get -S -p 'svcs[name == papertrail].enabled' "$repo/vars.$deployment.yml")" = True ]; then
   ctnr_fetch \
     'https://github.com/papertrail/remote_syslog2/releases/download/v0.20/remote_syslog_linux_amd64.tar.gz' \
