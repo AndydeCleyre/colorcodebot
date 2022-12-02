@@ -205,7 +205,7 @@ ctnr_run -u fc-cache -r
 command -v yaml-get || exit 1
 if [ "$(yaml-get -S -p 'svcs[name == papertrail].enabled' "$repo/vars.$deployment.yml")" = True ]; then
   ctnr_fetch \
-    'https://github.com/papertrail/remote_syslog2/releases/download/v0.20/remote_syslog_linux_amd64.tar.gz' \
+    'https://github.com/papertrail/remote_syslog2/releases/download/v0.21/remote_syslog_linux_amd64.tar.gz' \
     /tmp
   ctnr_run tar xf \
     /tmp/remote_syslog_linux_amd64.tar.gz \
