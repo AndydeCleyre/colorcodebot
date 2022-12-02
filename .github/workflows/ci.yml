@@ -21,7 +21,7 @@ jobs:
       - name: install sops from GitHub
         run: >-
           wget -P /tmp
-          'https://github.com/mozilla/sops/releases/download/v3.7.1/sops_3.7.1_amd64.deb' &&
+          'https://github.com/mozilla/sops/releases/download/v3.7.3/sops_3.7.3_amd64.deb' &&
           sudo dpkg -i /tmp/sops_*.deb
 
       - name: configure sops secrets
