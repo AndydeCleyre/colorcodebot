@@ -2,7 +2,7 @@ absl-py==1.3.0            # via -r app/requirements.txt, tensorboard, tensorflow
 astunparse==1.6.3         # via -r app/requirements.txt, tensorflow
 black==22.10.0            # via -r ops-requirements.txt
 cachetools==5.2.0         # via -r app/requirements.txt, google-auth
-certifi==2022.9.24        # via -r app/requirements.txt, requests
+certifi==2022.12.7        # via -r app/requirements.txt, requests
 charset-normalizer==2.1.1  # via -r app/requirements.txt, requests
 click==8.1.3              # via -r ops-requirements.txt, black
 commonmark==0.9.1         # via -r app/dev-requirements.txt, rich
@@ -15,7 +15,7 @@ grpcio==1.51.1            # via -r app/requirements.txt, tensorboard, tensorflow
 guesslang @ git+https://github.com/andydecleyre/guesslang@tensorflow-looser  # via -r app/requirements.txt
 h5py==3.7.0               # via -r app/requirements.txt, tensorflow
 idna==3.4                 # via -r app/requirements.txt, requests
-importlib-metadata==5.1.0  # via -r app/requirements.txt, markdown
+importlib-metadata==5.1.0  # via -r app/requirements.txt
 isort==5.10.1             # via -r ops-requirements.txt
 keras==2.11.0             # via -r app/requirements.txt, tensorflow
 libclang==14.0.6          # via -r app/requirements.txt, tensorflow
@@ -25,7 +25,7 @@ mypy-extensions==0.4.3    # via -r ops-requirements.txt, black
 numpy==1.23.5             # via -r app/requirements.txt, h5py, opt-einsum, tensorboard, tensorflow
 oauthlib==3.2.2           # via -r app/requirements.txt, requests-oauthlib
 opt-einsum==3.3.0         # via -r app/requirements.txt, tensorflow
-packaging==21.3           # via -r app/requirements.txt, tensorflow
+packaging==22.0           # via -r app/requirements.txt, tensorflow
 pathspec==0.10.2          # via -r ops-requirements.txt, black
 peewee==3.15.4            # via -r app/requirements.txt
 platformdirs==2.6.0       # via -r ops-requirements.txt, black
@@ -34,7 +34,6 @@ protobuf==3.19.6          # via -r app/requirements.txt, tensorboard, tensorflow
 pyasn1==0.4.8             # via -r app/requirements.txt, pyasn1-modules, rsa
 pyasn1-modules==0.2.8     # via -r app/requirements.txt, google-auth
 pygments==2.13.0          # via -r app/dev-requirements.txt, rich
-pyparsing==3.0.9          # via -r app/requirements.txt, packaging
 pytelegrambotapi==4.8.0   # via -r app/requirements.txt
 python-dateutil==2.8.2    # via -r app/requirements.txt, -r ops-requirements.txt, strictyaml, yamlpath
 requests==2.28.1          # via -r app/requirements.txt, pytelegrambotapi, requests-oauthlib, tensorboard
@@ -54,7 +53,7 @@ tensorflow-estimator==2.11.0  # via -r app/requirements.txt, tensorflow
 tensorflow-io-gcs-filesystem==0.28.0  # via -r app/requirements.txt, tensorflow
 termcolor==2.1.1          # via -r app/requirements.txt, tensorflow
 tomli==2.0.1              # via -r ops-requirements.txt, black
-typing-extensions==4.4.0  # via -r app/dev-requirements.txt, -r app/requirements.txt, -r ops-requirements.txt, black, rich, tensorflow
+typing-extensions==4.4.0  # via -r app/dev-requirements.txt, -r app/requirements.txt, -r ops-requirements.txt, tensorflow
 urllib3==1.26.13          # via -r app/requirements.txt, requests
 werkzeug==2.2.2           # via -r app/requirements.txt, tensorboard
 wheel==0.38.4             # via -r app/requirements.txt, astunparse, tensorboard
