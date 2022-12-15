@@ -15,7 +15,7 @@ grpcio==1.51.1            # via -r app/requirements.txt, tensorboard, tensorflow
 guesslang @ git+https://github.com/andydecleyre/guesslang@tensorflow-looser  # via -r app/requirements.txt
 h5py==3.7.0               # via -r app/requirements.txt, tensorflow
 idna==3.4                 # via -r app/requirements.txt, requests
-isort==5.11.1             # via -r ops-requirements.txt
+isort==5.11.2             # via -r ops-requirements.txt
 keras==2.11.0             # via -r app/requirements.txt, tensorflow
 libclang==14.0.6          # via -r app/requirements.txt, tensorflow
 markdown==3.4.1           # via -r app/requirements.txt, tensorboard
@@ -41,6 +41,7 @@ rich==12.6.0              # via -r app/dev-requirements.txt
 rsa==4.9                  # via -r app/requirements.txt, google-auth
 ruamel-yaml==0.17.21      # via -r ops-requirements.txt, yamlpath
 ruamel-yaml-clib==0.2.7   # via -r ops-requirements.txt, ruamel-yaml
+setuptools==65.6.3        # via -r app/requirements.txt, tensorboard, tensorflow
 six==1.16.0               # via -r app/requirements.txt, -r ops-requirements.txt, astunparse, google-auth, google-pasta, python-dateutil, tensorflow
 strictyaml==1.6.2         # via -r app/requirements.txt
 structlog==22.3.0         # via -r app/requirements.txt
@@ -59,6 +60,3 @@ wheel==0.38.4             # via -r app/requirements.txt, astunparse, tensorboard
 wheezy-template==3.1.0    # via -r ops-requirements.txt
 wrapt==1.14.1             # via -r app/requirements.txt, tensorflow
 yamlpath==3.6.9           # via -r ops-requirements.txt
-
-# The following packages are considered to be unsafe in a requirements file:
-setuptools==65.6.3        # via -r app/requirements.txt, tensorboard, tensorflow
