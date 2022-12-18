@@ -15,7 +15,7 @@ grpcio==1.51.1            # via -r app/requirements.txt, tensorboard, tensorflow
 guesslang @ git+https://github.com/andydecleyre/guesslang@tensorflow-looser  # via -r app/requirements.txt
 h5py==3.7.0               # via -r app/requirements.txt, tensorflow
 idna==3.4                 # via -r app/requirements.txt, requests
-isort==5.11.2             # via -r ops-requirements.txt
+isort==5.11.3             # via -r ops-requirements.txt
 keras==2.11.0             # via -r app/requirements.txt, tensorflow
 libclang==14.0.6          # via -r app/requirements.txt, tensorflow
 markdown==3.4.1           # via -r app/requirements.txt, tensorboard
