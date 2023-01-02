@@ -21,7 +21,7 @@ oauthlib==3.2.2           # via requests-oauthlib
 opt-einsum==3.3.0         # via tensorflow
 packaging==22.0           # via tensorflow
 peewee==3.15.4            # via -r requirements.in
-plumbum==1.8.0            # via -r requirements.in
+plumbum==1.8.1            # via -r requirements.in
 protobuf==3.19.6          # via tensorboard, tensorflow
 pyasn1==0.4.8             # via pyasn1-modules, rsa
 pyasn1-modules==0.2.8     # via google-auth
