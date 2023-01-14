@@ -34,7 +34,7 @@ setuptools==65.7.0        # via tensorboard, tensorflow
 six==1.16.0               # via astunparse, google-auth, google-pasta, python-dateutil, tensorflow
 strictyaml==1.6.2         # via -r requirements.in
 structlog==22.3.0         # via -r requirements.in
-tensorboard==2.11.1       # via tensorflow
+tensorboard==2.11.2       # via tensorflow
 tensorboard-data-server==0.6.1  # via tensorboard
 tensorboard-plugin-wit==1.8.1  # via tensorboard
 tensorflow==2.11.0        # via guesslang
