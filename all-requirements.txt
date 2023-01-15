@@ -45,7 +45,7 @@ setuptools==65.7.0        # via -r app/requirements.txt, tensorboard, tensorflow
 six==1.16.0               # via -r app/requirements.txt, -r ops-requirements.txt, astunparse, google-auth, google-pasta, python-dateutil, tensorflow
 strictyaml==1.6.2         # via -r app/requirements.txt
 structlog==22.3.0         # via -r app/requirements.txt
-tensorboard==2.11.1       # via -r app/requirements.txt, tensorflow
+tensorboard==2.11.2       # via -r app/requirements.txt, tensorflow
 tensorboard-data-server==0.6.1  # via -r app/requirements.txt, tensorboard
 tensorboard-plugin-wit==1.8.1  # via -r app/requirements.txt, tensorboard
 tensorflow==2.11.0        # via -r app/requirements.txt, guesslang
