@@ -19,7 +19,7 @@ isort==5.11.4             # via -r ops-requirements.txt
 keras==2.11.0             # via -r app/requirements.txt, tensorflow
 libclang==15.0.6.1        # via -r app/requirements.txt, tensorflow
 markdown==3.4.1           # via -r app/requirements.txt, tensorboard
-markupsafe==2.1.1         # via -r app/requirements.txt, werkzeug
+markupsafe==2.1.2         # via -r app/requirements.txt, werkzeug
 mypy-extensions==0.4.3    # via -r ops-requirements.txt, black
 numpy==1.24.1             # via -r app/requirements.txt, h5py, opt-einsum, tensorboard, tensorflow
 oauthlib==3.2.2           # via -r app/requirements.txt, requests-oauthlib
