@@ -47,4 +47,4 @@ wheel==0.38.4             # via astunparse, tensorboard
 wrapt==1.14.1             # via -r requirements.in, tensorflow
 
 # The following packages are considered to be unsafe in a requirements file:
-setuptools==67.0.0        # via tensorboard, tensorflow
+setuptools==67.1.0        # via tensorboard, tensorflow
