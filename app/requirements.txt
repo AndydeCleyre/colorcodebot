@@ -40,11 +40,11 @@ tensorflow==2.11.0        # via guesslang
 tensorflow-estimator==2.11.0  # via tensorflow
 tensorflow-io-gcs-filesystem==0.30.0  # via tensorflow
 termcolor==2.2.0          # via tensorflow
-typing-extensions==4.4.0  # via tensorflow
+typing-extensions==4.5.0  # via tensorflow
 urllib3==1.26.14          # via requests
-werkzeug==2.2.2           # via tensorboard
+werkzeug==2.2.3           # via tensorboard
 wheel==0.38.4             # via astunparse, tensorboard
 wrapt==1.14.1             # via -r requirements.in, tensorflow
 
 # The following packages are considered to be unsafe in a requirements file:
-setuptools==67.2.0        # via tensorboard, tensorflow
+setuptools==67.3.1        # via tensorboard, tensorflow
