@@ -53,13 +53,13 @@ tensorflow-estimator==2.11.0  # via -r app/requirements.txt, tensorflow
 tensorflow-io-gcs-filesystem==0.30.0  # via -r app/requirements.txt, tensorflow
 termcolor==2.2.0          # via -r app/requirements.txt, tensorflow
 tomli==2.0.1              # via -r ops-requirements.txt, black
-typing-extensions==4.4.0  # via -r app/requirements.txt, tensorflow
+typing-extensions==4.5.0  # via -r app/requirements.txt, tensorflow
 urllib3==1.26.14          # via -r app/requirements.txt, requests
-werkzeug==2.2.2           # via -r app/requirements.txt, tensorboard
+werkzeug==2.2.3           # via -r app/requirements.txt, tensorboard
 wheel==0.38.4             # via -r app/requirements.txt, astunparse, tensorboard
 wheezy-template==3.1.0    # via -r ops-requirements.txt
 wrapt==1.14.1             # via -r app/requirements.txt, tensorflow
 yamlpath==3.7.0           # via -r ops-requirements.txt
 
 # The following packages are considered to be unsafe in a requirements file:
-setuptools==67.2.0        # via -r app/requirements.txt, tensorboard, tensorflow
+setuptools==67.3.1        # via -r app/requirements.txt, tensorboard, tensorflow
