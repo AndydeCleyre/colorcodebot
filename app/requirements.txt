@@ -20,7 +20,7 @@ numpy==1.24.2             # via h5py, opt-einsum, tensorboard, tensorflow
 oauthlib==3.2.2           # via requests-oauthlib
 opt-einsum==3.3.0         # via tensorflow
 packaging==23.0           # via tensorflow
-peewee==3.15.4            # via -r requirements.in
+peewee==3.16.0            # via -r requirements.in
 plumbum==1.8.1            # via -r requirements.in
 protobuf==3.19.6          # via tensorboard, tensorflow
 pyasn1==0.4.8             # via pyasn1-modules, rsa
