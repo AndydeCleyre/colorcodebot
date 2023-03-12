@@ -28,7 +28,7 @@ opt-einsum==3.3.0         # via -r app/requirements.txt, tensorflow
 packaging==23.0           # via -r app/requirements.txt, -r ops-requirements.txt, black, tensorflow
 pathspec==0.11.0          # via -r ops-requirements.txt, black
 peewee==3.16.0            # via -r app/requirements.txt
-platformdirs==3.1.0       # via -r ops-requirements.txt, black
+platformdirs==3.1.1       # via -r ops-requirements.txt, black
 plumbum==1.8.1            # via -r app/requirements.txt
 protobuf==3.19.6          # via -r app/requirements.txt, tensorboard, tensorflow
 pyasn1==0.4.8             # via -r app/requirements.txt, pyasn1-modules, rsa
@@ -43,7 +43,7 @@ rsa==4.9                  # via -r app/requirements.txt, google-auth
 ruamel-yaml==0.17.21      # via -r ops-requirements.txt, yamlpath
 ruamel-yaml-clib==0.2.7   # via -r ops-requirements.txt, ruamel-yaml
 six==1.16.0               # via -r app/requirements.txt, -r ops-requirements.txt, astunparse, google-auth, google-pasta, python-dateutil, tensorflow
-strictyaml==1.6.2         # via -r app/requirements.txt
+strictyaml==1.7.3         # via -r app/requirements.txt
 structlog==22.3.0         # via -r app/requirements.txt
 tensorboard==2.11.2       # via -r app/requirements.txt, tensorflow
 tensorboard-data-server==0.6.1  # via -r app/requirements.txt, tensorboard
@@ -54,7 +54,7 @@ tensorflow-io-gcs-filesystem==0.31.0  # via -r app/requirements.txt, tensorflow
 termcolor==2.2.0          # via -r app/requirements.txt, tensorflow
 tomli==2.0.1              # via -r ops-requirements.txt, black
 typing-extensions==4.5.0  # via -r app/requirements.txt, tensorflow
-urllib3==1.26.14          # via -r app/requirements.txt, requests
+urllib3==1.26.15          # via -r app/requirements.txt, requests
 werkzeug==2.2.3           # via -r app/requirements.txt, tensorboard
 wheel==0.38.4             # via -r app/requirements.txt, astunparse, tensorboard
 wheezy-template==3.1.0    # via -r ops-requirements.txt
