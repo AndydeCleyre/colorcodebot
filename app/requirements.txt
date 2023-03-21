@@ -36,7 +36,7 @@ structlog==22.3.0         # via -r requirements.in
 tensorboard==2.11.2       # via tensorflow
 tensorboard-data-server==0.6.1  # via tensorboard
 tensorboard-plugin-wit==1.8.1  # via tensorboard
-tensorflow==2.11.0        # via guesslang
+tensorflow==2.11.1        # via guesslang
 tensorflow-estimator==2.11.0  # via tensorflow
 tensorflow-io-gcs-filesystem==0.31.0  # via tensorflow
 termcolor==2.2.0          # via tensorflow
