@@ -48,7 +48,7 @@ structlog==22.3.0         # via -r app/requirements.txt
 tensorboard==2.11.2       # via -r app/requirements.txt, tensorflow
 tensorboard-data-server==0.6.1  # via -r app/requirements.txt, tensorboard
 tensorboard-plugin-wit==1.8.1  # via -r app/requirements.txt, tensorboard
-tensorflow==2.11.0        # via -r app/requirements.txt, guesslang
+tensorflow==2.11.1        # via -r app/requirements.txt, guesslang
 tensorflow-estimator==2.11.0  # via -r app/requirements.txt, tensorflow
 tensorflow-io-gcs-filesystem==0.31.0  # via -r app/requirements.txt, tensorflow
 termcolor==2.2.0          # via -r app/requirements.txt, tensorflow
