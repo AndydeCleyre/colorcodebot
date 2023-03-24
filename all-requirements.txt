@@ -15,22 +15,23 @@ guesslang @ git+https://github.com/andydecleyre/guesslang@tensorflow-looser  # v
 h5py==3.8.0               # via -r app/requirements.txt, tensorflow
 idna==3.4                 # via -r app/requirements.txt, requests
 isort==5.12.0             # via -r ops-requirements.txt
-keras==2.11.0             # via -r app/requirements.txt, tensorflow
+jax==0.4.6                # via -r app/requirements.txt, tensorflow
+keras==2.12.0             # via -r app/requirements.txt, tensorflow
 libclang==15.0.6.1        # via -r app/requirements.txt, tensorflow
-markdown==3.4.1           # via -r app/requirements.txt, tensorboard
+markdown==3.4.2           # via -r app/requirements.txt, tensorboard
 markdown-it-py==2.2.0     # via -r app/dev-requirements.txt, rich
 markupsafe==2.1.2         # via -r app/requirements.txt, werkzeug
 mdurl==0.1.2              # via -r app/dev-requirements.txt, markdown-it-py
 mypy-extensions==1.0.0    # via -r ops-requirements.txt, black
-numpy==1.24.2             # via -r app/requirements.txt, h5py, opt-einsum, tensorboard, tensorflow
+numpy==1.23.5             # via -r app/requirements.txt, h5py, jax, opt-einsum, scipy, tensorboard, tensorflow
 oauthlib==3.2.2           # via -r app/requirements.txt, requests-oauthlib
-opt-einsum==3.3.0         # via -r app/requirements.txt, tensorflow
+opt-einsum==3.3.0         # via -r app/requirements.txt, jax, tensorflow
 packaging==23.0           # via -r app/requirements.txt, -r ops-requirements.txt, black, tensorflow
 pathspec==0.11.1          # via -r ops-requirements.txt, black
 peewee==3.16.0            # via -r app/requirements.txt
 platformdirs==3.1.1       # via -r ops-requirements.txt, black
 plumbum==1.8.1            # via -r app/requirements.txt
-protobuf==3.19.6          # via -r app/requirements.txt, tensorboard, tensorflow
+protobuf==4.22.1          # via -r app/requirements.txt, tensorboard, tensorflow
 pyasn1==0.4.8             # via -r app/requirements.txt, pyasn1-modules, rsa
 pyasn1-modules==0.2.8     # via -r app/requirements.txt, google-auth
 pygments==2.14.0          # via -r app/dev-requirements.txt, rich
@@ -42,14 +43,15 @@ rich==13.3.2              # via -r app/dev-requirements.txt
 rsa==4.9                  # via -r app/requirements.txt, google-auth
 ruamel-yaml==0.17.21      # via -r ops-requirements.txt, yamlpath
 ruamel-yaml-clib==0.2.7   # via -r ops-requirements.txt, ruamel-yaml
+scipy==1.10.1             # via -r app/requirements.txt, jax
 six==1.16.0               # via -r app/requirements.txt, -r ops-requirements.txt, astunparse, google-auth, google-pasta, python-dateutil, tensorflow
 strictyaml==1.7.3         # via -r app/requirements.txt
 structlog==22.3.0         # via -r app/requirements.txt
-tensorboard==2.11.2       # via -r app/requirements.txt, tensorflow
-tensorboard-data-server==0.6.1  # via -r app/requirements.txt, tensorboard
+tensorboard==2.12.0       # via -r app/requirements.txt, tensorflow
+tensorboard-data-server==0.7.0  # via -r app/requirements.txt, tensorboard
 tensorboard-plugin-wit==1.8.1  # via -r app/requirements.txt, tensorboard
-tensorflow==2.11.1        # via -r app/requirements.txt, guesslang
-tensorflow-estimator==2.11.0  # via -r app/requirements.txt, tensorflow
+tensorflow==2.12.0        # via -r app/requirements.txt, guesslang
+tensorflow-estimator==2.12.0  # via -r app/requirements.txt, tensorflow
 tensorflow-io-gcs-filesystem==0.31.0  # via -r app/requirements.txt, tensorflow
 termcolor==2.2.0          # via -r app/requirements.txt, tensorflow
 tomli==2.0.1              # via -r ops-requirements.txt, black
@@ -58,7 +60,7 @@ urllib3==1.26.15          # via -r app/requirements.txt, requests
 werkzeug==2.2.3           # via -r app/requirements.txt, tensorboard
 wheel==0.40.0             # via -r app/requirements.txt, astunparse, tensorboard
 wheezy-template==3.1.0    # via -r ops-requirements.txt
-wrapt==1.15.0             # via -r app/requirements.txt, tensorflow
+wrapt==1.14.1             # via -r app/requirements.txt, tensorflow
 yamlpath==3.7.0           # via -r ops-requirements.txt
 
 # The following packages are considered to be unsafe in a requirements file:
