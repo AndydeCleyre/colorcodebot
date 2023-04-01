@@ -6,7 +6,7 @@ charset-normalizer==3.1.0  # via requests
 flatbuffers==23.3.3       # via tensorflow
 gast==0.4.0               # via tensorflow
 google-auth==2.17.1       # via google-auth-oauthlib, tensorboard
-google-auth-oauthlib==0.4.6  # via tensorboard
+google-auth-oauthlib==1.0.0  # via tensorboard
 google-pasta==0.2.0       # via tensorflow
 grpcio==1.53.0            # via tensorboard, tensorflow
 guesslang @ git+https://github.com/andydecleyre/guesslang@tensorflow-looser  # via -r requirements.in
@@ -36,7 +36,7 @@ scipy==1.10.1             # via jax
 six==1.16.0               # via astunparse, google-auth, google-pasta, python-dateutil, tensorflow
 strictyaml==1.7.3         # via -r requirements.in
 structlog==22.3.0         # via -r requirements.in
-tensorboard==2.12.0       # via tensorflow
+tensorboard==2.12.1       # via tensorflow
 tensorboard-data-server==0.7.0  # via tensorboard
 tensorboard-plugin-wit==1.8.1  # via tensorboard
 tensorflow==2.12.0        # via guesslang
