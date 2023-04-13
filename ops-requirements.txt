@@ -2,7 +2,7 @@ black==23.3.0             # via -r ops-requirements.in
 click==8.1.3              # via black
 isort==5.12.0             # via -r ops-requirements.in
 mypy-extensions==1.0.0    # via black
-packaging==23.0           # via black
+packaging==23.1           # via black
 pathspec==0.11.1          # via black
 platformdirs==3.2.0       # via black
 python-dateutil==2.8.2    # via yamlpath
