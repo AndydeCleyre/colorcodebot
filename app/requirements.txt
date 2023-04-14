@@ -36,7 +36,7 @@ scipy==1.10.1             # via jax
 six==1.16.0               # via astunparse, google-auth, google-pasta, python-dateutil, tensorflow
 strictyaml==1.7.3         # via -r requirements.in
 structlog==23.1.0         # via -r requirements.in
-tensorboard==2.12.1       # via tensorflow
+tensorboard==2.12.2       # via tensorflow
 tensorboard-data-server==0.7.0  # via tensorboard
 tensorboard-plugin-wit==1.8.1  # via tensorboard
 tensorflow==2.12.0        # via guesslang
