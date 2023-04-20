@@ -29,13 +29,13 @@ oauthlib==3.2.2           # via -r app/requirements.txt, requests-oauthlib
 opt-einsum==3.3.0         # via -r app/requirements.txt, jax, tensorflow
 packaging==23.1           # via -r app/requirements.txt, -r ops-requirements.txt, black, tensorflow
 pathspec==0.11.1          # via -r ops-requirements.txt, black
-peewee==3.16.0            # via -r app/requirements.txt
+peewee==3.16.1            # via -r app/requirements.txt
 platformdirs==3.2.0       # via -r ops-requirements.txt, black
 plumbum==1.8.1            # via -r app/requirements.txt
 protobuf==4.22.3          # via -r app/requirements.txt, tensorboard, tensorflow
 pyasn1==0.4.8             # via -r app/requirements.txt, pyasn1-modules, rsa
 pyasn1-modules==0.2.8     # via -r app/requirements.txt, google-auth
-pygments==2.15.0          # via -r app/dev-requirements.txt, rich
+pygments==2.15.1          # via -r app/dev-requirements.txt, rich
 pytelegrambotapi==4.11.0  # via -r app/requirements.txt
 python-dateutil==2.8.2    # via -r app/requirements.txt, -r ops-requirements.txt, strictyaml, yamlpath
 requests==2.28.2          # via -r app/requirements.txt, pytelegrambotapi, requests-oauthlib, tensorboard
