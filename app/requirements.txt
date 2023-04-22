@@ -22,7 +22,7 @@ numpy==1.23.5             # via h5py, jax, ml-dtypes, opt-einsum, scipy, tensorb
 oauthlib==3.2.2           # via requests-oauthlib
 opt-einsum==3.3.0         # via jax, tensorflow
 packaging==23.1           # via tensorflow
-peewee==3.16.1            # via -r requirements.in
+peewee==3.16.2            # via -r requirements.in
 plumbum==1.8.1            # via -r requirements.in
 protobuf==4.22.3          # via tensorboard, tensorflow
 pyasn1==0.5.0             # via pyasn1-modules, rsa
@@ -50,4 +50,4 @@ wheel==0.40.0             # via astunparse, tensorboard
 wrapt==1.14.1             # via -r requirements.in, tensorflow
 
 # The following packages are considered to be unsafe in a requirements file:
-setuptools==67.7.0        # via tensorboard, tensorflow
+setuptools==67.7.1        # via tensorboard, tensorflow
