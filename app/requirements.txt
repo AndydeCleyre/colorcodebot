@@ -45,7 +45,7 @@ tensorflow-io-gcs-filesystem==0.32.0  # via tensorflow
 termcolor==2.3.0          # via tensorflow
 typing-extensions==4.5.0  # via tensorflow
 urllib3==1.26.15          # via requests
-werkzeug==2.3.2           # via tensorboard
+werkzeug==2.3.3           # via tensorboard
 wheel==0.40.0             # via astunparse, tensorboard
 wrapt==1.14.1             # via -r requirements.in, tensorflow
 
