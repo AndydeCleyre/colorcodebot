@@ -24,12 +24,12 @@ opt-einsum==3.3.0         # via jax, tensorflow
 packaging==23.1           # via tensorflow
 peewee==3.16.2            # via -r requirements.in
 plumbum==1.8.1            # via -r requirements.in
-protobuf==4.22.3          # via tensorboard, tensorflow
+protobuf==4.22.4          # via tensorboard, tensorflow
 pyasn1==0.5.0             # via pyasn1-modules, rsa
 pyasn1-modules==0.3.0     # via google-auth
 pytelegrambotapi==4.11.0  # via -r requirements.in
 python-dateutil==2.8.2    # via strictyaml
-requests==2.29.0          # via pytelegrambotapi, requests-oauthlib, tensorboard
+requests==2.30.0          # via pytelegrambotapi, requests-oauthlib, tensorboard
 requests-oauthlib==1.3.1  # via google-auth-oauthlib
 rsa==4.9                  # via google-auth
 scipy==1.10.1             # via jax
@@ -43,7 +43,7 @@ tensorflow-estimator==2.12.0  # via tensorflow
 tensorflow-io-gcs-filesystem==0.32.0  # via tensorflow
 termcolor==2.3.0          # via tensorflow
 typing-extensions==4.5.0  # via tensorflow
-urllib3==1.26.15          # via requests
+urllib3==2.0.2            # via requests
 werkzeug==2.3.3           # via tensorboard
 wheel==0.40.0             # via astunparse, tensorboard
 wrapt==1.14.1             # via -r requirements.in, tensorflow
