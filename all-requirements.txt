@@ -32,7 +32,7 @@ pathspec==0.11.1          # via -r ops-requirements.txt, black
 peewee==3.16.2            # via -r app/requirements.txt
 platformdirs==3.5.0       # via -r ops-requirements.txt, black
 plumbum==1.8.1            # via -r app/requirements.txt
-protobuf==4.22.4          # via -r app/requirements.txt, tensorboard, tensorflow
+protobuf==4.23.0          # via -r app/requirements.txt, tensorboard, tensorflow
 pyasn1==0.5.0             # via -r app/requirements.txt, pyasn1-modules, rsa
 pyasn1-modules==0.3.0     # via -r app/requirements.txt, google-auth
 pygments==2.15.1          # via -r app/dev-requirements.txt, rich
@@ -57,7 +57,7 @@ termcolor==2.3.0          # via -r app/requirements.txt, tensorflow
 tomli==2.0.1              # via -r ops-requirements.txt, black
 typing-extensions==4.5.0  # via -r app/requirements.txt, tensorflow
 urllib3==2.0.2            # via -r app/requirements.txt, requests
-werkzeug==2.3.3           # via -r app/requirements.txt, tensorboard
+werkzeug==2.3.4           # via -r app/requirements.txt, tensorboard
 wheel==0.40.0             # via -r app/requirements.txt, astunparse, tensorboard
 wheezy-template==3.1.0    # via -r ops-requirements.txt
 wrapt==1.14.1             # via -r app/requirements.txt, tensorflow
