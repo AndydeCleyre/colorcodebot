@@ -8,7 +8,7 @@ gast==0.4.0               # via tensorflow
 google-auth==2.18.0       # via google-auth-oauthlib, tensorboard
 google-auth-oauthlib==1.0.0  # via tensorboard
 google-pasta==0.2.0       # via tensorflow
-grpcio==1.54.0            # via tensorboard, tensorflow
+grpcio==1.54.2            # via tensorboard, tensorflow
 guesslang @ git+https://github.com/andydecleyre/guesslang@tensorflow-looser  # via -r requirements.in
 h5py==3.8.0               # via tensorflow
 idna==3.4                 # via requests
