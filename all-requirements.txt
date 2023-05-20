@@ -36,7 +36,7 @@ protobuf==4.23.1          # via -r app/requirements.txt, tensorboard, tensorflow
 pyasn1==0.5.0             # via -r app/requirements.txt, pyasn1-modules, rsa
 pyasn1-modules==0.3.0     # via -r app/requirements.txt, google-auth
 pygments==2.15.1          # via -r app/dev-requirements.txt, rich
-pytelegrambotapi==4.11.0  # via -r app/requirements.txt
+pytelegrambotapi==4.12.0  # via -r app/requirements.txt
 python-dateutil==2.8.2    # via -r app/requirements.txt, -r ops-requirements.txt, strictyaml, yamlpath
 requests==2.30.0          # via -r app/requirements.txt, pytelegrambotapi, requests-oauthlib, tensorboard
 requests-oauthlib==1.3.1  # via -r app/requirements.txt, google-auth-oauthlib
