@@ -8,7 +8,7 @@ gast==0.4.0               # via tensorflow
 google-auth==2.18.1       # via google-auth-oauthlib, tensorboard
 google-auth-oauthlib==1.0.0  # via tensorboard
 google-pasta==0.2.0       # via tensorflow
-grpcio==1.55.0            # via tensorboard, tensorflow
+grpcio==1.54.2            # via tensorboard, tensorflow
 guesslang @ git+https://github.com/andydecleyre/guesslang@tensorflow-looser  # via -r requirements.in
 h5py==3.8.0               # via tensorflow
 idna==3.4                 # via requests
@@ -42,8 +42,8 @@ tensorflow==2.12.0        # via guesslang
 tensorflow-estimator==2.12.0  # via tensorflow
 tensorflow-io-gcs-filesystem==0.32.0  # via tensorflow
 termcolor==2.3.0          # via tensorflow
-typing-extensions==4.6.0  # via tensorflow
-urllib3==1.26.15          # via google-auth, requests
+typing-extensions==4.6.1  # via tensorflow
+urllib3==1.26.16          # via google-auth, requests
 werkzeug==2.3.4           # via tensorboard
 wheel==0.40.0             # via astunparse, tensorboard
 wrapt==1.14.1             # via -r requirements.in, tensorflow
