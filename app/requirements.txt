@@ -17,7 +17,7 @@ keras==2.12.0             # via tensorflow
 libclang==16.0.0          # via tensorflow
 markdown==3.4.3           # via tensorboard
 markupsafe==2.1.3         # via werkzeug
-ml-dtypes==0.1.0          # via jax
+ml-dtypes==0.2.0          # via jax
 numpy==1.23.5             # via h5py, jax, ml-dtypes, opt-einsum, scipy, tensorboard, tensorflow
 oauthlib==3.2.2           # via requests-oauthlib
 opt-einsum==3.3.0         # via jax, tensorflow
