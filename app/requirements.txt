@@ -12,7 +12,7 @@ grpcio==1.54.2            # via tensorboard, tensorflow
 guesslang @ git+https://github.com/andydecleyre/guesslang@tensorflow-looser  # via -r requirements.in
 h5py==3.8.0               # via tensorflow
 idna==3.4                 # via requests
-jax==0.4.11               # via tensorflow
+jax==0.4.12               # via tensorflow
 keras==2.12.0             # via tensorflow
 libclang==16.0.0          # via tensorflow
 markdown==3.4.3           # via tensorboard
@@ -44,7 +44,7 @@ tensorflow-io-gcs-filesystem==0.32.0  # via tensorflow
 termcolor==2.3.0          # via tensorflow
 typing-extensions==4.6.3  # via tensorflow
 urllib3==1.26.16          # via google-auth, requests
-werkzeug==2.3.5           # via tensorboard
+werkzeug==2.3.6           # via tensorboard
 wheel==0.40.0             # via astunparse, tensorboard
 wrapt==1.14.1             # via -r requirements.in, tensorflow
 
