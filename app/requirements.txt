@@ -5,7 +5,7 @@ certifi==2023.5.7         # via requests
 charset-normalizer==3.1.0  # via requests
 flatbuffers==23.5.26      # via tensorflow
 gast==0.4.0               # via tensorflow
-google-auth==2.19.1       # via google-auth-oauthlib, tensorboard
+google-auth==2.20.0       # via google-auth-oauthlib, tensorboard
 google-auth-oauthlib==1.0.0  # via tensorboard
 google-pasta==0.2.0       # via tensorflow
 grpcio==1.54.2            # via tensorboard, tensorflow
@@ -37,7 +37,7 @@ six==1.16.0               # via astunparse, google-auth, google-pasta, python-da
 strictyaml==1.7.3         # via -r requirements.in
 structlog==23.1.0         # via -r requirements.in
 tensorboard==2.12.3       # via tensorflow
-tensorboard-data-server==0.7.0  # via tensorboard
+tensorboard-data-server==0.7.1  # via tensorboard
 tensorflow==2.12.0        # via guesslang
 tensorflow-estimator==2.12.0  # via tensorflow
 tensorflow-io-gcs-filesystem==0.32.0  # via tensorflow
