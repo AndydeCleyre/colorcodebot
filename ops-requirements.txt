@@ -4,7 +4,7 @@ isort==5.12.0             # via -r ops-requirements.in
 mypy-extensions==1.0.0    # via black
 packaging==23.1           # via black
 pathspec==0.11.1          # via black
-platformdirs==3.5.3       # via black
+platformdirs==3.6.0       # via black
 python-dateutil==2.8.2    # via yamlpath
 ruamel-yaml==0.17.21      # via yamlpath
 ruamel-yaml-clib==0.2.7   # via ruamel-yaml
