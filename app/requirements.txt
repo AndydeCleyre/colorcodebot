@@ -10,7 +10,7 @@ google-auth-oauthlib==1.0.0  # via tensorboard
 google-pasta==0.2.0       # via tensorflow
 grpcio==1.54.2            # via tensorboard, tensorflow
 guesslang @ git+https://github.com/andydecleyre/guesslang@tensorflow-looser  # via -r requirements.in
-h5py==3.8.0               # via tensorflow
+h5py==3.9.0               # via tensorflow
 idna==3.4                 # via requests
 jax==0.4.12               # via tensorflow
 keras==2.12.0             # via tensorflow
