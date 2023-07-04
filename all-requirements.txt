@@ -55,7 +55,7 @@ tensorflow-estimator==2.12.0  # via -r app/requirements.txt, tensorflow
 tensorflow-io-gcs-filesystem==0.32.0  # via -r app/requirements.txt, tensorflow
 termcolor==2.3.0          # via -r app/requirements.txt, tensorflow
 tomli==2.0.1              # via -r ops-requirements.txt, black
-typing-extensions==4.7.0  # via -r app/requirements.txt, tensorflow
+typing-extensions==4.7.1  # via -r app/requirements.txt, tensorflow
 urllib3==1.26.16          # via -r app/requirements.txt, google-auth, requests
 werkzeug==2.3.6           # via -r app/requirements.txt, tensorboard
 wheel==0.40.0             # via -r app/requirements.txt, astunparse, tensorboard
