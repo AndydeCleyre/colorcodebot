@@ -15,18 +15,16 @@ guesslang @ git+https://github.com/andydecleyre/guesslang@tensorflow-looser  # v
 h5py==3.9.0               # via -r app/requirements.txt, tensorflow
 idna==3.4                 # via -r app/requirements.txt, requests
 isort==5.12.0             # via -r ops-requirements.txt
-jax==0.4.13               # via -r app/requirements.txt, tensorflow
-keras==2.12.0             # via -r app/requirements.txt, tensorflow
+keras==2.13.1             # via -r app/requirements.txt, tensorflow
 libclang==16.0.0          # via -r app/requirements.txt, tensorflow
 markdown==3.4.3           # via -r app/requirements.txt, tensorboard
 markdown-it-py==3.0.0     # via -r app/dev-requirements.txt, rich
 markupsafe==2.1.3         # via -r app/requirements.txt, werkzeug
 mdurl==0.1.2              # via -r app/dev-requirements.txt, markdown-it-py
-ml-dtypes==0.2.0          # via -r app/requirements.txt, jax
 mypy-extensions==1.0.0    # via -r ops-requirements.txt, black
-numpy==1.23.5             # via -r app/requirements.txt, h5py, jax, ml-dtypes, opt-einsum, scipy, tensorboard, tensorflow
+numpy==1.24.3             # via -r app/requirements.txt, h5py, opt-einsum, tensorboard, tensorflow
 oauthlib==3.2.2           # via -r app/requirements.txt, requests-oauthlib
-opt-einsum==3.3.0         # via -r app/requirements.txt, jax, tensorflow
+opt-einsum==3.3.0         # via -r app/requirements.txt, tensorflow
 packaging==23.1           # via -r app/requirements.txt, -r ops-requirements.txt, black, tensorflow
 pathspec==0.11.1          # via -r ops-requirements.txt, black
 peewee==3.16.2            # via -r app/requirements.txt
@@ -44,23 +42,22 @@ rich==13.4.2              # via -r app/dev-requirements.txt
 rsa==4.9                  # via -r app/requirements.txt, google-auth
 ruamel-yaml==0.17.21      # via -r ops-requirements.txt, yamlpath
 ruamel-yaml-clib==0.2.7   # via -r ops-requirements.txt, ruamel-yaml
-scipy==1.11.1             # via -r app/requirements.txt, jax
 six==1.16.0               # via -r app/requirements.txt, -r ops-requirements.txt, astunparse, google-auth, google-pasta, python-dateutil, tensorflow
 strictyaml==1.7.3         # via -r app/requirements.txt
 structlog==23.1.0         # via -r app/requirements.txt
-tensorboard==2.12.3       # via -r app/requirements.txt, tensorflow
+tensorboard==2.13.0       # via -r app/requirements.txt, tensorflow
 tensorboard-data-server==0.7.1  # via -r app/requirements.txt, tensorboard
-tensorflow==2.12.0        # via -r app/requirements.txt, guesslang
-tensorflow-estimator==2.12.0  # via -r app/requirements.txt, tensorflow
+tensorflow==2.13.0        # via -r app/requirements.txt, guesslang
+tensorflow-estimator==2.13.0  # via -r app/requirements.txt, tensorflow
 tensorflow-io-gcs-filesystem==0.32.0  # via -r app/requirements.txt, tensorflow
 termcolor==2.3.0          # via -r app/requirements.txt, tensorflow
 tomli==2.0.1              # via -r ops-requirements.txt, black
-typing-extensions==4.7.1  # via -r app/requirements.txt, tensorflow
+typing-extensions==4.5.0  # via -r app/requirements.txt, tensorflow
 urllib3==1.26.16          # via -r app/requirements.txt, google-auth, requests
 werkzeug==2.3.6           # via -r app/requirements.txt, tensorboard
 wheel==0.40.0             # via -r app/requirements.txt, astunparse, tensorboard
 wheezy-template==3.1.0    # via -r ops-requirements.txt
-wrapt==1.14.1             # via -r app/requirements.txt, tensorflow
+wrapt==1.15.0             # via -r app/requirements.txt, tensorflow
 yamlpath==3.8.0           # via -r ops-requirements.txt
 
 # The following packages are considered to be unsafe in a requirements file:
