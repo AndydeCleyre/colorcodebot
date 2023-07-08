@@ -4,7 +4,7 @@ black==23.3.0             # via -r ops-requirements.txt
 cachetools==5.3.1         # via -r app/requirements.txt, google-auth
 certifi==2023.5.7         # via -r app/requirements.txt, requests
 charset-normalizer==3.1.0  # via -r app/requirements.txt, requests
-click==8.1.3              # via -r ops-requirements.txt, black
+click==8.1.4              # via -r ops-requirements.txt, black
 flatbuffers==23.5.26      # via -r app/requirements.txt, tensorflow
 gast==0.4.0               # via -r app/requirements.txt, tensorflow
 google-auth==2.21.0       # via -r app/requirements.txt, google-auth-oauthlib, tensorboard
@@ -28,9 +28,9 @@ opt-einsum==3.3.0         # via -r app/requirements.txt, tensorflow
 packaging==23.1           # via -r app/requirements.txt, -r ops-requirements.txt, black, tensorflow
 pathspec==0.11.1          # via -r ops-requirements.txt, black
 peewee==3.16.2            # via -r app/requirements.txt
-platformdirs==3.8.0       # via -r ops-requirements.txt, black
+platformdirs==3.8.1       # via -r ops-requirements.txt, black
 plumbum==1.8.2            # via -r app/requirements.txt
-protobuf==4.23.3          # via -r app/requirements.txt, tensorboard, tensorflow
+protobuf==4.23.4          # via -r app/requirements.txt, tensorboard, tensorflow
 pyasn1==0.5.0             # via -r app/requirements.txt, pyasn1-modules, rsa
 pyasn1-modules==0.3.0     # via -r app/requirements.txt, google-auth
 pygments==2.15.1          # via -r app/dev-requirements.txt, rich
