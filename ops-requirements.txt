@@ -1,5 +1,5 @@
 black==23.7.0             # via -r ops-requirements.in
-click==8.1.4              # via black
+click==8.1.5              # via black
 isort==5.12.0             # via -r ops-requirements.in
 mypy-extensions==1.0.0    # via black
 packaging==23.1           # via black
