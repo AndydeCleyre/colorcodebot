@@ -26,7 +26,7 @@ numpy==1.24.3             # via -r app/requirements.txt, h5py, opt-einsum, tenso
 oauthlib==3.2.2           # via -r app/requirements.txt, requests-oauthlib
 opt-einsum==3.3.0         # via -r app/requirements.txt, tensorflow
 packaging==23.1           # via -r app/requirements.txt, -r ops-requirements.txt, black, tensorflow
-pathspec==0.11.1          # via -r ops-requirements.txt, black
+pathspec==0.11.2          # via -r ops-requirements.txt, black
 peewee==3.16.2            # via -r app/requirements.txt
 platformdirs==3.9.1       # via -r ops-requirements.txt, black
 plumbum==1.8.2            # via -r app/requirements.txt
@@ -56,7 +56,7 @@ typing-extensions==4.5.0  # via -r app/requirements.txt, tensorflow
 urllib3==1.26.16          # via -r app/requirements.txt, google-auth, requests
 werkzeug==2.3.6           # via -r app/requirements.txt, tensorboard
 wheel==0.41.0             # via -r app/requirements.txt, astunparse, tensorboard
-wheezy-template==3.2.0    # via -r ops-requirements.txt
+wheezy-template==3.2.1    # via -r ops-requirements.txt
 wrapt==1.15.0             # via -r app/requirements.txt, tensorflow
 yamlpath==3.8.0           # via -r ops-requirements.txt
 
