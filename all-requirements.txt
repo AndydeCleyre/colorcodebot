@@ -10,7 +10,7 @@ gast==0.4.0               # via -r app/requirements.txt, tensorflow
 google-auth==2.22.0       # via -r app/requirements.txt, google-auth-oauthlib, tensorboard
 google-auth-oauthlib==1.0.0  # via -r app/requirements.txt, tensorboard
 google-pasta==0.2.0       # via -r app/requirements.txt, tensorflow
-grpcio==1.56.2            # via -r app/requirements.txt, tensorboard, tensorflow
+grpcio==1.57.0            # via -r app/requirements.txt, tensorboard, tensorflow
 guesslang @ git+https://github.com/andydecleyre/guesslang@tensorflow-looser  # via -r app/requirements.txt
 h5py==3.9.0               # via -r app/requirements.txt, tensorflow
 idna==3.4                 # via -r app/requirements.txt, requests
