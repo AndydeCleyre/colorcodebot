@@ -22,7 +22,7 @@ opt-einsum==3.3.0         # via tensorflow
 packaging==23.1           # via tensorflow
 peewee==3.16.3            # via -r requirements.in
 plumbum==1.8.2            # via -r requirements.in
-protobuf==4.24.1          # via tensorboard, tensorflow
+protobuf==4.24.2          # via tensorboard, tensorflow
 pyasn1==0.5.0             # via pyasn1-modules, rsa
 pyasn1-modules==0.3.0     # via google-auth
 pytelegrambotapi==4.13.0  # via -r requirements.in
