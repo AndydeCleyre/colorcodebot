@@ -61,4 +61,4 @@ wrapt==1.15.0             # via -r app/requirements.txt, tensorflow
 yamlpath==3.8.0           # via -r ops-requirements.txt
 
 # The following packages are considered to be unsafe in a requirements file:
-setuptools==68.1.2        # via -r app/requirements.txt, tensorboard, tensorflow
+setuptools==68.2.0        # via -r app/requirements.txt, tensorboard, tensorflow
