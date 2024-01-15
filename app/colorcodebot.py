@@ -215,7 +215,6 @@ def retry(
     attempts: int = 6,
     seconds: float = 3,
 ) -> Union[WraptFunc, functools.partial[WraptFunc]]:
-
     if not original:  # needed to make args altogether optional
         return functools.partial(
             retry, exceptions=exceptions, attempts=attempts, seconds=seconds
@@ -701,7 +700,6 @@ class ColorCodeBot:
         query_message: Optional[Message] = None,
         ext: Optional[str] = None,
     ):
-
         if cb_query:
             query_message = cb_query.message
             ext = yload(cb_query.data)['ext']
