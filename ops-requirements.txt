@@ -11,5 +11,5 @@ ruamel-yaml-clib==0.2.12  # via ruamel-yaml
 six==1.16.0               # via python-dateutil
 tomli==2.0.2              # via black
 typing-extensions==4.12.2  # via black
-wheezy-template==3.2.2    # via -r ops-requirements.in
+wheezy-template==3.2.3    # via -r ops-requirements.in
 yamlpath==3.8.2           # via -r ops-requirements.in
