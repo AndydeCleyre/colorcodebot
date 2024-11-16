@@ -8,7 +8,7 @@ gast==0.4.0               # via tensorflow
 google-auth==2.36.0       # via google-auth-oauthlib, tensorboard
 google-auth-oauthlib==1.0.0  # via tensorboard
 google-pasta==0.2.0       # via tensorflow
-grpcio==1.67.1            # via tensorboard, tensorflow
+grpcio==1.68.0            # via tensorboard, tensorflow
 guesslang @ git+https://github.com/andydecleyre/guesslang@e8be843a519b3da59b573bc58744cb47978508ad  # via -r requirements.in
 h5py==3.12.1              # via tensorflow
 idna==3.10                # via requests
@@ -25,7 +25,7 @@ plumbum==1.9.0            # via -r requirements.in
 protobuf==4.25.5          # via tensorboard, tensorflow
 pyasn1==0.6.1             # via pyasn1-modules, rsa
 pyasn1-modules==0.4.1     # via google-auth
-pytelegrambotapi==4.23.0  # via -r requirements.in
+pytelegrambotapi==4.24.0  # via -r requirements.in
 python-dateutil==2.9.0.post0  # via strictyaml
 requests==2.32.3          # via pytelegrambotapi, requests-oauthlib, tensorboard
 requests-oauthlib==2.0.0  # via google-auth-oauthlib
