@@ -31,7 +31,7 @@ requests==2.32.3          # via pytelegrambotapi, requests-oauthlib, tensorboard
 requests-oauthlib==2.0.0  # via google-auth-oauthlib
 rsa==4.9                  # via google-auth
 setuptools==75.6.0        # via tensorboard, tensorflow
-six==1.16.0               # via astunparse, google-pasta, python-dateutil, tensorflow
+six==1.17.0               # via astunparse, google-pasta, python-dateutil, tensorflow
 strictyaml==1.7.3         # via -r requirements.in
 structlog==24.4.0         # via -r requirements.in
 tensorboard==2.13.0       # via tensorflow

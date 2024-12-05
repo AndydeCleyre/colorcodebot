@@ -8,7 +8,7 @@ platformdirs==4.3.6       # via black
 python-dateutil==2.9.0.post0  # via yamlpath
 ruamel-yaml==0.17.21      # via yamlpath
 ruamel-yaml-clib==0.2.12  # via ruamel-yaml
-six==1.16.0               # via python-dateutil
+six==1.17.0               # via python-dateutil
 tomli==2.2.1              # via black
 typing-extensions==4.12.2  # via black
 wheezy-template==3.2.3    # via -r ops-requirements.in
