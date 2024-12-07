@@ -25,7 +25,7 @@ plumbum==1.9.0            # via -r requirements.in
 protobuf==4.25.5          # via tensorboard, tensorflow
 pyasn1==0.6.1             # via pyasn1-modules, rsa
 pyasn1-modules==0.4.1     # via google-auth
-pytelegrambotapi==4.24.0  # via -r requirements.in
+pytelegrambotapi==4.25.0  # via -r requirements.in
 python-dateutil==2.9.0.post0  # via strictyaml
 requests==2.32.3          # via pytelegrambotapi, requests-oauthlib, tensorboard
 requests-oauthlib==2.0.0  # via google-auth-oauthlib
