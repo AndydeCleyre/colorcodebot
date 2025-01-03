@@ -497,6 +497,7 @@ class ColorCodeBot:
             ': ': 'factor',
             'USING: ': 'factor',
             'IN: ': 'factor',
+            'TUPLE: ': 'factor',
             # fmt: on
         }.items():
             if code.startswith(start):
