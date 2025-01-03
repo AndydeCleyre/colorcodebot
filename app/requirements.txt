@@ -1,11 +1,11 @@
 absl-py==2.1.0            # via tensorboard, tensorflow
 astunparse==1.6.3         # via tensorflow
 cachetools==5.5.0         # via google-auth
-certifi==2024.8.30        # via requests
-charset-normalizer==3.4.0  # via requests
-flatbuffers==24.3.25      # via tensorflow
+certifi==2024.12.14       # via requests
+charset-normalizer==3.4.1  # via requests
+flatbuffers==24.12.23     # via tensorflow
 gast==0.4.0               # via tensorflow
-google-auth==2.36.0       # via google-auth-oauthlib, tensorboard
+google-auth==2.37.0       # via google-auth-oauthlib, tensorboard
 google-auth-oauthlib==1.0.0  # via tensorboard
 google-pasta==0.2.0       # via tensorflow
 grpcio==1.68.1            # via tensorboard, tensorflow
@@ -25,7 +25,7 @@ plumbum==1.9.0            # via -r requirements.in
 protobuf==4.25.5          # via tensorboard, tensorflow
 pyasn1==0.6.1             # via pyasn1-modules, rsa
 pyasn1-modules==0.4.1     # via google-auth
-pytelegrambotapi==4.24.0  # via -r requirements.in
+pytelegrambotapi==4.25.0  # via -r requirements.in
 python-dateutil==2.9.0.post0  # via strictyaml
 requests==2.32.3          # via pytelegrambotapi, requests-oauthlib, tensorboard
 requests-oauthlib==2.0.0  # via google-auth-oauthlib
@@ -41,7 +41,7 @@ tensorflow-estimator==2.13.0  # via tensorflow
 tensorflow-io-gcs-filesystem==0.37.1  # via tensorflow
 termcolor==2.5.0          # via tensorflow
 typing-extensions==4.5.0  # via tensorflow
-urllib3==2.2.3            # via requests
+urllib3==2.3.0            # via requests
 werkzeug==3.1.3           # via tensorboard
 wheel==0.45.1             # via astunparse, tensorboard
 wrapt==1.17.0             # via tensorflow, -r requirements.in
