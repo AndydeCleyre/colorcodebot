@@ -12,6 +12,8 @@ jobs:
         with:
           ref: develop
 
+      - uses: jdx/mise-action@v2
+
       - name: hit it
         run: ./mk/reqs.sh
 
