@@ -33,7 +33,7 @@ rsa==4.9                  # via google-auth
 setuptools==75.8.0        # via tensorboard, tensorflow
 six==1.17.0               # via astunparse, google-pasta, python-dateutil, tensorflow
 strictyaml==1.7.3         # via -r requirements.in
-structlog==24.4.0         # via -r requirements.in
+structlog==25.1.0         # via -r requirements.in
 tensorboard==2.13.0       # via tensorflow
 tensorboard-data-server==0.7.2  # via tensorboard
 tensorflow==2.13.1        # via guesslang
