@@ -8,7 +8,7 @@ mdurl==0.1.2              # via markdown-it-py
 parso==0.8.4              # via jedi
 pexpect==4.9.0            # via ipython
 pickleshare==0.7.5        # via ipython
-prompt-toolkit==3.0.48    # via ipython
+prompt-toolkit==3.0.50    # via ipython
 ptyprocess==0.7.0         # via pexpect
 pygments==2.19.1          # via ipython, rich
 rich==13.9.4              # via -r dev-requirements.in
