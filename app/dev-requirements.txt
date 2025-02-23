@@ -1,5 +1,5 @@
 backcall==0.2.0           # via ipython
-decorator==5.1.1          # via ipython
+decorator==5.2.0          # via ipython
 ipython==7.34.0           # via -r dev-requirements.in
 jedi==0.19.2              # via ipython
 markdown-it-py==3.0.0     # via rich
