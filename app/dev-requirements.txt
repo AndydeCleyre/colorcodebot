@@ -12,6 +12,6 @@ prompt-toolkit==3.0.50    # via ipython
 ptyprocess==0.7.0         # via pexpect
 pygments==2.19.1          # via ipython, rich
 rich==13.9.4              # via -r dev-requirements.in
-setuptools==75.8.0        # via ipython, -c requirements.txt
+setuptools==75.8.1        # via ipython, -c requirements.txt
 traitlets==5.14.3         # via ipython, matplotlib-inline
 wcwidth==0.2.13           # via prompt-toolkit
