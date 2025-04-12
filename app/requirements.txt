@@ -14,7 +14,7 @@ h5py==3.13.0              # via tensorflow
 idna==3.10                # via requests
 keras==2.13.1             # via tensorflow
 libclang==18.1.1          # via tensorflow
-markdown==3.7             # via tensorboard
+markdown==3.8             # via tensorboard
 markupsafe==3.0.2         # via werkzeug
 numpy==1.24.3             # via h5py, tensorboard, tensorflow
 oauthlib==3.2.2           # via requests-oauthlib
