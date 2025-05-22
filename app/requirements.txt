@@ -5,7 +5,7 @@ certifi==2025.4.26        # via requests
 charset-normalizer==3.4.2  # via requests
 flatbuffers==25.2.10      # via tensorflow
 gast==0.4.0               # via tensorflow
-google-auth==2.40.1       # via google-auth-oauthlib, tensorboard
+google-auth==2.40.2       # via google-auth-oauthlib, tensorboard
 google-auth-oauthlib==1.0.0  # via tensorboard
 google-pasta==0.2.0       # via tensorflow
 grpcio==1.71.0            # via tensorboard, tensorflow
