@@ -17,7 +17,7 @@ libclang==18.1.1          # via tensorflow
 markdown==3.8             # via tensorboard
 markupsafe==3.0.2         # via werkzeug
 numpy==1.24.3             # via h5py, tensorboard, tensorflow
-oauthlib==3.2.2           # via requests-oauthlib
+oauthlib==3.3.0           # via requests-oauthlib
 opt-einsum==3.4.0         # via tensorflow
 packaging==25.0           # via tensorflow
 peewee==3.18.1            # via -r requirements.in
