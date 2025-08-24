@@ -5,7 +5,7 @@ jedi==0.19.2              # via ipython
 markdown-it-py==4.0.0     # via rich
 matplotlib-inline==0.1.7  # via ipython
 mdurl==0.1.2              # via markdown-it-py
-parso==0.8.4              # via jedi
+parso==0.8.5              # via jedi
 pexpect==4.9.0            # via ipython
 pickleshare==0.7.5        # via ipython
 prompt-toolkit==3.0.51    # via ipython
