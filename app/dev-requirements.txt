@@ -10,7 +10,7 @@ pexpect==4.9.0            # via ipython
 pickleshare==0.7.5        # via ipython
 prompt-toolkit==3.0.52    # via ipython
 ptyprocess==0.7.0         # via pexpect
-pygments==2.19.2          # via ipython, rich, -c requirements.txt
+pygments==2.19.2          # via ipython, rich
 rich==14.1.0              # via -r dev-requirements.in
 setuptools==80.9.0        # via ipython, -c requirements.txt
 traitlets==5.14.3         # via ipython, matplotlib-inline
