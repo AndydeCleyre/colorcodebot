@@ -1,6 +1,6 @@
 black==25.9.0             # via -r ops-requirements.in
 click==8.3.0              # via black
-isort==6.0.1              # via -r ops-requirements.in
+isort==6.1.0              # via -r ops-requirements.in
 mypy-extensions==1.1.0    # via black
 packaging==25.0           # via black
 pathspec==0.12.1          # via black
