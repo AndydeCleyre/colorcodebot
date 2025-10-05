@@ -1,7 +1,7 @@
 absl-py==2.3.1            # via tensorboard, tensorflow
 astunparse==1.6.3         # via tensorflow
 cachetools==6.2.0         # via google-auth
-certifi==2025.8.3         # via requests
+certifi==2025.10.5        # via requests
 charset-normalizer==3.4.3  # via requests
 flatbuffers==25.9.23      # via tensorflow
 gast==0.4.0               # via tensorflow
