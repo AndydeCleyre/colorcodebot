@@ -41,7 +41,7 @@ tensorflow-estimator==2.13.0  # via tensorflow
 tensorflow-io-gcs-filesystem==0.37.1  # via tensorflow
 termcolor==3.2.0          # via tensorflow
 typing-extensions==4.5.0  # via tensorflow
-urllib3==2.5.0            # via requests
+urllib3==2.6.0            # via requests
 werkzeug==3.1.4           # via tensorboard
 wheel==0.45.1             # via astunparse, tensorboard
 wrapt==2.0.1              # via tensorflow, -r requirements.in
