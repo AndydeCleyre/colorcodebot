@@ -1,11 +1,11 @@
 absl-py==2.3.1            # via tensorboard, tensorflow
 astunparse==1.6.3         # via tensorflow
-cachetools==6.2.3         # via google-auth
+cachetools==6.2.4         # via google-auth
 certifi==2025.11.12       # via requests
 charset-normalizer==3.4.4  # via requests
 flatbuffers==25.9.23      # via tensorflow
 gast==0.4.0               # via tensorflow
-google-auth==2.43.0       # via google-auth-oauthlib, tensorboard
+google-auth==2.45.0       # via google-auth-oauthlib, tensorboard
 google-auth-oauthlib==1.0.0  # via tensorboard
 google-pasta==0.2.0       # via tensorflow
 grpcio==1.74.0            # via tensorboard, tensorflow
