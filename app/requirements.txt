@@ -39,7 +39,7 @@ tensorboard-data-server==0.7.2  # via tensorboard
 tensorflow==2.13.1        # via guesslang
 tensorflow-estimator==2.13.0  # via tensorflow
 tensorflow-io-gcs-filesystem==0.37.1  # via tensorflow
-termcolor==3.2.0          # via tensorflow
+termcolor==3.3.0          # via tensorflow
 typing-extensions==4.5.0  # via tensorflow
 urllib3==2.6.2            # via requests
 werkzeug==3.1.4           # via tensorboard
