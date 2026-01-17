@@ -22,9 +22,9 @@ packaging==25.0           # via tensorflow
 peewee==3.19.0            # via -r requirements.in
 plumbum==1.10.0           # via -r requirements.in
 protobuf==4.25.8          # via tensorboard, tensorflow
-pyasn1==0.6.1             # via pyasn1-modules, rsa
+pyasn1==0.6.2             # via pyasn1-modules, rsa
 pyasn1-modules==0.4.2     # via google-auth
-pytelegrambotapi==4.29.1  # via -r requirements.in
+pytelegrambotapi==4.30.0  # via -r requirements.in
 python-dateutil==2.9.0.post0  # via strictyaml
 requests==2.32.5          # via pytelegrambotapi, requests-oauthlib, tensorboard
 requests-oauthlib==2.0.0  # via google-auth-oauthlib
