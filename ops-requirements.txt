@@ -6,7 +6,7 @@ packaging==25.0           # via black
 pathspec==1.0.3           # via black
 platformdirs==4.5.1       # via black
 python-dateutil==2.9.0.post0  # via yamlpath
-pytokens==0.3.0           # via black
+pytokens==0.4.0           # via black
 ruamel-yaml==0.17.21      # via yamlpath
 six==1.17.0               # via python-dateutil
 wheezy-template==3.2.4    # via -r ops-requirements.in
