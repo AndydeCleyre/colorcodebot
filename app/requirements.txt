@@ -13,12 +13,12 @@ h5py==3.15.1              # via tensorflow
 idna==3.11                # via requests
 keras==2.13.1             # via tensorflow
 libclang==18.1.1          # via tensorflow
-markdown==3.10            # via tensorboard
+markdown==3.10.1          # via tensorboard
 markupsafe==3.0.3         # via werkzeug
 numpy==1.24.3             # via h5py, tensorboard, tensorflow
 oauthlib==3.3.1           # via requests-oauthlib
 opt-einsum==3.4.0         # via tensorflow
-packaging==25.0           # via tensorflow
+packaging==26.0           # via tensorflow, wheel
 peewee==3.19.0            # via -r requirements.in
 plumbum==1.10.0           # via -r requirements.in
 protobuf==4.25.8          # via tensorboard, tensorflow
@@ -29,7 +29,7 @@ python-dateutil==2.9.0.post0  # via strictyaml
 requests==2.32.5          # via pytelegrambotapi, requests-oauthlib, tensorboard
 requests-oauthlib==2.0.0  # via google-auth-oauthlib
 rsa==4.9.1                # via google-auth
-setuptools==80.9.0        # via tensorboard, tensorflow
+setuptools==80.10.1       # via tensorboard, tensorflow
 six==1.17.0               # via astunparse, google-pasta, python-dateutil, tensorflow
 strictyaml==1.7.3         # via -r requirements.in
 structlog==25.5.0         # via -r requirements.in
@@ -42,5 +42,5 @@ termcolor==3.3.0          # via tensorflow
 typing-extensions==4.5.0  # via tensorflow
 urllib3==2.6.3            # via requests
 werkzeug==3.1.5           # via tensorboard
-wheel==0.45.1             # via astunparse, tensorboard
+wheel==0.46.2             # via astunparse, tensorboard
 wrapt==2.0.1              # via tensorflow, -r requirements.in
