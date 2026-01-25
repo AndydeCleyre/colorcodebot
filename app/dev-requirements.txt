@@ -11,7 +11,7 @@ pickleshare==0.7.5        # via ipython
 prompt-toolkit==3.0.52    # via ipython
 ptyprocess==0.7.0         # via pexpect
 pygments==2.19.2          # via ipython, rich
-rich==14.2.0              # via -r dev-requirements.in
+rich==14.3.1              # via -r dev-requirements.in
 setuptools==80.10.1       # via ipython, -c requirements.txt
 traitlets==5.14.3         # via ipython, matplotlib-inline
-wcwidth==0.3.2            # via prompt-toolkit
+wcwidth==0.3.5            # via prompt-toolkit
