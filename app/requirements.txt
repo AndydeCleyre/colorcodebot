@@ -1,4 +1,4 @@
-absl-py==2.3.1            # via tensorboard, tensorflow
+absl-py==2.4.0            # via tensorboard, tensorflow
 astunparse==1.6.3         # via tensorflow
 certifi==2026.1.4         # via requests
 cffi==2.0.0               # via cryptography
