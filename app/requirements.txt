@@ -6,12 +6,12 @@ charset-normalizer==3.4.5  # via requests
 cryptography==46.0.5      # via google-auth
 flatbuffers==25.12.19     # via tensorflow
 gast==0.4.0               # via tensorflow
-google-auth==2.48.0       # via google-auth-oauthlib, tensorboard
+google-auth==2.49.0       # via google-auth-oauthlib, tensorboard
 google-auth-oauthlib==1.0.0  # via tensorboard
 google-pasta==0.2.0       # via tensorflow
 grpcio==1.74.0            # via tensorboard, tensorflow
 guesslang @ git+https://github.com/andydecleyre/guesslang@e8be843a519b3da59b573bc58744cb47978508ad  # via -r requirements.in
-h5py==3.15.1              # via tensorflow
+h5py==3.16.0              # via tensorflow
 idna==3.11                # via requests
 keras==2.13.1             # via tensorflow
 libclang==18.1.1          # via tensorflow
