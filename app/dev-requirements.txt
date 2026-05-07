@@ -2,7 +2,7 @@ backcall==0.2.0           # via ipython
 decorator==5.2.1          # via ipython
 ipython==7.34.0           # via -r dev-requirements.in
 jedi==0.20.0              # via ipython
-markdown-it-py==4.0.0     # via rich
+markdown-it-py==4.1.0     # via rich
 matplotlib-inline==0.2.1  # via ipython
 mdurl==0.1.2              # via markdown-it-py
 parso==0.8.7              # via jedi
