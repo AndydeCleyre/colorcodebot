@@ -6,7 +6,7 @@ charset-normalizer==3.4.7  # via requests
 cryptography==48.0.0      # via google-auth
 flatbuffers==25.12.19     # via tensorflow
 gast==0.4.0               # via tensorflow
-google-auth==2.51.0       # via google-auth-oauthlib, tensorboard
+google-auth==2.52.0       # via google-auth-oauthlib, tensorboard
 google-auth-oauthlib==1.0.0  # via tensorboard
 google-pasta==0.2.0       # via tensorflow
 grpcio==1.74.0            # via tensorboard, tensorflow
@@ -42,7 +42,7 @@ tensorflow-estimator==2.13.0  # via tensorflow
 tensorflow-io-gcs-filesystem==0.37.1  # via tensorflow
 termcolor==3.3.0          # via tensorflow
 typing-extensions==4.5.0  # via tensorflow
-urllib3==2.6.3            # via requests
+urllib3==2.7.0            # via requests
 werkzeug==3.1.8           # via tensorboard
 wheel==0.47.0             # via astunparse, tensorboard
 wrapt==2.1.2              # via tensorflow, -r requirements.in
