@@ -1,6 +1,6 @@
 absl-py==2.4.0            # via tensorboard, tensorflow
 astunparse==1.6.3         # via tensorflow
-certifi==2026.4.22        # via requests
+certifi==2026.5.20        # via requests
 cffi==2.0.0               # via cryptography
 charset-normalizer==3.4.7  # via requests
 cryptography==48.0.0      # via google-auth
@@ -21,7 +21,7 @@ numpy==1.24.3             # via h5py, tensorboard, tensorflow
 oauthlib==3.3.1           # via requests-oauthlib
 opt-einsum==3.4.0         # via tensorflow
 packaging==26.2           # via tensorflow, wheel
-peewee==4.0.5             # via -r requirements.in
+peewee==4.0.6             # via -r requirements.in
 plumbum==1.10.0           # via -r requirements.in
 protobuf==4.25.9          # via tensorboard, tensorflow
 pyasn1==0.6.3             # via pyasn1-modules
@@ -45,4 +45,4 @@ typing-extensions==4.5.0  # via tensorflow
 urllib3==2.7.0            # via requests
 werkzeug==3.1.8           # via tensorboard
 wheel==0.47.0             # via astunparse, tensorboard
-wrapt==2.1.2              # via tensorflow, -r requirements.in
+wrapt==2.2.0              # via tensorflow, -r requirements.in
