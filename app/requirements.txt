@@ -12,7 +12,7 @@ google-pasta==0.2.0       # via tensorflow
 grpcio==1.74.0            # via tensorboard, tensorflow
 guesslang @ git+https://github.com/andydecleyre/guesslang@e8be843a519b3da59b573bc58744cb47978508ad  # via -r requirements.in
 h5py==3.16.0              # via tensorflow
-idna==3.15                # via requests
+idna==3.16                # via requests
 keras==2.13.1             # via tensorflow
 libclang==18.1.1          # via tensorflow
 markdown==3.10.2          # via tensorboard
