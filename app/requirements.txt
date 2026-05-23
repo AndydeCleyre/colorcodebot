@@ -45,4 +45,4 @@ typing-extensions==4.5.0  # via tensorflow
 urllib3==2.7.0            # via requests
 werkzeug==3.1.8           # via tensorboard
 wheel==0.47.0             # via astunparse, tensorboard
-wrapt==2.2.0              # via tensorflow, -r requirements.in
+wrapt==2.2.1              # via tensorflow, -r requirements.in
