@@ -1,4 +1,4 @@
-absl-py==2.4.0            # via tensorboard, tensorflow
+absl-py==2.5.0            # via tensorboard, tensorflow
 aiohappyeyeballs==2.7.1   # via aiohttp
 aiohttp==3.14.1           # via pytelegrambotapi
 aiosignal==1.4.0          # via aiohttp
