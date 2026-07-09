@@ -31,7 +31,7 @@ peewee==4.1.1             # via -r requirements.in
 plumbum==2.0.1            # via -r requirements.in
 propcache==0.5.2          # via aiohttp, yarl
 protobuf==4.25.9          # via tensorboard, tensorflow
-pyasn1==0.6.3             # via pyasn1-modules
+pyasn1==0.6.4             # via pyasn1-modules
 pyasn1-modules==0.4.2     # via google-auth
 pycparser==3.0            # via cffi
 pytelegrambotapi==4.34.0  # via -r requirements.in
