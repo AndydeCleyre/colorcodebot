@@ -11,7 +11,7 @@ cryptography==49.0.0      # via google-auth
 flatbuffers==25.12.19     # via tensorflow
 frozenlist==1.8.0         # via aiohttp, aiosignal
 gast==0.4.0               # via tensorflow
-google-auth==2.55.2       # via google-auth-oauthlib, tensorboard
+google-auth==2.56.0       # via google-auth-oauthlib, tensorboard
 google-auth-oauthlib==1.0.0  # via tensorboard
 google-pasta==0.2.0       # via tensorflow
 grpcio==1.74.0            # via tensorboard, tensorflow
@@ -27,7 +27,7 @@ numpy==1.24.3             # via h5py, tensorboard, tensorflow
 oauthlib==3.3.1           # via requests-oauthlib
 opt-einsum==3.4.0         # via tensorflow
 packaging==26.2           # via tensorflow, wheel
-peewee==4.2.1             # via -r requirements.in
+peewee==4.2.2             # via -r requirements.in
 plumbum==2.0.1            # via -r requirements.in
 propcache==0.5.2          # via aiohttp, yarl
 protobuf==4.25.9          # via tensorboard, tensorflow
