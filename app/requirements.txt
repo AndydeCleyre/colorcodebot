@@ -27,14 +27,14 @@ numpy==1.24.3             # via h5py, tensorboard, tensorflow
 oauthlib==3.3.1           # via requests-oauthlib
 opt-einsum==3.4.0         # via tensorflow
 packaging==26.2           # via tensorflow, wheel
-peewee==4.2.4             # via -r requirements.in
+peewee==4.2.6             # via -r requirements.in
 plumbum==2.0.1            # via -r requirements.in
 propcache==0.5.2          # via aiohttp, yarl
 protobuf==4.25.9          # via tensorboard, tensorflow
 pyasn1==0.6.4             # via pyasn1-modules
 pyasn1-modules==0.4.2     # via google-auth
 pycparser==3.0            # via cffi
-pytelegrambotapi==4.35.0  # via -r requirements.in
+pytelegrambotapi==4.36.0  # via -r requirements.in
 python-dateutil==2.9.0.post0  # via strictyaml
 requests==2.34.2          # via pytelegrambotapi, requests-oauthlib, tensorboard
 requests-oauthlib==2.0.0  # via google-auth-oauthlib
