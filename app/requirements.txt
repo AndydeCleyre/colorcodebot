@@ -1,6 +1,6 @@
 absl-py==2.5.0            # via tensorboard, tensorflow
 aiohappyeyeballs==2.7.1   # via aiohttp
-aiohttp==3.14.1           # via pytelegrambotapi
+aiohttp==3.14.2           # via pytelegrambotapi
 aiosignal==1.4.0          # via aiohttp
 astunparse==1.6.3         # via tensorflow
 attrs==26.1.0             # via aiohttp
