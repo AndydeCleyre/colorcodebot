@@ -52,5 +52,5 @@ typing-extensions==4.5.0  # via aiohttp, aiosignal, plumbum, tensorflow
 urllib3==2.7.0            # via requests
 werkzeug==3.1.8           # via tensorboard
 wheel==0.47.0             # via astunparse, tensorboard
-wrapt==2.2.2              # via tensorflow, -r requirements.in
+wrapt==2.3.0              # via tensorflow, -r requirements.in
 yarl==1.24.5              # via aiohttp
