@@ -20,7 +20,7 @@ h5py==3.16.0              # via tensorflow
 idna==3.18                # via requests, yarl
 keras==2.13.1             # via tensorflow
 libclang==18.1.1          # via tensorflow
-markdown==3.10.2          # via tensorboard
+markdown==3.10.3          # via tensorboard
 markupsafe==3.0.3         # via werkzeug
 multidict==6.7.1          # via aiohttp, yarl
 numpy==1.24.3             # via h5py, tensorboard, tensorflow
