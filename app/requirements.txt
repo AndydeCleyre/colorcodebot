@@ -5,7 +5,7 @@ aiosignal==1.4.0          # via aiohttp
 astunparse==1.6.3         # via tensorflow
 attrs==26.1.0             # via aiohttp
 certifi==2026.7.22        # via requests
-cffi==2.1.0               # via cryptography
+cffi==2.1.1               # via cryptography
 charset-normalizer==3.4.9  # via requests
 cryptography==50.0.0      # via google-auth
 flatbuffers==25.12.19     # via tensorflow
