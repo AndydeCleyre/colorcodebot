@@ -38,7 +38,7 @@ pytelegrambotapi==4.36.0  # via -r requirements.in
 python-dateutil==2.9.0.post0  # via strictyaml
 requests==2.34.2          # via pytelegrambotapi, requests-oauthlib, tensorboard
 requests-oauthlib==2.0.0  # via google-auth-oauthlib
-setuptools==83.0.0        # via tensorboard, tensorflow
+setuptools==84.0.0        # via tensorboard, tensorflow
 six==1.17.0               # via astunparse, google-pasta, python-dateutil, tensorflow
 strictyaml==1.7.3         # via -r requirements.in
 structlog==26.1.0         # via -r requirements.in
