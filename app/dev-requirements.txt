@@ -14,4 +14,4 @@ pygments==2.21.0          # via ipython, rich
 rich==15.0.0              # via -r dev-requirements.in
 setuptools==84.0.0        # via ipython, -c requirements.txt
 traitlets==5.16.1         # via ipython, matplotlib-inline
-wcwidth==0.8.2            # via prompt-toolkit
+wcwidth==0.8.3            # via prompt-toolkit
