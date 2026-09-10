@@ -11,7 +11,7 @@ cryptography==50.0.1      # via google-auth
 flatbuffers==25.12.19     # via tensorflow
 frozenlist==1.8.0         # via aiohttp, aiosignal
 gast==0.4.0               # via tensorflow
-google-auth==2.57.1       # via google-auth-oauthlib, tensorboard
+google-auth==2.58.0       # via google-auth-oauthlib, tensorboard
 google-auth-oauthlib==1.0.0  # via tensorboard
 google-pasta==0.2.0       # via tensorflow
 grpcio==1.74.0            # via tensorboard, tensorflow
@@ -22,7 +22,7 @@ keras==2.13.1             # via tensorflow
 libclang==18.1.1          # via tensorflow
 markdown==3.10.3          # via tensorboard
 markupsafe==3.0.3         # via werkzeug
-multidict==6.7.1          # via aiohttp, yarl
+multidict==6.8.0          # via aiohttp, yarl
 numpy==1.24.3             # via h5py, tensorboard, tensorflow
 oauthlib==3.3.1           # via requests-oauthlib
 opt-einsum==3.4.0         # via tensorflow
