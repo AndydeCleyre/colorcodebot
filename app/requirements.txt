@@ -29,7 +29,7 @@ opt-einsum==3.4.0         # via tensorflow
 packaging==26.3           # via tensorflow, wheel
 peewee==4.5.1             # via -r requirements.in
 plumbum==2.0.2            # via -r requirements.in
-propcache==0.5.2          # via aiohttp, yarl
+propcache==0.5.4          # via aiohttp, yarl
 protobuf==4.25.9          # via tensorboard, tensorflow
 pyasn1==0.6.4             # via pyasn1-modules
 pyasn1-modules==0.4.2     # via google-auth
@@ -49,8 +49,8 @@ tensorflow-estimator==2.13.0  # via tensorflow
 tensorflow-io-gcs-filesystem==0.37.1  # via tensorflow
 termcolor==3.3.0          # via tensorflow
 typing-extensions==4.5.0  # via aiohttp, aiosignal, plumbum, tensorflow
-urllib3==2.7.0            # via requests
+urllib3==2.8.0            # via requests
 werkzeug==3.1.8           # via tensorboard
 wheel==0.48.0             # via astunparse, tensorboard
 wrapt==2.4.1              # via tensorflow, -r requirements.in
-yarl==1.24.5              # via aiohttp
+yarl==1.25.1              # via aiohttp
