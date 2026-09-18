@@ -17,12 +17,12 @@ google-pasta==0.2.0       # via tensorflow
 grpcio==1.74.0            # via tensorboard, tensorflow
 guesslang @ git+https://github.com/andydecleyre/guesslang@e8be843a519b3da59b573bc58744cb47978508ad  # via -r requirements.in
 h5py==3.16.0              # via tensorflow
-idna==3.19                # via requests, yarl
+idna==3.20                # via requests, yarl
 keras==2.13.1             # via tensorflow
 libclang==18.1.1          # via tensorflow
 markdown==3.10.3          # via tensorboard
 markupsafe==3.0.3         # via werkzeug
-multidict==6.8.0          # via aiohttp, yarl
+multidict==6.9.0          # via aiohttp, yarl
 numpy==1.24.3             # via h5py, tensorboard, tensorflow
 oauthlib==3.3.1           # via requests-oauthlib
 opt-einsum==3.4.0         # via tensorflow
