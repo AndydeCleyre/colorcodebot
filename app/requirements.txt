@@ -22,7 +22,7 @@ keras==2.13.1             # via tensorflow
 libclang==18.1.1          # via tensorflow
 markdown==3.10.3          # via tensorboard
 markupsafe==3.0.3         # via werkzeug
-multidict==6.9.0          # via aiohttp, yarl
+multidict==6.9.1          # via aiohttp, yarl
 numpy==1.24.3             # via h5py, tensorboard, tensorflow
 oauthlib==3.3.1           # via requests-oauthlib
 opt-einsum==3.4.0         # via tensorflow
@@ -34,7 +34,7 @@ protobuf==4.25.9          # via tensorboard, tensorflow
 pyasn1==0.6.4             # via pyasn1-modules
 pyasn1-modules==0.4.2     # via google-auth
 pycparser==3.0            # via cffi
-pytelegrambotapi==4.36.1  # via -r requirements.in
+pytelegrambotapi==4.37.0  # via -r requirements.in
 python-dateutil==2.9.0.post0  # via strictyaml
 requests==2.34.2          # via pytelegrambotapi, requests-oauthlib, tensorboard
 requests-oauthlib==2.0.0  # via google-auth-oauthlib
