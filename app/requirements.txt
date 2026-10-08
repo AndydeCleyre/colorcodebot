@@ -11,7 +11,7 @@ cryptography==50.0.2      # via google-auth
 flatbuffers==25.12.19     # via tensorflow
 frozenlist==1.8.0         # via aiohttp, aiosignal
 gast==0.4.0               # via tensorflow
-google-auth==2.60.0       # via google-auth-oauthlib, tensorboard
+google-auth==2.61.0       # via google-auth-oauthlib, tensorboard
 google-auth-oauthlib==1.0.0  # via tensorboard
 google-pasta==0.2.0       # via tensorflow
 grpcio==1.74.0            # via tensorboard, tensorflow
@@ -33,7 +33,7 @@ propcache==0.5.4          # via aiohttp, yarl
 protobuf==4.25.9          # via tensorboard, tensorflow
 pyasn1==0.6.4             # via pyasn1-modules
 pyasn1-modules==0.4.2     # via google-auth
-pycparser==3.0            # via cffi
+pycparser==3.1            # via cffi
 pytelegrambotapi==4.37.0  # via -r requirements.in
 python-dateutil==2.9.0.post0  # via strictyaml
 requests==2.34.2          # via pytelegrambotapi, requests-oauthlib, tensorboard
