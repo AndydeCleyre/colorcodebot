@@ -1,4 +1,4 @@
-black==26.10.0            # via -r ops-requirements.in
+black==26.10.1            # via -r ops-requirements.in
 click==8.5.0              # via black
 isort==9.0.2              # via -r ops-requirements.in
 mypy-extensions==1.1.0    # via black, isort
