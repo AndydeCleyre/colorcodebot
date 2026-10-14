@@ -20,7 +20,7 @@ h5py==3.16.0              # via tensorflow
 idna==3.20                # via requests, yarl
 keras==2.13.1             # via tensorflow
 libclang==18.1.1          # via tensorflow
-markdown==3.11            # via tensorboard
+markdown==3.11.1          # via tensorboard
 markupsafe==3.0.4         # via werkzeug
 multidict==7.1.0          # via aiohttp, yarl
 numpy==1.24.3             # via h5py, tensorboard, tensorflow
@@ -52,5 +52,5 @@ typing-extensions==4.5.0  # via aiohttp, aiosignal, plumbum, tensorflow
 urllib3==2.8.0            # via requests
 werkzeug==3.1.9           # via tensorboard
 wheel==0.48.0             # via astunparse, tensorboard
-wrapt==2.5.0              # via tensorflow, -r requirements.in
+wrapt==2.5.1              # via tensorflow, -r requirements.in
 yarl==1.25.1              # via aiohttp
