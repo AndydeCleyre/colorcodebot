@@ -33,9 +33,9 @@ propcache==0.5.4          # via aiohttp, yarl
 protobuf==4.25.9          # via tensorboard, tensorflow
 pyasn1==0.6.4             # via pyasn1-modules
 pyasn1-modules==0.4.2     # via google-auth
-pycparser==3.11           # via cffi
+pycparser==3.12           # via cffi
 pytelegrambotapi==4.37.1  # via -r requirements.in
-python-dateutil==2.9.0.post0  # via strictyaml
+python-dateutil==3.0.0    # via strictyaml
 requests==2.34.2          # via pytelegrambotapi, requests-oauthlib, tensorboard
 requests-oauthlib==2.0.0  # via google-auth-oauthlib
 setuptools==84.2.1        # via tensorboard, tensorflow
@@ -49,6 +49,7 @@ tensorflow-estimator==2.13.0  # via tensorflow
 tensorflow-io-gcs-filesystem==0.37.1  # via tensorflow
 termcolor==3.3.0          # via tensorflow
 typing-extensions==4.5.0  # via aiohttp, aiosignal, plumbum, tensorflow
+tzdata==2026.5            # via python-dateutil
 urllib3==2.8.0            # via requests
 werkzeug==3.1.9           # via tensorboard
 wheel==0.48.0             # via astunparse, tensorboard
