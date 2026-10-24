@@ -22,7 +22,7 @@ keras==2.13.1             # via tensorflow
 libclang==18.1.1          # via tensorflow
 markdown==3.11.2          # via tensorboard
 markupsafe==3.0.4         # via werkzeug
-multidict==7.1.0          # via aiohttp, yarl
+multidict==7.2.0          # via aiohttp, yarl
 numpy==1.24.3             # via h5py, tensorboard, tensorflow
 oauthlib==4.0.0           # via requests-oauthlib
 opt-einsum==3.4.0         # via tensorflow
