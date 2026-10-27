@@ -15,7 +15,7 @@ from peewee import BooleanField, CharField, IntegerField
 from playhouse.kv import KeyValue
 from playhouse.sqliteq import SqliteQueueDatabase as SqliteDatabase
 from plumbum import local
-from plumbum.cmd import highlight, silicon
+from plumbum.cmd import silicon
 from requests.exceptions import ConnectionError
 from structlog.types import BindableLogger
 from telebot import TeleBot
