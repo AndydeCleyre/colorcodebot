@@ -35,11 +35,11 @@ pyasn1==0.6.5             # via pyasn1-modules
 pyasn1-modules==0.4.2     # via google-auth
 pycparser==3.12           # via cffi
 pytelegrambotapi==4.37.1  # via -r requirements.in
-python-dateutil==3.0.0    # via strictyaml
+python-dateutil==4.0.0    # via strictyaml
 requests==2.34.2          # via pytelegrambotapi, requests-oauthlib, tensorboard
 requests-oauthlib==2.0.0  # via google-auth-oauthlib
 setuptools==84.2.1        # via tensorboard, tensorflow
-six==1.17.0               # via astunparse, google-pasta, python-dateutil, tensorflow
+six==1.17.0               # via astunparse, google-pasta, tensorflow
 strictyaml==1.7.3         # via -r requirements.in
 structlog==26.1.0         # via -r requirements.in
 tensorboard==2.13.0       # via tensorflow
