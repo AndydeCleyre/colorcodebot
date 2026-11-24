@@ -26,7 +26,7 @@ multidict==7.2.1          # via aiohttp, yarl
 numpy==1.24.3             # via h5py, tensorboard, tensorflow
 oauthlib==4.0.1           # via requests-oauthlib
 opt-einsum==3.4.0         # via tensorflow
-packaging==26.3           # via tensorflow, wheel
+packaging==26.4           # via tensorflow, wheel
 peewee==4.5.3             # via -r requirements.in
 plumbum==2.0.2            # via -r requirements.in
 propcache==0.5.4          # via aiohttp, yarl
